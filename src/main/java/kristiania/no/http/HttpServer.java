@@ -1,19 +1,24 @@
 package kristiania.no.http;
 
 import kristiania.no.jdbc.Question;
+import kristiania.no.jdbc.QuestionDao;
+import org.flywaydb.core.Flyway;
+import org.postgresql.ds.PGSimpleDataSource;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.*;
 
 public class HttpServer {
     private final ServerSocket serverSocket;
     private Path rootDirectory;
-    private static List<Question> questions = new ArrayList<>();
+    QuestionDao questionDao;
     private static List<String> categories = new ArrayList<>();
 
     public HttpServer(int serverPort) throws IOException {
@@ -32,7 +37,7 @@ public class HttpServer {
         }
     }
 
-    private void handleClient() throws IOException {
+    private void handleClient() throws IOException, SQLException {
             Socket clientSocket = serverSocket.accept();
             HttpMessage httpMessage = new HttpMessage(clientSocket);
             String[] requestLine = httpMessage.startLine.split(" ");
@@ -64,7 +69,7 @@ public class HttpServer {
 
                 String responseText = "";
 
-                for (Question questions : questions) {
+                for (Question questions : questionDao.listAll()) {
                     responseText += "<p>" + questions.getTitle() + "</p>";
                 }
 
@@ -74,7 +79,7 @@ public class HttpServer {
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), categories.get(Integer.parseInt(queryMap.get("category"))-1));
-                questions.add(q);
+                questionDao.save(q);
                 String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Category: " + q.getCategory() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
@@ -140,22 +145,37 @@ public class HttpServer {
         this.rootDirectory = path;
     }
 
+    /*
+    Finne ut om vi trenger den
     public void addQuestions(Question q) {
         questions.add(q);
     }
+ */
+    public List<Question> getQuestions() throws SQLException {
+        return questionDao.listAll();
+    }
 
-    public List<Question> getQuestions() {
-        return questions;
+
+
+    public void setQuestionDao(QuestionDao questionDao) {
+        this.questionDao = questionDao;
+    }
+
+    private static DataSource createDataSource() {
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
+        dataSource.setUser("question_dbuser");
+        dataSource.setPassword("P545v#C@ZZ");
+        Flyway.configure().dataSource(dataSource).load().migrate();
+        return dataSource;
     }
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8080);
+        HttpServer httpServer = new HttpServer(8081);
+        httpServer.questionDao =  new QuestionDao(createDataSource());
         Question q1 = new Question("title1", "text1", "1");
         Question q2 = new Question("title2", "text2", "2");
-        questions.add(q1);
-        questions.add(q2);
-
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
     }

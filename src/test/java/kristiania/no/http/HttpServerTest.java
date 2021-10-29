@@ -1,6 +1,8 @@
 package kristiania.no.http;
 
 import kristiania.no.jdbc.Question;
+import kristiania.no.jdbc.QuestionDao;
+import kristiania.no.jdbc.TestData;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 public class HttpServerTest {
     HttpServer server = new HttpServer(0);
@@ -73,11 +76,14 @@ public class HttpServerTest {
 
 
     @Test
-    void shouldReturnQuestionsFromServer() throws IOException {
+    void shouldReturnQuestionsFromServer() throws IOException, SQLException {
+        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        server.setQuestionDao(questionDao);
+
         Question q1 = new Question("title1", "text1", "1");
         Question q2 = new Question("title2", "text2", "2");
-        server.addQuestions(q1);
-        server.addQuestions(q2);
+        questionDao.save(q1);
+        questionDao.save(q2);
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
         assertEquals(
@@ -100,7 +106,10 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldAddQuestions() throws IOException {
+    void shouldAddQuestions() throws IOException, SQLException {
+        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        server.setQuestionDao(questionDao);
+
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&category=1");
         assertEquals(200, postClient.getStatusCode());
         Question q = server.getQuestions().get(0);
