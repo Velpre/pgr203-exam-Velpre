@@ -18,4 +18,16 @@ public class QuestionDaoTest {
                 .usingRecursiveComparison()
                 .isEqualTo(question);
     }
+    @Test
+    void shouldListAllQuestions() throws SQLException {
+        Question question = new Question("q1","t1", "1");
+        dao.save(question);
+        Question question2 = new Question("q2","t2", "2");
+        dao.save(question2);
+
+        assertThat(dao.listAll())
+                .extracting(Question::getId)
+                .contains(question.getId(), question2.getId());
+    }
+
 }

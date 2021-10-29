@@ -2,6 +2,8 @@ package kristiania.no.jdbc;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionDao {
     private final DataSource dataSource;
@@ -52,5 +54,19 @@ public class QuestionDao {
         question.setQuestionText(rs.getString("question_text"));
         question.setCategory(rs.getString("category"));
         return question;
+    }
+
+    public List<Question> listAll() throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from questions")) {
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Question> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
+                }
+            }
+        }
     }
 }
