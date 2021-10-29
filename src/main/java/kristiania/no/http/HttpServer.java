@@ -31,12 +31,12 @@ public class HttpServer {
         }
     }
 
-    private void handleClient() {
-        try{
+    private void handleClient() throws IOException {
             Socket clientSocket = serverSocket.accept();
-            String[] requestLine = HttpClient.readLine(clientSocket).split(" ");
+            HttpMessage httpMessage = new HttpMessage(clientSocket);
+            String[] requestLine = httpMessage.startLine.split(" ");
             String requestTarget = requestLine[1];
-            //Håndterer at brukeren ikke trenger å taste inn /index.thml
+
             if(requestTarget.equals("/")) requestTarget ="/index.html";
 
             int questionPos = requestTarget.indexOf('?');
@@ -89,10 +89,8 @@ public class HttpServer {
                         responseText;
                 clientSocket.getOutputStream().write(response.getBytes());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
+
     private void writeOkResponse(Socket clientSocket, String responseText, String contentType) throws IOException {
         String response = "HTTP/1.1 200 OK\r\n" +
                 "Content-Length: " + responseText.length() + "\r\n" +

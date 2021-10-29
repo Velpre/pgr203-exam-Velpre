@@ -16,7 +16,6 @@ public class HttpServerTest {
     public HttpServerTest() throws IOException {
     }
 
-
     @Test
     void shouldReturn404ForUnknowRequestTarget() throws IOException {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/non-existing");
@@ -48,6 +47,7 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/test.txt");
         assertEquals(fileContent, client.getMessageBody());
     }
+    //Sjekk om nødvendig
     @Test
     void shouldUseFileExtensionForContentType() throws IOException {
         server.setRoot(Paths.get("target/test-classes"));
