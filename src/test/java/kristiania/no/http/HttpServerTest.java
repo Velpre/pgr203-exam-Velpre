@@ -72,20 +72,7 @@ public class HttpServerTest {
     }
 
 
-    @Test
-    void shouldReturnQuestionsFromServer() throws IOException {
-        Question q1 = new Question("title1", "text1", "1");
-        Question q2 = new Question("title2", "text2", "2");
 
-
-        server.setQuestions(List.of(q1, q2));
-
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
-        assertEquals(
-                "<p>title1</p><p>title2</p>",
-                client.getMessageBody()
-        );
-    }
 
 
     @Test
@@ -108,5 +95,18 @@ public class HttpServerTest {
         assertEquals("title1", q.getTitle());
     }
 
+    @Test
+    void shouldReturnQuestionsFromServer() throws IOException {
+        Question q1 = new Question("title1", "text1", "1");
+        Question q2 = new Question("title2", "text2", "2");
+        server.addQuestions(q1);
+        server.addQuestions(q2);
 
+
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
+        assertEquals(
+                "<p>title1</p><p>title2</p>",
+                client.getMessageBody()
+        );
+    }
 }

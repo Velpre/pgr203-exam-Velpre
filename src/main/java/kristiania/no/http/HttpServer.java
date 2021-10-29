@@ -6,15 +6,12 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HttpServer {
     private final ServerSocket serverSocket;
     private Path rootDirectory;
-    private static List<Question> questions= new ArrayList<Question>();
+    private static List<Question> questions = new ArrayList<>();
     private static List<String> categories = new ArrayList<>();
 
     public HttpServer(int serverPort) throws IOException {
@@ -74,12 +71,10 @@ public class HttpServer {
 
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                System.out.println(queryMap);
                 Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), categories.get(Integer.parseInt(queryMap.get("category"))-1));
                 questions.add(q);
                 String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Category: " + q.getCategory() + ".";
                 writeOkResponse(clientSocket, responseText, "text/html; charset=utf-8");
-
             }else if (fileTarget.equals("/api/categoryOptions")) {
                 String responseText = "";
 
@@ -142,11 +137,11 @@ public class HttpServer {
         this.rootDirectory = path;
     }
 
-    public void setQuestions(List<Question> q) {
-        this.questions = q;
+    public void addQuestions(Question q) {
+        questions.add(q);
     }
 
-    public  List<Question> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
@@ -155,7 +150,9 @@ public class HttpServer {
         HttpServer httpServer = new HttpServer(8080);
         Question q1 = new Question("title1", "text1", "1");
         Question q2 = new Question("title2", "text2", "2");
-        httpServer.setQuestions(List.of(q1, q2));
+        questions.add(q1);
+        questions.add(q2);
+
 
         httpServer.setRoot(Paths.get("src/main/resources"));
 
