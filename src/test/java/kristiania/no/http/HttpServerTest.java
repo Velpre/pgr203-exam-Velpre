@@ -8,25 +8,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class HttpServerTest {
+    HttpServer server = new HttpServer(0);
+
+    public HttpServerTest() throws IOException {
+    }
+
+
     @Test
     void shouldReturn404ForUnknowRequestTarget() throws IOException {
-        HttpServer server = new HttpServer(0);
         HttpClient client = new HttpClient("localhost", server.getPort(), "/non-existing");
         assertEquals(404, client.getStatusCode());
     }
 
     @Test
     void shouldRespondWithRequestTargetIn404() throws IOException {
-        HttpServer server = new HttpServer(0);
         HttpClient client = new HttpClient("localhost", server.getPort(), "/non-existing");
         assertEquals("File not found: /non-existing", client.getMessageBody());
     }
 
     @Test
     void shouldRespondWith200FoKnownRequestTrarget() throws IOException {
-        HttpServer server = new HttpServer(0);
         HttpClient client = new HttpClient("localhost", server.getPort(), "/hello");
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
@@ -36,8 +40,6 @@ public class HttpServerTest {
     }
     @Test
     void shouldServeFiles() throws IOException {
-        HttpServer server = new HttpServer(0);
-
         server.setRoot(Paths.get("target/test-classes"));
 
         String fileContent= "Det funker";
@@ -48,10 +50,7 @@ public class HttpServerTest {
     }
     @Test
     void shouldUseFileExtensionForContentType() throws IOException {
-        HttpServer server = new HttpServer(0);
-        //Forteller serveren hvor de skal lete etter filen. Lagd methode for det i HttpServer
         server.setRoot(Paths.get("target/test-classes"));
-        //Lager og printer content på filen
         String fileContent = "<p>Hello</p>";
         Files.write(Paths.get("target/test-classes/example-file.html"), fileContent.getBytes());
 
@@ -60,15 +59,28 @@ public class HttpServerTest {
     }
     @Test
     void shouldEchoQueryParameter() throws IOException {
-        HttpServer server = new HttpServer(0);
         HttpClient client = new HttpClient("localhost", server.getPort(), "/hello?yourName=Velkommen");
         assertEquals("<p>Hello Velkommen</p>", client.getMessageBody());
     }
 
     @Test
     void shouldHandelMoreThanOneRequest() throws IOException {
-        HttpServer server = new HttpServer(0);
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
+    }
+    @Test
+    void shouldReturnQuestionsFromServer() throws IOException {
+        Question q = new Question();
+        q.setTitle("title1");
+        Question q2 = new Question();
+        q2.setTitle("title2");
+
+        server.setQuestions(List.of(q, q2));
+
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
+        assertEquals(
+                "<p>title1</p><p>title2</p>",
+                client.getMessageBody()
+        );
     }
 }
