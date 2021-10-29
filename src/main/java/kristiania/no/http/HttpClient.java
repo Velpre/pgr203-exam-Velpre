@@ -1,16 +1,18 @@
 package kristiania.no.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class HttpClient {
-        private final int statusCode;
-        private final Map<String, String> headerFields = new HashMap<>();
+    private final int statusCode;
+    private final Map<String, String> headerFields = new HashMap<>();
+    private String messageBody;
 
-        public HttpClient(String host, int port, String requestTarget) throws IOException {
+
+    public HttpClient(String host, int port, String requestTarget) throws IOException {
             Socket socket = new Socket(host, port);
 
             String request = "GET " + requestTarget + " HTTP/1.1\r\n" +
@@ -30,8 +32,18 @@ public class HttpClient {
                 String headerValue = headerLine.substring(colonPos+1).trim();
                 headerFields.put(headerField, headerValue);
             }
+        this.messageBody = readCharacters(socket, getContentLength());
+    }
+    private String readCharacters(Socket socket, int contentLength) throws IOException {
+        StringBuilder result = new StringBuilder();
+        InputStream in = socket.getInputStream();
 
+        for (int i = 0; i < contentLength; i++) {
+            result.append((char) in.read());
         }
+
+        return result.toString();
+    }
 
         private String readLine(Socket socket) throws IOException {
             StringBuilder buffer = new StringBuilder();
@@ -54,5 +66,9 @@ public class HttpClient {
 
     public int getContentLength() {
         return Integer.parseInt(getHeader("Content-Length"));
+    }
+
+    public String getMessageBody() {
+        return messageBody;
     }
 }
