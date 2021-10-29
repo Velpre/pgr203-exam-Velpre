@@ -13,8 +13,18 @@ public class HttpServer {
 
     public HttpServer(int serverPort) throws IOException {
         serverSocket = new ServerSocket(serverPort);
-        new Thread(this::handleClient).start();
+        new Thread(this::handleClients).start();
+    }
 
+
+    private void handleClients() {
+        try{
+            while (true){
+                handleClient();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleClient() {
