@@ -1,5 +1,6 @@
 package kristiania.no.http;
 
+import kristiania.no.jdbc.Question;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -8,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
 public class HttpServerTest {
     HttpServer server = new HttpServer(0);
@@ -72,7 +72,19 @@ public class HttpServerTest {
     }
 
 
+    @Test
+    void shouldReturnQuestionsFromServer() throws IOException {
+        Question q1 = new Question("title1", "text1", "1");
+        Question q2 = new Question("title2", "text2", "2");
+        server.addQuestions(q1);
+        server.addQuestions(q2);
 
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
+        assertEquals(
+                "<p>title1</p><p>title2</p>",
+                client.getMessageBody()
+        );
+    }
 
 
     @Test
@@ -95,18 +107,5 @@ public class HttpServerTest {
         assertEquals("title1", q.getTitle());
     }
 
-    @Test
-    void shouldReturnQuestionsFromServer() throws IOException {
-        Question q1 = new Question("title1", "text1", "1");
-        Question q2 = new Question("title2", "text2", "2");
-        server.addQuestions(q1);
-        server.addQuestions(q2);
 
-
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
-        assertEquals(
-                "<p>title1</p><p>title2</p>",
-                client.getMessageBody()
-        );
-    }
 }

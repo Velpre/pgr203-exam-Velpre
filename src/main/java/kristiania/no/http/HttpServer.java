@@ -1,5 +1,7 @@
 package kristiania.no.http;
 
+import kristiania.no.jdbc.Question;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -36,7 +38,7 @@ public class HttpServer {
             String[] requestLine = httpMessage.startLine.split(" ");
             String requestTarget = requestLine[1];
 
-            if(requestTarget.equals("/")) requestTarget ="/index.html";
+            if(requestTarget.equals("/")) requestTarget = "/index.html";
 
             int questionPos = requestTarget.indexOf('?');
             String fileTarget;
@@ -57,7 +59,7 @@ public class HttpServer {
                 }
                 String responseText = "<p>Hello " + yourName + "</p>";
 
-                writeOkResponse(clientSocket, responseText, "text/html; charset=utf-8");
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             } else if(fileTarget.equals("/api/questions")) {
 
                 String responseText = "";
@@ -66,7 +68,7 @@ public class HttpServer {
                     responseText += "<p>" + questions.getTitle() + "</p>";
                 }
 
-                writeOkResponse(clientSocket, responseText, "text/html; charset=utf-8");
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
 
             else if (fileTarget.equals("/api/newQuestion")) {
@@ -74,7 +76,8 @@ public class HttpServer {
                 Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), categories.get(Integer.parseInt(queryMap.get("category"))-1));
                 questions.add(q);
                 String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Category: " + q.getCategory() + ".";
-                writeOkResponse(clientSocket, responseText, "text/html; charset=utf-8");
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
             }else if (fileTarget.equals("/api/categoryOptions")) {
                 String responseText = "";
 
@@ -82,7 +85,7 @@ public class HttpServer {
                 for (String categories : categories) {
                     responseText += "<option value=" + i++ + ">" + categories + "</option>";
                 }
-                writeOkResponse(clientSocket, responseText, "text/html; charset=utf-8");
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
 
             else {
@@ -95,13 +98,13 @@ public class HttpServer {
                         contentType = "text/css";
                     }
 
-                    writeOkResponse(clientSocket, responseText, contentType);
+                    writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), contentType);
                     return;
                 }
 
                 String responseText = "File not found: " + requestTarget;
                 String response = "HTTP/1.1 404 Not found\r\n" +
-                        "Content-Length: " + responseText.length() + "\r\n" +
+                        "Content-Length: " + responseText.getBytes().length + "\r\n" +
                         "\r\n" +
                         responseText;
                 clientSocket.getOutputStream().write(response.getBytes());
@@ -110,7 +113,7 @@ public class HttpServer {
 
     private void writeOkResponse(Socket clientSocket, String responseText, String contentType) throws IOException {
         String response = "HTTP/1.1 200 OK\r\n" +
-                "Content-Length: " + responseText.length() + "\r\n" +
+                "Content-Length: " + responseText.getBytes().length + "\r\n" +
                 "Content-Type:" + contentType + "\r\n" +
                 "Connection: close\r\n" +
                 "\r\n" +
@@ -153,8 +156,7 @@ public class HttpServer {
         questions.add(q1);
         questions.add(q2);
 
-
-        httpServer.setRoot(Paths.get("src/main/resources"));
+        httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
     }
 }
