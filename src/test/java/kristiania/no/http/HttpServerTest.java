@@ -71,9 +71,7 @@ public class HttpServerTest {
         assertEquals("<p>Hello Veljko, Premovic</p>", client.getMessageBody());
     }
 
-    /*
 
-    //Må jobbes mere med
     @Test
     void shouldReturnQuestionsFromServer() throws IOException {
         Question q = new Question();
@@ -89,9 +87,6 @@ public class HttpServerTest {
                 client.getMessageBody()
         );
     }
-
-     */
-
 
 
 }

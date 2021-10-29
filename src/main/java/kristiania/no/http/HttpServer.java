@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class HttpServer {
     private final ServerSocket serverSocket;
     private Path rootDirectory;
-    private List questions;
+    private List<Question> questions= new ArrayList<>();
 
     public HttpServer(int serverPort) throws IOException {
         serverSocket = new ServerSocket(serverPort);
@@ -35,6 +36,8 @@ public class HttpServer {
             Socket clientSocket = serverSocket.accept();
             String[] requestLine = HttpClient.readLine(clientSocket).split(" ");
             String requestTarget = requestLine[1];
+            //Håndterer at brukeren ikke trenger å taste inn /index.thml
+            if(requestTarget.equals("/")) requestTarget ="/index.html";
 
             int questionPos = requestTarget.indexOf('?');
             String fileTarget;
@@ -56,12 +59,23 @@ public class HttpServer {
                 String responseText = "<p>Hello " + yourName + "</p>";
 
                 writeOkResponse(clientSocket, responseText, "text/html");
-            } else {
+            } else if(fileTarget.equals("/api/questions")) {
+
+                String responseText = "";
+
+                for (Question questions : questions) {
+                    responseText += "<p>" + questions.getTitle() + "</p>";
+                }
+
+                writeOkResponse(clientSocket, responseText, "text/html");
+            }else {
                 if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                     String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
                     String contentType = "text/plain";
                     if (requestTarget.endsWith(".html")) {
                         contentType = "text/html";
+                    }else if (requestTarget.endsWith(".css")) {
+                        contentType = "text/css";
                     }
 
                     writeOkResponse(clientSocket, responseText, contentType);
@@ -108,15 +122,20 @@ public class HttpServer {
         this.rootDirectory = path;
     }
 
-    /*
     public void setQuestions(List<Question> q) {
         this.questions = q;
     }
 
-     */
 
     public static void main(String[] args) throws IOException {
         HttpServer httpServer = new HttpServer(8080);
+        Question q = new Question();
+        q.setTitle("title1");
+        Question q2 = new Question();
+        q2.setTitle("title2");
+        httpServer.setQuestions(List.of(q, q2));
         httpServer.setRoot(Paths.get("src/main/resources"));
+
+
     }
 }
