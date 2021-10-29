@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class HttpServer {
     private final ServerSocket serverSocket;
@@ -85,5 +86,11 @@ public class HttpServer {
 
     public void setRoot(Path path) {
         this.rootDirectory = path;
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        HttpServer httpServer = new HttpServer(8080);
+        httpServer.setRoot(Paths.get("src/main/resources"));
     }
 }

@@ -64,4 +64,11 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/hello?yourName=Velkommen");
         assertEquals("<p>Hello Velkommen</p>", client.getMessageBody());
     }
+
+    @Test
+    void shouldHandelMoreThanOneRequest() throws IOException {
+        HttpServer server = new HttpServer(0);
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
+    }
 }
