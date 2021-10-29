@@ -33,7 +33,7 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/hello");
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
-                () -> assertEquals("text/html", client.getHeader("Content-Type")),
+                () -> assertEquals("text/html; charset=utf-8", client.getHeader("Content-Type")),
                 () -> assertEquals("<p>Hello world</p>", client.getMessageBody())
         );
     }
@@ -74,18 +74,38 @@ public class HttpServerTest {
 
     @Test
     void shouldReturnQuestionsFromServer() throws IOException {
-        Question q = new Question();
-        q.setTitle("title1");
-        Question q2 = new Question();
-        q2.setTitle("title2");
+        Question q1 = new Question("title1", "text1", "1");
+        Question q2 = new Question("title2", "text2", "2");
 
-        server.setQuestions(List.of(q, q2));
+
+        server.setQuestions(List.of(q1, q2));
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
         assertEquals(
                 "<p>title1</p><p>title2</p>",
                 client.getMessageBody()
         );
+    }
+
+
+    @Test
+    void shouldReturnCategoriesFromServer() throws IOException {
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/categoryOptions");
+        assertEquals(
+                "<option value=1>1</option>" +
+                        "<option value=2>2</option>" +
+                        "<option value=3>3</option>"
+                ,
+                client.getMessageBody()
+        );
+    }
+
+    @Test
+    void shouldAddQuestions() throws IOException {
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&category=1");
+        assertEquals(200, postClient.getStatusCode());
+        Question q = server.getQuestions().get(0);
+        assertEquals("title1", q.getTitle());
     }
 
 
