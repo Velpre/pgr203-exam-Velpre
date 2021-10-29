@@ -1,4 +1,4 @@
-package java.kristiania.no.http;
+package kristiania.no.http;
 
 public class HttpClient {
 }
