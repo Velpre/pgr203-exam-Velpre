@@ -8,8 +8,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpClientTest {
     @Test
+    void shouldReturnStatusCode() throws IOException {
+        assertEquals(200, new HttpClient("httpbin.org", 80, "/html").getStatusCode());
+    }
+
+    @Test
+    void shouldGet404ResponseCode() throws IOException {
+        HttpClient client1= new HttpClient("httpbin.org", 80, "/bla-bla");
+        assertEquals(404, client1.getStatusCode());
+    }
+
+    @Test
     void shouldReturnHeaders() throws IOException {
         HttpClient client = new HttpClient("httpbin.org", 80, "/html");
         assertEquals("text/html; charset=utf-8", client.getHeader("Content-Type"));
+    }
+
+    @Test
+    void shouldReadContentLength() throws IOException {
+        HttpClient client = new HttpClient("httpbin.org", 80, "/html");
+        assertEquals(3741, client.getContentLength());
     }
 }
