@@ -46,4 +46,22 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/test.txt");
         assertEquals(fileContent, client.getMessageBody());
     }
+    @Test
+    void shouldUseFileExtensionForContentType() throws IOException {
+        HttpServer server = new HttpServer(0);
+        //Forteller serveren hvor de skal lete etter filen. Lagd methode for det i HttpServer
+        server.setRoot(Paths.get("target/test-classes"));
+        //Lager og printer content på filen
+        String fileContent = "<p>Hello</p>";
+        Files.write(Paths.get("target/test-classes/example-file.html"), fileContent.getBytes());
+
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/example-file.html");
+        assertEquals("text/html", client.getHeader("Content-Type"));
+    }
+    @Test
+    void shouldEchoQueryParameter() throws IOException {
+        HttpServer server = new HttpServer(0);
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/hello?yourName=johannes");
+        assertEquals("<p>Hello Velkommen</p>", client.getMessageBody());
+    }
 }
