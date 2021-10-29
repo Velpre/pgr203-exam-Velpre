@@ -50,13 +50,7 @@ public class HttpServer {
             if (fileTarget.equals("/hello")) {
                 String yourName = "world";
                 if (query != null){
-                    Map<String,String> queryMap = new HashMap<>();
-                    for (String queryParameter : query.split("&")) {
-                        int equalsPos = queryParameter.indexOf("=");
-                        String parameterName = queryParameter.substring(0,equalsPos);
-                        String parameterValue = queryParameter.substring(equalsPos+1);
-                        queryMap.put(parameterName,parameterValue);
-                    }
+                    Map<String, String> queryMap = parseRequestParameters(query);
                     yourName = queryMap.get("firstName") + ", " + queryMap.get("lastName");
                 }
                 String responseText = "<p>Hello " + yourName + "</p>";
@@ -93,6 +87,17 @@ public class HttpServer {
                 "\r\n" +
                 responseText;
         clientSocket.getOutputStream().write(response.getBytes());
+    }
+
+    private Map<String, String> parseRequestParameters(String query) {
+        Map<String,String> queryMap = new HashMap<>();
+        for (String queryParameter : query.split("&")) {
+            int equalsPos = queryParameter.indexOf("=");
+            String parameterName = queryParameter.substring(0,equalsPos);
+            String parameterValue = queryParameter.substring(equalsPos+1);
+            queryMap.put(parameterName,parameterValue);
+        }
+        return queryMap;
     }
 
     public int getPort() {
