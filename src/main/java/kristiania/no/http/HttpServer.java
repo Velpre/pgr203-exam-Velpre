@@ -7,6 +7,7 @@ import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -166,18 +167,25 @@ public class HttpServer {
         this.surveyDao = surveyDao;
     }
 
-    private static DataSource createDataSource() {
+    private static DataSource createDataSource() throws IOException {
+        Properties properties = new Properties();
+        try (FileReader reader = new FileReader("pgr203.properties")) {
+            properties.load(reader);
+        }
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
-        dataSource.setUser("question_dbuser");
-        dataSource.setPassword("P545v#C@ZZ");
-        Flyway.configure().dataSource(dataSource).load().migrate();
+        dataSource.setUrl(properties.getProperty(
+                "dataSource.url",
+                "jdbc:postgresql://localhost:5432/question_db"
+        ));
+        dataSource.setUser(properties.getProperty("dataSource.user", "question_dbuser"));
+        dataSource.setPassword(properties.getProperty("dataSource.password"));
+        //Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8081);
+        HttpServer httpServer = new HttpServer(8080);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         Question q1 = new Question("title1", "text1", 1);
