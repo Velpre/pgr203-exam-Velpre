@@ -19,6 +19,7 @@ public class SurveyDaoTest {
         dao.save(survey2);
 
         assertThat(dao.listAll())
+                .extracting(Survey::getName)
                 .contains(survey1, survey2);
     }
 }

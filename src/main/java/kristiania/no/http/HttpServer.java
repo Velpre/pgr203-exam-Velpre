@@ -2,6 +2,7 @@ package kristiania.no.http;
 
 import kristiania.no.jdbc.Question;
 import kristiania.no.jdbc.QuestionDao;
+import kristiania.no.jdbc.Survey;
 import kristiania.no.jdbc.SurveyDao;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -89,7 +90,7 @@ public class HttpServer {
                 String responseText = "";
 
                 int i = 1;
-                for (String survey : surveyDao.listAll()) {
+                for (Survey survey : surveyDao.listAll()) {
                     responseText += "<option value=" + i++ + ">" + survey + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
@@ -177,7 +178,7 @@ public class HttpServer {
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8081);
+        HttpServer httpServer = new HttpServer(8085);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         Question q1 = new Question("title1", "text1", 1);

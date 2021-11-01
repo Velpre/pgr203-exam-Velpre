@@ -25,14 +25,14 @@ public class SurveyDao {
         }
     }
 
-    public List<String> listAll() throws SQLException {
+    public List<Survey> listAll() throws SQLException {
 
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from survey")) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from survey order by survey_name")) {
                 try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<String> result = new ArrayList<>();
+                    ArrayList<Survey> result = new ArrayList<>();
                     while (rs.next()) {
-                        result.add(rs.getString("survey_name"));
+                        result.add(new Survey(rs.getString("survey_name")));
                     }
                     return result;
                 }
