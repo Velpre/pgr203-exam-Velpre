@@ -177,7 +177,7 @@ public class HttpServer {
                 "dataSource.url",
                 "jdbc:postgresql://localhost:5432/question_db"
         ));
-        dataSource.setUser(properties.getProperty("dataSource.user", "question_dbuser"));
+        dataSource.setUser(properties.getProperty("dataSource.username", "question_dbuser"));
         dataSource.setPassword(properties.getProperty("dataSource.password"));
         //Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
