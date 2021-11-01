@@ -2,6 +2,7 @@ package kristiania.no.http;
 
 import kristiania.no.jdbc.Question;
 import kristiania.no.jdbc.QuestionDao;
+import kristiania.no.jdbc.SurveyDao;
 import kristiania.no.jdbc.TestData;
 import org.junit.jupiter.api.Test;
 
@@ -80,8 +81,8 @@ public class HttpServerTest {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
 
-        Question q1 = new Question("title1", "text1", "1");
-        Question q2 = new Question("title2", "text2", "2");
+        Question q1 = new Question("title1", "text1", 1);
+        Question q2 = new Question("title2", "text2", 2);
         questionDao.save(q1);
         questionDao.save(q2);
 
@@ -94,12 +95,15 @@ public class HttpServerTest {
 
 
     @Test
-    void shouldReturnCategoriesFromServer() throws IOException {
+    void shouldReturnCategoriesFromServer() throws IOException, SQLException {
+        SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
+        server.setSurveyDao(surveyDao);
+        surveyDao.save("Food survey");
+        surveyDao.save("Sport survey");
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/categoryOptions");
         assertEquals(
-                "<option value=1>1</option>" +
-                        "<option value=2>2</option>" +
-                        "<option value=3>3</option>"
+                "<option value=1>Food survey</option>" +
+                        "<option value=2>Sport survey</option>"
                 ,
                 client.getMessageBody()
         );
@@ -110,7 +114,7 @@ public class HttpServerTest {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
 
-        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&category=1");
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1");
         assertEquals(200, postClient.getStatusCode());
         Question q = server.getQuestions().get(0);
         assertEquals("title1", q.getTitle());

@@ -11,7 +11,7 @@ public class QuestionDaoTest {
 
     @Test
     void shouldRetrieveSavedPerson() throws SQLException {
-        Question question = new Question("q1","t1", "1");
+        Question question = new Question("q1","t1", 1);
         dao.save(question);
         assertThat(dao.retrieve(question.getId()))
                 .hasNoNullFieldsOrProperties()
@@ -20,9 +20,9 @@ public class QuestionDaoTest {
     }
     @Test
     void shouldListAllQuestions() throws SQLException {
-        Question question = new Question("q1","t1", "1");
+        Question question = new Question("q1","t1", 1);
         dao.save(question);
-        Question question2 = new Question("q2","t2", "2");
+        Question question2 = new Question("q2","t2", 2);
         dao.save(question2);
 
         assertThat(dao.listAll())

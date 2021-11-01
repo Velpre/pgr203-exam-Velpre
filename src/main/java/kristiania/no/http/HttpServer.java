@@ -2,6 +2,7 @@ package kristiania.no.http;
 
 import kristiania.no.jdbc.Question;
 import kristiania.no.jdbc.QuestionDao;
+import kristiania.no.jdbc.SurveyDao;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -18,11 +19,11 @@ import java.util.*;
 public class HttpServer {
     private final ServerSocket serverSocket;
     private Path rootDirectory;
-    QuestionDao questionDao;
-    private static List<String> categories = new ArrayList<>();
+    private QuestionDao questionDao;
+    private SurveyDao surveyDao;
+
 
     public HttpServer(int serverPort) throws IOException {
-        categories = (List.of("1","2","3"));
         serverSocket = new ServerSocket(serverPort);
         new Thread(this::handleClients).start();
     }
@@ -78,17 +79,18 @@ public class HttpServer {
 
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), categories.get(Integer.parseInt(queryMap.get("category"))-1));
+                System.out.println(Integer.parseInt(queryMap.get("survey")));
+                Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), Integer.parseInt(queryMap.get("survey")));
                 questionDao.save(q);
-                String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Category: " + q.getCategory() + ".";
+                String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Survey: " + q.getSurveyId() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
             }else if (fileTarget.equals("/api/categoryOptions")) {
                 String responseText = "";
 
                 int i = 1;
-                for (String categories : categories) {
-                    responseText += "<option value=" + i++ + ">" + categories + "</option>";
+                for (String survey : surveyDao.listAll()) {
+                    responseText += "<option value=" + i++ + ">" + survey + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
@@ -156,9 +158,12 @@ public class HttpServer {
     }
 
 
-
+//Settere for Dao klasser
     public void setQuestionDao(QuestionDao questionDao) {
         this.questionDao = questionDao;
+    }
+    public void setSurveyDao(SurveyDao surveyDao) {
+        this.surveyDao = surveyDao;
     }
 
     private static DataSource createDataSource() {
@@ -174,9 +179,11 @@ public class HttpServer {
     public static void main(String[] args) throws IOException {
         HttpServer httpServer = new HttpServer(8081);
         httpServer.questionDao =  new QuestionDao(createDataSource());
-        Question q1 = new Question("title1", "text1", "1");
-        Question q2 = new Question("title2", "text2", "2");
+        httpServer.surveyDao =  new SurveyDao(createDataSource());
+        Question q1 = new Question("title1", "text1", 1);
+        Question q2 = new Question("title2", "text2", 2);
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
     }
+
 }
