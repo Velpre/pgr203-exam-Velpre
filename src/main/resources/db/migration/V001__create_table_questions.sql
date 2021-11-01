@@ -5,4 +5,5 @@ create table questions
     question_text varchar(100) not null,
     survey_id int not null,
     Foreign key (survey_id) REFERENCES questions(id)
-)
+);
+
