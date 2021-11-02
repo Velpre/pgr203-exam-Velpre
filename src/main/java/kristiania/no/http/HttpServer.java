@@ -1,9 +1,6 @@
 package kristiania.no.http;
 
-import kristiania.no.jdbc.Question;
-import kristiania.no.jdbc.QuestionDao;
-import kristiania.no.jdbc.Survey;
-import kristiania.no.jdbc.SurveyDao;
+import kristiania.no.jdbc.*;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -22,6 +19,8 @@ public class HttpServer {
     private Path rootDirectory;
     private QuestionDao questionDao;
     private SurveyDao surveyDao;
+    private AnswerDao answerDao;
+
 
 
     public HttpServer(int serverPort) throws IOException {
@@ -78,7 +77,13 @@ public class HttpServer {
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }else if(fileTarget.equals("/api/addAnswers")){
-                System.out.println("kommet hit");
+                //Her må det jobbes mere med
+
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                Answer a = new Answer(queryMap.get("answer"), 1);
+                answerDao.save(a);
+                String responseText = "You have added answers.";
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
@@ -168,6 +173,10 @@ public class HttpServer {
         this.surveyDao = surveyDao;
     }
 
+    public void setAnswerDao(AnswerDao answerDao) {
+        this.answerDao = answerDao;
+    }
+
     private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
@@ -182,6 +191,7 @@ public class HttpServer {
         HttpServer httpServer = new HttpServer(8081);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
+        httpServer.answerDao = new AnswerDao(createDataSource());
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
     }
 
