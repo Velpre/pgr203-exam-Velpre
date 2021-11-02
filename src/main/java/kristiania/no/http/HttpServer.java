@@ -73,15 +73,13 @@ public class HttpServer {
 
                 for (Question questions : questionDao.listAll()) {
                     responseText += "<p>" + questions.getTitle() + "</p>" +
-                            "<label for=answer>Answer:</label>"+
-                            "<input type=text name=answer>";
+                            "<p><label>Answer question: <input type=text name=answer></label></p>";
                 }
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            }else if(fileTarget.equals("/api/addAnswers")){
+                System.out.println("kommet hit");
             }
-
-            //Her skal jeg lage /api/addAnswers som skal lagre i DB
-
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
@@ -181,7 +179,7 @@ public class HttpServer {
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8080);
+        HttpServer httpServer = new HttpServer(8081);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));

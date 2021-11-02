@@ -91,11 +91,9 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
         assertEquals(
                 "<p>title1</p>" +
-                        "<label for=answer>Answer:</label>" +
-                        "<input type=text name=answer>"+
+                        "<p><label>Answer question: <input type=text name=answer></label></p>" +
                         "<p>title2</p>" +
-                        "<label for=answer>Answer:</label>" +
-                        "<input type=text name=answer>"
+                        "<p><label>Answer question: <input type=text name=answer></label></p>"
                 ,
                 client.getMessageBody()
         );
