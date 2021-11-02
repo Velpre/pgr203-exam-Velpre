@@ -76,6 +76,8 @@ public class HttpServerTest {
     }
 
 
+    //Denne testen ble forandret i forbildense med at vi printer ut input feil under spørsmål på api/questions
+    //Må eventuelt finne bedre ting å teste på istedenfor å teste på messageBody.
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
@@ -88,7 +90,13 @@ public class HttpServerTest {
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
         assertEquals(
-                "<p>title1</p><p>title2</p>",
+                "<p>title1</p>" +
+                        "<label for=answer>Answer:</label>" +
+                        "<input type=text name=answer>"+
+                        "<p>title2</p>" +
+                        "<label for=answer>Answer:</label>" +
+                        "<input type=text name=answer>"
+                ,
                 client.getMessageBody()
         );
     }

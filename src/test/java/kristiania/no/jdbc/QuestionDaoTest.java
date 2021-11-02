@@ -10,7 +10,7 @@ public class QuestionDaoTest {
     private QuestionDao dao = new QuestionDao(TestData.testDataSource());
 
     @Test
-    void shouldRetrieveSavedPerson() throws SQLException {
+    void shouldRetrieveSavedQuestion() throws SQLException {
         Question question = new Question("q1", 1);
         dao.save(question);
         assertThat(dao.retrieve(question.getId()))
