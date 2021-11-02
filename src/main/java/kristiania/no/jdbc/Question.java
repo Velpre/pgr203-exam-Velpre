@@ -3,15 +3,13 @@ package kristiania.no.jdbc;
 public class Question {
     long id;
     String title;
-    String questionText;
     int surveyId;
 
     public Question() {
     }
 
-    public Question(String title, String questionText, int surveyId) {
+    public Question(String title, int surveyId) {
         this.title = title;
-        this.questionText = questionText;
         this.surveyId = surveyId;
     }
 
@@ -32,12 +30,6 @@ public class Question {
         this.title = title;
     }
 
-    public String getQuestionText() {
-        return questionText;
-    }
-    public void setQuestionText(String questionText) {
-        this.questionText = questionText;
-    }
 
     public void setId(long id) {
         this.id = id;
@@ -45,6 +37,5 @@ public class Question {
     public long getId() {
         return id;
     }
-
 
 }

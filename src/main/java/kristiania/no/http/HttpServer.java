@@ -72,20 +72,24 @@ public class HttpServer {
                 String responseText = "";
 
                 for (Question questions : questionDao.listAll()) {
-                    responseText += "<p>" + questions.getTitle() + "</p>";
+                    responseText += "<p>" + questions.getTitle() + "</p>" +
+                            "<label for=answer>Answer:</label>"+
+                            "<input type=text name=answer>";
                 }
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
 
+            //Her skal jeg lage /api/addAnswers som skal lagre i DB
+
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), Integer.parseInt(queryMap.get("survey")));
+                Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
                 questionDao.save(q);
-                String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Survey: " + q.getSurveyId() + ".";
+                String responseText = "You have added: Question: " + q.getTitle()  + " Survey: " + q.getSurveyId() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
-            }else if (fileTarget.equals("/api/categoryOptions")) {
+            }else if (fileTarget.equals("/api/surveyOptions")) {
                 String responseText = "";
 
                 int i = 1;

@@ -81,8 +81,8 @@ public class HttpServerTest {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
 
-        Question q1 = new Question("title1", "text1", 1);
-        Question q2 = new Question("title2", "text2", 2);
+        Question q1 = new Question("title1", 1);
+        Question q2 = new Question("title2", 2);
         questionDao.save(q1);
         questionDao.save(q2);
 
@@ -100,7 +100,7 @@ public class HttpServerTest {
         server.setSurveyDao(surveyDao);
         surveyDao.save("Food survey");
         surveyDao.save("Sport survey");
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/categoryOptions");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/surveyOptions");
         assertEquals(
                 "<option value=1>Food survey</option>" +
                         "<option value=2>Sport survey</option>"
