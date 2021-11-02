@@ -80,7 +80,6 @@ public class HttpServer {
 
             else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                System.out.println(Integer.parseInt(queryMap.get("survey")));
                 Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), Integer.parseInt(queryMap.get("survey")));
                 questionDao.save(q);
                 String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Survey: " + q.getSurveyId() + ".";
@@ -91,7 +90,7 @@ public class HttpServer {
 
                 int i = 1;
                 for (Survey survey : surveyDao.listAll()) {
-                    responseText += "<option value=" + i++ + ">" + survey + "</option>";
+                    responseText += "<option value=" + i++ + ">" + survey.getName() + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
@@ -178,13 +177,10 @@ public class HttpServer {
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8085);
+        HttpServer httpServer = new HttpServer(8080);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
-        Question q1 = new Question("title1", "text1", 1);
-        Question q2 = new Question("title2", "text2", 2);
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
-
     }
 
 }
