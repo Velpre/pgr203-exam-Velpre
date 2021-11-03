@@ -216,19 +216,12 @@ public class HttpServer {
     }
 
 
-    private static DataSource createDataSource() throws IOException {
-        Properties properties = new Properties();
-        try (FileReader reader = new FileReader("pgr203.properties")) {
-            properties.load(reader);
-        }
+    private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl(properties.getProperty(
-                "dataSource.url",
-                "jdbc:postgresql://localhost:5432/question_db"
-        ));
-        dataSource.setUser(properties.getProperty("dataSource.username", "question_dbuser"));
-        dataSource.setPassword(properties.getProperty("dataSource.password"));
-        //Flyway.configure().dataSource(dataSource).load().migrate();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
+        dataSource.setUser("question_dbuser");
+        dataSource.setPassword("P545v#C@ZZ");
+        Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
 
