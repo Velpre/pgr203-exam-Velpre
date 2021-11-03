@@ -8,8 +8,6 @@
 <body>
 <h1>All Questions</h1>
 
-
-
 <form action="/api/addAnswers" method="post">
     <div id="questions"></div>
     <button>Submit</button>
@@ -21,7 +19,7 @@
 
 </body>
 <script>
-    fetch("/api/questions")
+    fetch("/api/listQuestions")
         .then(function(response) {
             return response.text();
         }).then(function(text) {
