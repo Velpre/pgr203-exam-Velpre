@@ -10,8 +10,21 @@
 
 <div>
     <a href="listQuestion.html">List all questions</a>
-    <a href="addQuestion.html">Add new questions</a>
+    <a href="editSurvey.html">Edit Survey</a>
+
 </div>
+<h1>All Surveys</h1>
+<div id="surveys"></div>
+</body>
+
+<script>
+    fetch("/api/surveys")
+        .then(function(response) {
+            return response.text();
+        }).then(function(text) {
+        document.getElementById("surveys").innerHTML = text;
+    });
+</script>
 
 </body>
 </html>

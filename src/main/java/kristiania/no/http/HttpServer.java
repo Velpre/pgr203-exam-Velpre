@@ -2,6 +2,7 @@ package kristiania.no.http;
 
 import kristiania.no.jdbc.Question;
 import kristiania.no.jdbc.QuestionDao;
+import kristiania.no.jdbc.Survey;
 import kristiania.no.jdbc.SurveyDao;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -76,9 +77,17 @@ public class HttpServer {
                 }
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }
+            }else if(fileTarget.equals("/api/surveys")) {
 
-            else if (fileTarget.equals("/api/newQuestion")) {
+                String responseText = "";
+
+                for (Survey survey : surveyDao.listAll()) {
+                    responseText += "<h3>" + survey.getTitle() + "</h3>";
+                    responseText += "<a href=editSurvey?id="+ survey.getId() + ">" + "Add Questions </a>";
+                }
+
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            } else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 System.out.println(Integer.parseInt(queryMap.get("survey")));
                 Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), Integer.parseInt(queryMap.get("survey")));
@@ -86,17 +95,39 @@ public class HttpServer {
                 String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Survey: " + q.getSurveyId() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
-            }else if (fileTarget.equals("/api/categoryOptions")) {
-                String responseText = "";
-
-                int i = 1;
-                for (String survey : surveyDao.listAll()) {
-                    responseText += "<option value=" + i++ + ">" + survey + "</option>";
-                }
+            }else if (fileTarget.equals("/api/newSurvey")) {
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                Survey s = new Survey(queryMap.get("title"));
+                surveyDao.save(s);
+                String responseText = "You have added: Title: " + s.getTitle() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
+            else if (fileTarget.equals("/api/deleteSurvey")) {
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
 
-            else {
+                surveyDao.delete(Integer.parseInt(queryMap.get("survey")));
+                String responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            }
+            else if (fileTarget.equals("/api/surveyOptions")) {
+                String responseText = "";
+
+                for (Survey survey : surveyDao.listAll()) {
+                    responseText += "<option value=" + survey.getId() + ">" + survey.getTitle() + "</option>";
+                }
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            }else if (fileTarget.equals("/api/editSurvey")) {
+                String responseText = "";
+                long parsedQuery = Long.parseLong(query.split("=")[1]);
+
+                responseText = surveyDao.retrieve(parsedQuery).getTitle();
+
+                for (Question question : questionDao.retrieveFromSurveyId(parsedQuery)) {
+                    responseText += "<p>" + question.getTitle() + "</p>" + "\r\n" +
+                            "<button>Delete</button>";
+                }
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            } else {
                 if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                     String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
                     String contentType = "text/plain";

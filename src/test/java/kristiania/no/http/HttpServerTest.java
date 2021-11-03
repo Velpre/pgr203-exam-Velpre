@@ -93,7 +93,7 @@ public class HttpServerTest {
         );
     }
 
-
+/*
     @Test
     void shouldReturnCategoriesFromServer() throws IOException, SQLException {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
@@ -108,6 +108,8 @@ public class HttpServerTest {
                 client.getMessageBody()
         );
     }
+
+ */
 
     @Test
     void shouldAddQuestions() throws IOException, SQLException {

@@ -7,13 +7,16 @@
 </head>
 <body>
 <main>
-    <h1>Add a new question</h1>
+    <h1>Edit Survey</h1>
 
-    <form action="/api/newQuestion" method="post">
+    <form action="/api/newSurvey" method="post">
         <p><label>Title: <input type="text" name="title"></label></p>
-        <p><label>Question text: <input type="text" name="questionText"></label></p>
-        <p><label>Category <select name="survey" id="survey"></select></label></p>
         <button>Submit</button>
+    </form>
+
+    <form action="/api/deleteSurvey" method="post">
+        <p><label>Category <select name="survey" id="survey"></select></label></p>
+        <button>Delete</button>
     </form>
 </main>
 <script>
@@ -22,7 +25,6 @@
     }).then(function(text){
         document.getElementById("survey").innerHTML=text;
     });
-
 
 </script>
 </body>
