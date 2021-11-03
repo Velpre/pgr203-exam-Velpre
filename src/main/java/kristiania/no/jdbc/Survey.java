@@ -1,21 +1,11 @@
 package kristiania.no.jdbc;
 
 public class Survey {
-    String title;
     long id;
+    private String surveyName;
 
-    public Survey(String title) {
-        this.title = title;
-    }
-    public Survey(){
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public Survey(String surveyName) {
+        this.surveyName = surveyName;
     }
 
     public long getId() {
@@ -24,5 +14,13 @@ public class Survey {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return surveyName;
+    }
+
+    public void setName(String name) {
+        this.surveyName = name;
     }
 }
