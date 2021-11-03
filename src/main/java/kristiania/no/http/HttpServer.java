@@ -21,6 +21,7 @@ public class HttpServer {
     private QuestionDao questionDao;
     private SurveyDao surveyDao;
     private AnswerDao answerDao;
+    private UserDao userDao;
     int savedQuery;
 
 
@@ -69,26 +70,50 @@ public class HttpServer {
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             } else if(fileTarget.equals("/api/listQuestions")) {
-
                 String responseText = "";
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 if (queryMap.size() != 0){
                     savedQuery = Integer.parseInt(queryMap.get("survey"));
                 }
+                responseText += "<input type=\"text\" id=\"userName\" name=\"userName\"><br>";
 
                 for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
-                    responseText += "<p>" + question.getTitle() + "</p>";
+                    responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
+                    responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"100\" value=\"50\" class=\"slider\" id=\"myRange\">";
                 }
+                responseText += "<br><button>Answer</button>";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }else if(fileTarget.equals("/api/addAnswers")){
-                //Her må det jobbes mere med
+            }else if(fileTarget.equals("/api/answerQuestions")){
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                System.out.println(queryMap);
+                System.out.println(queryMap.get("userName"));
 
+                User user = new User(queryMap.get("userName"));
+                userDao.save(user);
+                queryMap.remove("userName");
+
+
+                Object[] keySet = queryMap.keySet().toArray();
+
+                for (int i = 0; i < keySet.length; i++) {
+                    System.out.println(queryMap.get(keySet[i]));
+                    Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
+                    answerDao.save(a);
+                }
+
+
+                String responseText = "You have added answers.";
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
+            }else if(fileTarget.equals("/api/addAnswers")){
+                /*
+                //Her må det jobbes mere med
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Answer a = new Answer(queryMap.get("answer"), 1);
                 answerDao.save(a);
                 String responseText = "You have added answers.";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-
+                */
             } else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
@@ -171,16 +196,9 @@ public class HttpServer {
         this.rootDirectory = path;
     }
 
-    /*
-    Finne ut om vi trenger den
-    public void addQuestions(Question q) {
-        questions.add(q);
-    }
- */
     public List<Question> getQuestions() throws SQLException {
         return questionDao.listAll();
     }
-
 
 //Settere for Dao klasser
     public void setQuestionDao(QuestionDao questionDao) {
@@ -210,6 +228,7 @@ public class HttpServer {
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         httpServer.answerDao = new AnswerDao(createDataSource());
+        httpServer.userDao = new UserDao(createDataSource());
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
     }

@@ -5,4 +5,5 @@ create table questions
     survey_id int not null,
     constraint FK_survey_questions foreign key (survey_id)
         references survey(id)
+    on delete cascade
 )

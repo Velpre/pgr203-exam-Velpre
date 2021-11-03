@@ -2,6 +2,8 @@ package kristiania.no.jdbc;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnswerDao {
 
@@ -14,12 +16,13 @@ public class AnswerDao {
     public void save(Answer answer) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into answers (answer, question_id) values (?, ?)",
+                    "insert into answers (answer, question_id, user_id) values (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
 
             )) {
                 statement.setString(1, answer.getAnswer());
                 statement.setInt(2, answer.getQuestionId());
+                statement.setInt(3, answer.userId());
 
                 statement.executeUpdate();
 
@@ -53,6 +56,21 @@ public class AnswerDao {
         return answer;
     }
 
+    //teste denne
+    public List<Answer> retrieveFromQuestionById(long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers where question_id = ?")) {
+                statement.setLong(1, id);
 
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Answer> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
+                }
+            }
+        }
+    }
 
 }
