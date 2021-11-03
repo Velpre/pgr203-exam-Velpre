@@ -1,9 +1,6 @@
 package kristiania.no.http;
 
-import kristiania.no.jdbc.Question;
-import kristiania.no.jdbc.QuestionDao;
-import kristiania.no.jdbc.Survey;
-import kristiania.no.jdbc.SurveyDao;
+import kristiania.no.jdbc.*;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -23,6 +20,8 @@ public class HttpServer {
     private Path rootDirectory;
     private QuestionDao questionDao;
     private SurveyDao surveyDao;
+    private AnswerDao answerDao;
+
 
 
     public HttpServer(int serverPort) throws IOException {
@@ -73,33 +72,43 @@ public class HttpServer {
                 String responseText = "";
 
                 for (Question questions : questionDao.listAll()) {
-                    responseText += "<p>" + questions.getTitle() + "</p>";
+                    responseText += "<p>" + questions.getTitle() + "</p>" +
+                            "<p><label>Answer question: <input type=text name=answer></label></p>";
                 }
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }else if(fileTarget.equals("/api/surveys")) {
+            }else if(fileTarget.equals("/api/addAnswers")){
+                //Her må det jobbes mere med
+
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                Answer a = new Answer(queryMap.get("answer"), 1);
+                answerDao.save(a);
+                String responseText = "You have added answers.";
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            }
+            else if(fileTarget.equals("/api/surveys")) {
 
                 String responseText = "";
 
                 for (Survey survey : surveyDao.listAll()) {
-                    responseText += "<h3>" + survey.getTitle() + "</h3>";
+                    responseText += "<h3>" + survey.getName() + "</h3>";
                     responseText += "<a href=editSurvey?id="+ survey.getId() + ">" + "Add Questions </a>";
                 }
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             } else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                System.out.println(Integer.parseInt(queryMap.get("survey")));
-                Question q = new Question(queryMap.get("title"), queryMap.get("questionText"), Integer.parseInt(queryMap.get("survey")));
+                Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
                 questionDao.save(q);
-                String responseText = "You have added: Title: " + q.getTitle() + " Text:  " + q.getQuestionText() + " Survey: " + q.getSurveyId() + ".";
+                String responseText = "You have added: Question: " + q.getTitle()  + " Survey: " + q.getSurveyId() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
 
             }else if (fileTarget.equals("/api/newSurvey")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Survey s = new Survey(queryMap.get("title"));
                 surveyDao.save(s);
-                String responseText = "You have added: Title: " + s.getTitle() + ".";
+                String responseText = "You have added: Title: " + s.getName() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
             else if (fileTarget.equals("/api/deleteSurvey")) {
@@ -113,20 +122,24 @@ public class HttpServer {
                 String responseText = "";
 
                 for (Survey survey : surveyDao.listAll()) {
-                    responseText += "<option value=" + survey.getId() + ">" + survey.getTitle() + "</option>";
+                    responseText += "<option value=" + survey.getId() + ">" + survey.getName() + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }else if (fileTarget.equals("/api/editSurvey")) {
                 String responseText = "";
                 long parsedQuery = Long.parseLong(query.split("=")[1]);
 
-                responseText = surveyDao.retrieve(parsedQuery).getTitle();
+                int i = 1;
+                for (Survey survey : surveyDao.listAll()) {
+                    responseText += "<option value=" + i++ + ">" + survey.getName() + "</option>";
+                responseText = surveyDao.retrieve(parsedQuery).getName();
 
                 for (Question question : questionDao.retrieveFromSurveyId(parsedQuery)) {
                     responseText += "<p>" + question.getTitle() + "</p>" + "\r\n" +
                             "<button>Delete</button>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            }
             } else {
                 if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                     String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
@@ -198,19 +211,17 @@ public class HttpServer {
         this.surveyDao = surveyDao;
     }
 
-    private static DataSource createDataSource() throws IOException {
-        Properties properties = new Properties();
-        try (FileReader reader = new FileReader("pgr203.properties")) {
-            properties.load(reader);
-        }
+    public void setAnswerDao(AnswerDao answerDao) {
+        this.answerDao = answerDao;
+    }
+
+
+    private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl(properties.getProperty(
-                "dataSource.url",
-                "jdbc:postgresql://localhost:5432/question_db"
-        ));
-        dataSource.setUser(properties.getProperty("dataSource.username", "question_dbuser"));
-        dataSource.setPassword(properties.getProperty("dataSource.password"));
-        //Flyway.configure().dataSource(dataSource).load().migrate();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
+        dataSource.setUser("question_dbuser");
+        dataSource.setPassword("P545v#C@ZZ");
+        Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
 
@@ -219,8 +230,7 @@ public class HttpServer {
         HttpServer httpServer = new HttpServer(8080);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
-        Question q1 = new Question("title1", "text1", 1);
-        Question q2 = new Question("title2", "text2", 2);
+        httpServer.answerDao = new AnswerDao(createDataSource());
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
     }

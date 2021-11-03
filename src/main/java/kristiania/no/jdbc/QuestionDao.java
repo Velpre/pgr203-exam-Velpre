@@ -14,13 +14,12 @@ public class QuestionDao {
     public void save(Question question) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into questions (title, question_text, survey_id) values (?, ?, ?)",
+                    "insert into questions (title, survey_id) values (?, ?)",
                     Statement.RETURN_GENERATED_KEYS
 
             )) {
                 statement.setString(1, question.getTitle());
-                statement.setString(2, question.getQuestionText());
-                statement.setInt(3, question.getSurveyId());
+                statement.setInt(2, question.getSurveyId());
 
                 statement.executeUpdate();
 
@@ -68,7 +67,6 @@ public class QuestionDao {
         Question question = new Question();
         question.setId(rs.getLong("id"));
         question.setTitle(rs.getString("title"));
-        question.setQuestionText(rs.getString("question_text"));
         question.setSurveyId(rs.getInt("survey_id"));
         return question;
     }

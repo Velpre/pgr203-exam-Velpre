@@ -76,14 +76,20 @@ public class HttpServerTest {
     }
 
 
+    //Denne testen ble forandret i forbildense med at vi printer ut input feil under spørsmål på api/questions
+    //Må eventuelt finne bedre ting å teste på istedenfor å teste på messageBody.
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
-
+        //question1 & question2 objekt blir lagt til i DB gjennom V005 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
         assertEquals(
-                "<p>question1</p><p>question2</p>",
+                "<p>question1</p>" +
+                        "<p><label>Answer question: <input type=text name=answer></label></p>" +
+                        "<p>question2</p>" +
+                        "<p><label>Answer question: <input type=text name=answer></label></p>"
+                ,
                 client.getMessageBody()
         );
     }
@@ -93,6 +99,7 @@ public class HttpServerTest {
     void shouldReturnCategoriesFromServer() throws IOException, SQLException {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
         server.setSurveyDao(surveyDao);
+        //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/surveyOptions");
         assertEquals(
                 "<option value=1>survey1</option>" +
@@ -102,8 +109,6 @@ public class HttpServerTest {
         );
     }
 
-
-
     @Test
     void shouldAddQuestions() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
@@ -112,6 +117,7 @@ public class HttpServerTest {
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1");
         assertEquals(200, postClient.getStatusCode());
         Question q = server.getQuestions().get(0);
+        //question1 blir lagt til i DB gjennom V005 migrering
         assertEquals("question1", q.getTitle());
     }
 
