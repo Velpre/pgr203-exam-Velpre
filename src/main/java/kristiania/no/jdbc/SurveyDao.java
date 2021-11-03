@@ -18,7 +18,7 @@ public class SurveyDao {
                     Statement.RETURN_GENERATED_KEYS
 
             )) {
-                statement.setString(1, survey.getTitle());
+                statement.setString(1, survey.getName());
 
 
                 statement.executeUpdate();
@@ -49,7 +49,7 @@ public class SurveyDao {
     private Survey readFromResultSet(ResultSet rs) throws SQLException {
         Survey survey = new Survey();
         survey.setId(rs.getLong("id"));
-        survey.setTitle(rs.getString("survey_name"));
+        survey.setName(rs.getString("survey_name"));
 
         return survey;
     }

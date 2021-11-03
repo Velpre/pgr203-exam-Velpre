@@ -4,6 +4,9 @@ public class Survey {
     long id;
     private String surveyName;
 
+    public Survey(){
+
+    }
     public Survey(String surveyName) {
         this.surveyName = surveyName;
     }
