@@ -67,7 +67,7 @@ public class HttpServer {
                 String responseText = "<p>Hello " + yourName + "</p>";
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            } else if(fileTarget.equals("/api/questions")) {
+            } else if(fileTarget.equals("/api/listQuestions")) {
 
                 String responseText = "";
 
@@ -84,17 +84,6 @@ public class HttpServer {
                 Answer a = new Answer(queryMap.get("answer"), 1);
                 answerDao.save(a);
                 String responseText = "You have added answers.";
-                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }
-            else if(fileTarget.equals("/api/surveys")) {
-
-                String responseText = "";
-
-                for (Survey survey : surveyDao.listAll()) {
-                    responseText += "<h3>" + survey.getName() + "</h3>";
-                    responseText += "<a href=editSurvey?id="+ survey.getId() + ">" + "Add Questions </a>";
-                }
-
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             } else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
@@ -118,28 +107,13 @@ public class HttpServer {
                 String responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
-            else if (fileTarget.equals("/api/surveyOptions")) {
+            else if (fileTarget.equals("/api/listSurveyOptions")) {
                 String responseText = "";
 
                 for (Survey survey : surveyDao.listAll()) {
                     responseText += "<option value=" + survey.getId() + ">" + survey.getName() + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }else if (fileTarget.equals("/api/editSurvey")) {
-                String responseText = "";
-                long parsedQuery = Long.parseLong(query.split("=")[1]);
-
-                int i = 1;
-                for (Survey survey : surveyDao.listAll()) {
-                    responseText += "<option value=" + i++ + ">" + survey.getName() + "</option>";
-                responseText = surveyDao.retrieve(parsedQuery).getName();
-
-                for (Question question : questionDao.retrieveFromSurveyId(parsedQuery)) {
-                    responseText += "<p>" + question.getTitle() + "</p>" + "\r\n" +
-                            "<button>Delete</button>";
-                }
-                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }
             } else {
                 if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                     String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
@@ -220,14 +194,14 @@ public class HttpServer {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
         dataSource.setUser("question_dbuser");
-        dataSource.setPassword("P545v#C@ZZ");
+        dataSource.setPassword("sKKA4rPjM6ZQ2eNH8MxQ");
         Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8080);
+        HttpServer httpServer = new HttpServer(8082);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         httpServer.answerDao = new AnswerDao(createDataSource());

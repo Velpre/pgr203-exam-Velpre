@@ -83,7 +83,7 @@ public class HttpServerTest {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
         //question1 & question2 objekt blir lagt til i DB gjennom V005 migrering
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/questions");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
         assertEquals(
                 "<p>question1</p>" +
                         "<p><label>Answer question: <input type=text name=answer></label></p>" +
@@ -100,7 +100,7 @@ public class HttpServerTest {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
         server.setSurveyDao(surveyDao);
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/surveyOptions");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
                 "<option value=1>survey1</option>" +
                         "<option value=2>survey2</option>"
