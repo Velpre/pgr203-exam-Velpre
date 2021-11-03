@@ -8,22 +8,38 @@
 <body>
 <h1>All Questions</h1>
 
-<form action="/api/addAnswers" method="post">
-    <div id="questions"></div>
-    <button>Submit</button>
+<h3>Answer Questions:</h3>
+<form action="/api/listQuestions" method="post" onsubmit="fetchQuestions()">
+    <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
+    <button>Select</button>
 </form>
 
+<div id = questions></div>
 <div>
     <a href="index.html">Home</a>
 </div>
 
 </body>
 <script>
+    fetch("/api/listSurveyOptions").then(function(res){
+        return res.text();
+    }).then(function(text){
+        document.getElementById("survey1").innerHTML=text;
+        document.getElementById("survey2").innerHTML=text;
+    });
+
     fetch("/api/listQuestions")
         .then(function(response) {
             return response.text();
         }).then(function(text) {
         document.getElementById("questions").innerHTML = text;
     });
+
+    const fetchQuestions = function () {
+
+        setTimeout(function(){window.location.reload();},10);
+
+
+    }
 </script>
 </html>

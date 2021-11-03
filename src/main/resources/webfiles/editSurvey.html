@@ -10,17 +10,17 @@
     <h1>Edit Survey</h1>
     <h3>Add survey</h3>
     <!--onsubmit="setTimeout(function(){window.location.reload();},10);"-->
-    <form action="/api/newSurvey" method="post">
+    <form action="/api/newSurvey" method="post" onsubmit="setTimeout(function(){window.location.reload();},10);">
         <p><label>Add survey name: <input type="text" name="title"></label></p>
         <button>Add</button>
     </form>
     <h3>Delete</h3>
-    <form action="/api/deleteSurvey" method="post">
+    <form action="/api/deleteSurvey" method="post" onsubmit="setTimeout(function(){window.location.reload();},10);">
         <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
         <button>Delete</button>
     </form>
     <h3>Add question</h3>
-    <form action="/api/newQuestion" method="post">
+    <form action="/api/newQuestion" method="post" onsubmit="setTimeout(function(){window.location.reload();},10);">
         <p><label>Add question: <input type="text" name="title"></label></p>
         <p><label>Choose survey <select name="survey" id="survey2"></select></label></p>
         <button>Submit</button>

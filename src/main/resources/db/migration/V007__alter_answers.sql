@@ -1,5 +1,5 @@
 alter table answers
-    DROP constraint answers_question_id_fkey;
+    DROP constraint fk_questions_answer;
 alter table answers
     add constraint FK_questions_answer foreign key (question_id)
         references questions(id)

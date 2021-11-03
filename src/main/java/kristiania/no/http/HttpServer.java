@@ -21,6 +21,7 @@ public class HttpServer {
     private QuestionDao questionDao;
     private SurveyDao surveyDao;
     private AnswerDao answerDao;
+    int savedQuery;
 
 
 
@@ -70,12 +71,14 @@ public class HttpServer {
             } else if(fileTarget.equals("/api/listQuestions")) {
 
                 String responseText = "";
-
-                for (Question questions : questionDao.listAll()) {
-                    responseText += "<p>" + questions.getTitle() + "</p>" +
-                            "<p><label>Answer question: <input type=text name=answer></label></p>";
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                if (queryMap.size() != 0){
+                    savedQuery = Integer.parseInt(queryMap.get("survey"));
                 }
 
+                for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
+                    responseText += "<p>" + question.getTitle() + "</p>";
+                }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }else if(fileTarget.equals("/api/addAnswers")){
                 //Her må det jobbes mere med
@@ -85,13 +88,13 @@ public class HttpServer {
                 answerDao.save(a);
                 String responseText = "You have added answers.";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
             } else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
                 questionDao.save(q);
                 String responseText = "You have added: Question: " + q.getTitle()  + " Survey: " + q.getSurveyId() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-
 
             }else if (fileTarget.equals("/api/newSurvey")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
@@ -149,11 +152,13 @@ public class HttpServer {
 
     private Map<String, String> parseRequestParameters(String query) {
         Map<String,String> queryMap = new HashMap<>();
-        for (String queryParameter : query.split("&")) {
-            int equalsPos = queryParameter.indexOf("=");
-            String parameterName = queryParameter.substring(0,equalsPos);
-            String parameterValue = queryParameter.substring(equalsPos+1);
-            queryMap.put(parameterName,parameterValue);
+        if (query != null){
+            for (String queryParameter : query.split("&")) {
+                int equalsPos = queryParameter.indexOf("=");
+                String parameterName = queryParameter.substring(0,equalsPos);
+                String parameterValue = queryParameter.substring(equalsPos+1);
+                queryMap.put(parameterName,parameterValue);
+            }
         }
         return queryMap;
     }
@@ -201,7 +206,7 @@ public class HttpServer {
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8082);
+        HttpServer httpServer = new HttpServer(8010);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         httpServer.answerDao = new AnswerDao(createDataSource());
