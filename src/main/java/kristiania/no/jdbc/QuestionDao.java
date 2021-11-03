@@ -32,7 +32,7 @@ public class QuestionDao {
         }
     }
 
-
+    //fjerne denne?
     public Question retrieve(long id) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement("select * from questions where id = ?")) {
@@ -42,6 +42,23 @@ public class QuestionDao {
                     rs.next();
 
                     return readFromResultSet(rs);
+                }
+            }
+        }
+    }
+
+    //teste denne
+    public List<Question> retrieveFromSurveyId(long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from questions where survey_id = ?")) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Question> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
                 }
             }
         }
@@ -66,6 +83,18 @@ public class QuestionDao {
                     }
                     return result;
                 }
+            }
+        }
+    }
+    //Teste denne
+    public void delete(int id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "delete from questions where id = ?"
+            )) {
+                statement.setLong(1, id);
+
+                statement.executeUpdate();
             }
         }
     }
