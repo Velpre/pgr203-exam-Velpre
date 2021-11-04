@@ -84,6 +84,23 @@ public class AnswerDao {
         }
     }
 
+    //Denne må testes
+    public List<Answer> retrieveFromUserId(long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers where user_id = ?")) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Answer> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+
     private Answer readFromResultSet(ResultSet rs) throws SQLException {
         Answer answer  = new Answer();
         answer.setId(rs.getLong("id"));

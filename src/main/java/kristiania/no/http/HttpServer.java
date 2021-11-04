@@ -31,7 +31,9 @@ public class HttpServer {
     private AnswerDao answerDao;
     private UserDao userDao;
     private OptionDao optionDao;
-    private int savedQuery;
+    private int userId;
+    private int surveyId;
+
 
 
 
@@ -82,12 +84,12 @@ public class HttpServer {
                 String responseText = "";
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 if (queryMap.size() != 0){
-                    savedQuery = Integer.parseInt(queryMap.get("survey"));
+                    surveyId = Integer.parseInt(queryMap.get("survey"));
                 }
                 responseText += "<p>Write username:</p>";
                 responseText += "<input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
 
-                for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
+                for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
                     for (Option option : optionDao.retrieveFromQuestionId(question.getId())){
                         responseText += "<label class =\"radioLabel\"><input required type=\"radio\" id=\"myRange\" name=\"" + question.getId() + "\" value=\"" + option.getOptionName() +"\">" + option.getOptionName() +"</label>";
@@ -101,13 +103,18 @@ public class HttpServer {
                 String responseText = "";
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 if (queryMap.size() != 0){
-                    savedQuery = Integer.parseInt(queryMap.get("survey"));
+                    surveyId = Integer.parseInt(queryMap.get("survey"));
+                    userId = Integer.parseInt(queryMap.get("user"));
                 }
 
-                for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
+
+
+                for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
-                    for (Answer answer : answerDao.retrieveFromQuestionId(question.getId())){
-                        responseText += "<p>" + answer.getAnswer() + "</p>";
+                    for (Answer answerByQuestionId : answerDao.retrieveFromQuestionId(question.getId())){
+                        if(answerByQuestionId.getUserId() == userId ){
+                            responseText += "<p>" + answerByQuestionId.getAnswer() + "</p>\r\n";
+                        }
                     }
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
@@ -169,7 +176,16 @@ public class HttpServer {
                     responseText += "<option value=" + survey.getId() + ">" + survey.getName() + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            } else {
+            }
+            else if(fileTarget.equals("/api/listUsers")){
+                String responseText = "";
+                for (User user : userDao.listAll()) {
+                    responseText += "<option value=" + user.getId() + ">" + user.getUserName() + "</option>";
+                }
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
+            }
+            else {
                 if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                     String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
                     String contentType = "text/plain";
