@@ -1,10 +1,13 @@
 package kristiania.no.http;
 
 import kristiania.no.jdbc.*;
+import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
 import kristiania.no.jdbc.survey.SurveyDao;
 import org.junit.jupiter.api.Test;
+
+import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -107,18 +110,20 @@ public class HttpServerTest {
         );
     }
 
-    /*
+
     @Test
     void shouldAddQuestions() throws IOException, SQLException {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        DataSource dataSource = TestData.testDataSource();
+        QuestionDao questionDao = new QuestionDao(dataSource);
+        OptionDao optionDao = new OptionDao(dataSource);
         server.setQuestionDao(questionDao);
+        server.setOptionDao(optionDao);
 
-        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1");
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1&option1=o1&option2=o2&option3=o3");
         assertEquals(200, postClient.getStatusCode());
         Question q = server.getQuestions().get(0);
         //question1 blir lagt til i DB gjennom V005 migrering
         assertEquals("question1", q.getTitle());
     }
 
-     */
 }

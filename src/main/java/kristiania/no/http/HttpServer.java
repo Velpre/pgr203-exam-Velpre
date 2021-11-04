@@ -93,7 +93,7 @@ public class HttpServer {
                        // responseText += "<label>" + option.getOptionName() + "</label>";
                         responseText += "<label class =\"radioLabel\"><input type=\"radio\" id=\"myRange\" name=\"" + question.getId() + "\" value=\"" + option.getOptionName() +"\">" + option.getOptionName() +"</label>";
                     }
-
+                    //Finne ut om vi skal ha slider hele tiden eller ikke
                     //responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"5\" value=\"3\" class=\"slider\" id=\"myRange\">";
                 }
                 responseText += "<br><button>Answer</button>";
