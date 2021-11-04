@@ -103,8 +103,7 @@ public class HttpServerTest {
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
-                "<option value=1>survey1</option>" +
-                        "<option value=2>survey2</option>"
+                "<option value=1>Sport_Survey</option><option value=2>Mat_Survey</option>"
                 ,
                 client.getMessageBody()
         );
@@ -123,7 +122,7 @@ public class HttpServerTest {
         assertEquals(200, postClient.getStatusCode());
         Question q = server.getQuestions().get(0);
         //question1 blir lagt til i DB gjennom V005 migrering
-        assertEquals("question1", q.getTitle());
+        assertEquals("Hvilken football spiller liker du?", q.getTitle());
     }
 
 }

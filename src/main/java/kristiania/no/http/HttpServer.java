@@ -90,15 +90,29 @@ public class HttpServer {
                 for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
                     for (Option option : optionDao.retrieveFromQuestionId(question.getId())){
-                       // responseText += "<label>" + option.getOptionName() + "</label>";
-                        responseText += "<label class =\"radioLabel\"><input type=\"radio\" id=\"myRange\" name=\"" + question.getId() + "\" value=\"" + option.getOptionName() +"\">" + option.getOptionName() +"</label>";
+                        responseText += "<label class =\"radioLabel\"><input required type=\"radio\" id=\"myRange\" name=\"" + question.getId() + "\" value=\"" + option.getOptionName() +"\">" + option.getOptionName() +"</label>";
                     }
                     //Finne ut om vi skal ha slider hele tiden eller ikke
                     //responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"5\" value=\"3\" class=\"slider\" id=\"myRange\">";
                 }
                 responseText += "<br><button>Answer</button>";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            }else if(fileTarget.equals("/api/answerQuestions")){
+            }else if(fileTarget.equals("/api/listAnswers")){
+                String responseText = "";
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                if (queryMap.size() != 0){
+                    savedQuery = Integer.parseInt(queryMap.get("survey"));
+                }
+
+                for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
+                    responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
+                    for (Answer answer : answerDao.retrieveFromQuestionId(question.getId())){
+                        responseText += "<p>" + answer.getAnswer() + "</p>";
+                    }
+                }
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
+            } else if(fileTarget.equals("/api/answerQuestions")){
                 String responseText = "You have added: ";
 
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
@@ -111,6 +125,7 @@ public class HttpServer {
                 for (int i = 0; i < keySet.length; i++) {
                     Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
                     answerDao.save(a);
+
                     responseText += " " + a.getAnswer();
                 }
 

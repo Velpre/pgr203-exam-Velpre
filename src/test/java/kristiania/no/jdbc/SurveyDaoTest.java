@@ -23,9 +23,10 @@ public class SurveyDaoTest {
 
     @Test
     void shouldListSavedSurvey() throws SQLException {
+        //Verdier insertes i DAO ved V005 migrering
         assertThat(dao.listAll())
                 .extracting(Survey::getName)
-                .contains("survey1", "survey2");
+                .contains("Sport_Survey", "Mat_Survey");
     }
     @Test
     void shouldAddAndDeleteSurvey() throws SQLException {
