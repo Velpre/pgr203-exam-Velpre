@@ -17,18 +17,6 @@ public abstract class AbstractDao<T> {
         this.dataSource = dataSource;
     }
 
-    static DataSource createDataSource() {
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost/person_db");
-        dataSource.setUser("person_dbuser");
-        dataSource.setPassword("*****");
-
-        Flyway flyway = Flyway.configure().dataSource(dataSource).load();
-        flyway.migrate();
-
-        return dataSource;
-    }
-
     protected T retrieveById(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {

@@ -18,6 +18,11 @@ public class HttpMessage {
         }
     }
 
+    public HttpMessage(String startLine, String messageBody) {
+        this.startLine = startLine;
+        this.messageBody = messageBody;
+    }
+
     public int getContentLength() {
         return Integer.parseInt(headerFields.get("Content-Length"));
     }
@@ -53,5 +58,13 @@ public class HttpMessage {
         int expectedNewline = socket.getInputStream().read();
         assert expectedNewline == '\n';
         return buffer.toString();
+    }
+    public void write(Socket socket) throws IOException {
+        String response = startLine + "\r\n" +
+                "Content-Length: " + messageBody.length() + "\r\n" +
+                "Connection: close\r\n" +
+                "\r\n" +
+                messageBody;
+        socket.getOutputStream().write(response.getBytes());
     }
 }

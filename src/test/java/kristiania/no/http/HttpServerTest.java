@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.List;
 
 public class HttpServerTest {
     HttpServer server = new HttpServer(0);
@@ -67,10 +69,8 @@ public class HttpServerTest {
 
     @Test
     void shouldHandelMoreThanOneRequest() throws IOException {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-        server.setQuestionDao(questionDao);
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listQuestions").getStatusCode());
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listQuestions").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
     }
 
 
@@ -83,7 +83,8 @@ public class HttpServerTest {
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-        server.setQuestionDao(questionDao);
+        OptionDao optionDao = new OptionDao(TestData.testDataSource());
+        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
 
 
         //question1 & question2 objekt blir lagt til i DB gjennom V005 migrering
@@ -97,9 +98,9 @@ public class HttpServerTest {
 
 
     @Test
-    void shouldReturnCategoriesFromServer() throws IOException, SQLException {
+    void shouldReturnOptionsFromServer() throws IOException, SQLException {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
-        server.setSurveyDao(surveyDao);
+        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
@@ -116,14 +117,17 @@ public class HttpServerTest {
         DataSource dataSource = TestData.testDataSource();
         QuestionDao questionDao = new QuestionDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
-        server.setQuestionDao(questionDao);
-        server.setOptionDao(optionDao);
+
+        server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
 
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1&option1=o1&option2=o2&option3=o3");
         assertEquals(200, postClient.getStatusCode());
-        Question q = server.getQuestions().get(0);
-        //question1 blir lagt til i DB gjennom V005 migrering
-        assertEquals("question1", q.getTitle());
+        List<Question> questionList = questionDao.listAll();
+
+        assertThat(questionList)
+                .extracting(Question::getId)
+                .contains(1L);
+
     }
 
 }
