@@ -98,18 +98,9 @@ public class HttpServer {
                     answerDao.save(a);
                 }
 
-                String responseText = " have added answers.";
-                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-
-            }else if(fileTarget.equals("/api/addAnswers")){
-                /*
-                //Her må det jobbes mere med
-                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                Answer a = new Answer(queryMap.get("answer"), 1);
-                answerDao.save(a);
                 String responseText = "You have added answers.";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-                */
+
             } else if (fileTarget.equals("/api/newQuestion")) {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
