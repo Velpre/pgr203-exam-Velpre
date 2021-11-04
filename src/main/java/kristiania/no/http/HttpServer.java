@@ -85,20 +85,23 @@ public class HttpServer {
                 responseText += "<br><button>Answer</button>";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }else if(fileTarget.equals("/api/answerQuestions")){
+                String responseText = "You have added: ";
+
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 User user = new User(queryMap.get("userName"));
                 userDao.save(user);
                 queryMap.remove("userName");
-
 
                 Object[] keySet = queryMap.keySet().toArray();
 
                 for (int i = 0; i < keySet.length; i++) {
                     Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
                     answerDao.save(a);
+                    responseText += " " + a.getAnswer();
                 }
 
-                String responseText = "You have added answers.";
+                responseText += " with user" + user.getUserName();
+
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
             } else if (fileTarget.equals("/api/newQuestion")) {
