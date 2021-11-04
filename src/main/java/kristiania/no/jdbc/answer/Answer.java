@@ -4,14 +4,10 @@ public class Answer {
     long id;
     String answer;
     int questionId;
-
-
-
     int userId;
 
-    public Answer(){
+    public Answer(){}
 
-    }
     public Answer(String answer, int questionId, int userId) {
         this.answer = answer;
         this.questionId = questionId;

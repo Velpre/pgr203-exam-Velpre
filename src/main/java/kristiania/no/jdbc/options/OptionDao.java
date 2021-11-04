@@ -1,18 +1,21 @@
 package kristiania.no.jdbc.options;
 
-import kristiania.no.jdbc.options.Option;
-import kristiania.no.jdbc.question.Question;
-
+import kristiania.no.jdbc.AbstractDao;
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class OptionDao {
-    private final DataSource dataSource;
-
+public class OptionDao extends AbstractDao {
     public OptionDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
+    }
+    @Override
+    protected Option mapFromResultSet(ResultSet rs) throws SQLException {
+        Option options  = new Option();
+        options.setId(rs.getLong("id"));
+        options.setOptionName(rs.getString("option_name"));
+        options.setQuestionId(rs.getInt("question_id"));
+        return options;
     }
 
     public void save(Option option) throws SQLException {
@@ -35,40 +38,10 @@ public class OptionDao {
     }
 
     public Option retrieve(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from options where id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-
-                    return readFromResultSet(rs);
-                }
-            }
-        }
-    }
-
-    private Option readFromResultSet(ResultSet rs) throws SQLException {
-        Option options  = new Option();
-        options.setId(rs.getLong("id"));
-        options.setOptionName(rs.getString("option_name"));
-        options.setQuestionId(rs.getInt("question_id"));
-        return options;
+        return (Option) retrieve(id,"select * from options where id = ?");
     }
 
     public List<Option> retrieveFromQuestionId(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from options where question_id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<Option> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(readFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
+        return retrieveFromParentId(id, "select * from options where question_id = ?");
     }
 }
