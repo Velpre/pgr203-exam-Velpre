@@ -53,15 +53,13 @@ public class AnswerDao {
         answer.setId(rs.getLong("id"));
         answer.setAnswer(rs.getString("answer"));
         answer.setQuestionId(rs.getInt("question_id"));
+        answer.setUserId(rs.getInt("user_id"));
         return answer;
     }
 
-    //teste denne
-    public List<Answer> retrieveFromQuestionById(long id) throws SQLException {
+    public List<Answer> listAll() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from answers where question_id = ?")) {
-                statement.setLong(1, id);
-
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers")) {
                 try (ResultSet rs = statement.executeQuery()) {
                     ArrayList<Answer> result = new ArrayList<>();
                     while (rs.next()) {
@@ -69,6 +67,18 @@ public class AnswerDao {
                     }
                     return result;
                 }
+            }
+        }
+    }
+
+    public void delete(int id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "delete from answers where id = ?"
+            )) {
+                statement.setLong(1, id);
+
+                statement.executeUpdate();
             }
         }
     }

@@ -6,24 +6,21 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<h1>All Questions</h1>
+    <h1>Surveys</h1>
 
-<h3>Answer Questions:</h3>
-<form action="/api/listQuestions" method="post" onsubmit="fetchQuestions()">
-    <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
-    <button>Select</button>
-</form>
-
-<form action="/api/answerQuestions" method="post" id=questions>
-    <label>UserName:</label>
-    <input type="text" id="userName" name="userName"><br>
-</form>
-
-
-
-<div>
-    <a href="index.html">Home</a>
-</div>
+    <h3>Answer Surveys:</h3>
+    <form action="/api/listQuestions" method="post" onsubmit="fetchQuestions()">
+        <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
+        <button>Select</button>
+    </form>
+    <div>
+        <h3>Survey</h3>
+        <form action="/api/answerQuestions" method="post" id=questions>
+        </form>
+    </div>
+    <div>
+        <a href="index.html">Home</a>
+    </div>
 
 </body>
 <script>

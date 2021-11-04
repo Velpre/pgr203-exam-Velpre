@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Question</title>
+    <title>Edit Surveys</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <main>
     <h1>Edit Survey</h1>
     <h3>Add survey</h3>
-    <!--onsubmit="setTimeout(function(){window.location.reload();},10);"-->
     <form action="/api/newSurvey" method="post" onsubmit="setTimeout(function(){window.location.reload();},10);">
         <p><label>Add survey name: <input type="text" name="title"></label></p>
         <button>Add</button>

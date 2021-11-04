@@ -75,7 +75,8 @@ public class HttpServer {
                 if (queryMap.size() != 0){
                     savedQuery = Integer.parseInt(queryMap.get("survey"));
                 }
-                responseText += "<input type=\"text\" id=\"userName\" name=\"userName\"><br>";
+                responseText += "<p>Write username:</p>";
+                responseText += "<input type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
 
                 for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
@@ -85,9 +86,6 @@ public class HttpServer {
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }else if(fileTarget.equals("/api/answerQuestions")){
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                System.out.println(queryMap);
-                System.out.println(queryMap.get("userName"));
-
                 User user = new User(queryMap.get("userName"));
                 userDao.save(user);
                 queryMap.remove("userName");
@@ -96,13 +94,11 @@ public class HttpServer {
                 Object[] keySet = queryMap.keySet().toArray();
 
                 for (int i = 0; i < keySet.length; i++) {
-                    System.out.println(queryMap.get(keySet[i]));
                     Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
                     answerDao.save(a);
                 }
 
-
-                String responseText = "You have added answers.";
+                String responseText = " have added answers.";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
             }else if(fileTarget.equals("/api/addAnswers")){
@@ -207,7 +203,6 @@ public class HttpServer {
     public void setSurveyDao(SurveyDao surveyDao) {
         this.surveyDao = surveyDao;
     }
-
     public void setAnswerDao(AnswerDao answerDao) {
         this.answerDao = answerDao;
     }
@@ -224,7 +219,7 @@ public class HttpServer {
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8010);
+        HttpServer httpServer = new HttpServer(8070);
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         httpServer.answerDao = new AnswerDao(createDataSource());

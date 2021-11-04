@@ -4,6 +4,9 @@ public class Answer {
     long id;
     String answer;
     int questionId;
+
+
+
     int userId;
 
     public Answer(){
@@ -12,6 +15,14 @@ public class Answer {
     public Answer(String answer, int questionId, int userId) {
         this.answer = answer;
         this.questionId = questionId;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
