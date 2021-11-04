@@ -107,8 +107,6 @@ public class HttpServer {
                     userId = Integer.parseInt(queryMap.get("user"));
                 }
 
-
-
                 for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
                     for (Answer answerByQuestionId : answerDao.retrieveFromQuestionId(question.getId())){
