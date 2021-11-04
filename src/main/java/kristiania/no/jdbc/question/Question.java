@@ -1,4 +1,4 @@
-package kristiania.no.jdbc;
+package kristiania.no.jdbc.question;
 
 public class Question {
     long id;

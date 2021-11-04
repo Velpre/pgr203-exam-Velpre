@@ -1,10 +1,13 @@
 package kristiania.no.http;
 
-import kristiania.no.jdbc.Question;
-import kristiania.no.jdbc.QuestionDao;
-import kristiania.no.jdbc.SurveyDao;
-import kristiania.no.jdbc.TestData;
+import kristiania.no.jdbc.*;
+import kristiania.no.jdbc.options.OptionDao;
+import kristiania.no.jdbc.question.Question;
+import kristiania.no.jdbc.question.QuestionDao;
+import kristiania.no.jdbc.survey.SurveyDao;
 import org.junit.jupiter.api.Test;
+
+import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,8 +67,10 @@ public class HttpServerTest {
 
     @Test
     void shouldHandelMoreThanOneRequest() throws IOException {
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
+        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        server.setQuestionDao(questionDao);
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listQuestions").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listQuestions").getStatusCode());
     }
 
 
@@ -75,20 +80,16 @@ public class HttpServerTest {
         assertEquals("<p>Hello Veljko, Premovic</p>", client.getMessageBody());
     }
 
-
-    //Denne testen ble forandret i forbildense med at vi printer ut input feil under spørsmål på api/questions
-    //Må eventuelt finne bedre ting å teste på istedenfor å teste på messageBody.
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
+
+
         //question1 & question2 objekt blir lagt til i DB gjennom V005 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
         assertEquals(
-                "<p>question1</p>" +
-                        "<p><label>Answer question: <input type=text name=answer></label></p>" +
-                        "<p>question2</p>" +
-                        "<p><label>Answer question: <input type=text name=answer></label></p>"
+                "<p>Write username:</p><input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br><br><button>Answer</button>"
                 ,
                 client.getMessageBody()
         );
@@ -109,17 +110,20 @@ public class HttpServerTest {
         );
     }
 
+
     @Test
     void shouldAddQuestions() throws IOException, SQLException {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        DataSource dataSource = TestData.testDataSource();
+        QuestionDao questionDao = new QuestionDao(dataSource);
+        OptionDao optionDao = new OptionDao(dataSource);
         server.setQuestionDao(questionDao);
+        server.setOptionDao(optionDao);
 
-        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1");
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1&option1=o1&option2=o2&option3=o3");
         assertEquals(200, postClient.getStatusCode());
         Question q = server.getQuestions().get(0);
         //question1 blir lagt til i DB gjennom V005 migrering
         assertEquals("question1", q.getTitle());
     }
-
 
 }

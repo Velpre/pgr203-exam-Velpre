@@ -1,4 +1,4 @@
-package kristiania.no.jdbc;
+package kristiania.no.jdbc.question;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -47,6 +47,7 @@ public class QuestionDao {
     }
 
     //teste denne
+
     public List<Question> retrieveFromSurveyId(long id) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement("select * from questions where survey_id = ?")) {
@@ -62,6 +63,7 @@ public class QuestionDao {
             }
         }
     }
+
 
     private Question readFromResultSet(ResultSet rs) throws SQLException {
         Question question = new Question();

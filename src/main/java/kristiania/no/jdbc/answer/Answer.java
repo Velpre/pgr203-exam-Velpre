@@ -1,16 +1,29 @@
-package kristiania.no.jdbc;
+package kristiania.no.jdbc.answer;
 
 public class Answer {
     long id;
     String answer;
     int questionId;
 
+
+
+    int userId;
+
     public Answer(){
 
     }
-    public Answer(String answer, int questionId) {
+    public Answer(String answer, int questionId, int userId) {
         this.answer = answer;
         this.questionId = questionId;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public long getId() {
@@ -35,5 +48,9 @@ public class Answer {
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
+    }
+
+    public int userId() {
+        return userId;
     }
 }
