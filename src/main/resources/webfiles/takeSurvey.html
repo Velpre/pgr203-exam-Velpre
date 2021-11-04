@@ -28,7 +28,6 @@
         return res.text();
     }).then(function(text){
         document.getElementById("survey1").innerHTML=text;
-        document.getElementById("survey2").innerHTML=text;
     });
 
     fetch("/api/listQuestions")
