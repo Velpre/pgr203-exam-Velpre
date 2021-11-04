@@ -2,6 +2,8 @@ package kristiania.no.http;
 
 import kristiania.no.jdbc.answer.Answer;
 import kristiania.no.jdbc.answer.AnswerDao;
+import kristiania.no.jdbc.options.Option;
+import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
 import kristiania.no.jdbc.survey.Survey;
@@ -28,7 +30,8 @@ public class HttpServer {
     private SurveyDao surveyDao;
     private AnswerDao answerDao;
     private UserDao userDao;
-    int savedQuery;
+    private OptionDao optionDao;
+    private int savedQuery;
 
 
 
@@ -82,11 +85,16 @@ public class HttpServer {
                     savedQuery = Integer.parseInt(queryMap.get("survey"));
                 }
                 responseText += "<p>Write username:</p>";
-                responseText += "<input type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
+                responseText += "<input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
 
                 for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
-                    responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"100\" value=\"50\" class=\"slider\" id=\"myRange\">";
+                    for (Option option : optionDao.retrieveFromQuestionId(question.getId())){
+                       // responseText += "<label>" + option.getOptionName() + "</label>";
+                        responseText += "<label class =\"radioLabel\"><input type=\"radio\" id=\"myRange\" name=\"" + question.getId() + "\" value=\"" + option.getOptionName() +"\">" + option.getOptionName() +"</label>";
+                    }
+
+                    //responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"5\" value=\"3\" class=\"slider\" id=\"myRange\">";
                 }
                 responseText += "<br><button>Answer</button>";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
@@ -114,7 +122,13 @@ public class HttpServer {
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
                 Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
                 questionDao.save(q);
-                String responseText = "You have added: Question: " + q.getTitle()  + " Survey: " + q.getSurveyId() + ".";
+                Option o = new Option(queryMap.get("option1"), (int) q.getId());
+                Option o1 = new Option(queryMap.get("option2"), (int) q.getId());
+                Option o2 = new Option(queryMap.get("option3"), (int) q.getId());
+                optionDao.save(o);
+                optionDao.save(o1);
+                optionDao.save(o2);
+                String responseText = "You have added: Question: " + q.getTitle()  + " Survey: " + q.getSurveyId() + " Options:" + o.getOptionName() + " " + o1.getOptionName() + " " + o2.getOptionName() + ".";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
             }else if (fileTarget.equals("/api/newSurvey")) {
@@ -125,10 +139,12 @@ public class HttpServer {
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
             else if (fileTarget.equals("/api/deleteSurvey")) {
-                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-
-                surveyDao.delete(Integer.parseInt(queryMap.get("survey")));
-                String responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
+                String responseText = "";
+                if (httpMessage.messageBody != ""){
+                    Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                    surveyDao.delete(Integer.parseInt(queryMap.get("survey")));
+                    responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
+                }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
             else if (fileTarget.equals("/api/listSurveyOptions")) {
@@ -207,6 +223,10 @@ public class HttpServer {
         this.answerDao = answerDao;
     }
 
+    public void setOptionDao(OptionDao optionDao) {
+        this.optionDao = optionDao;
+    }
+
 
     private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
@@ -221,10 +241,13 @@ public class HttpServer {
     public static void main(String[] args) throws IOException {
         HttpServer httpServer = new HttpServer(8070);
         System.out.println("Server running at: http://localhost:"+ httpServer.getPort() + "/");
-        httpServer.questionDao =  new QuestionDao(createDataSource());
-        httpServer.surveyDao =  new SurveyDao(createDataSource());
-        httpServer.answerDao = new AnswerDao(createDataSource());
-        httpServer.userDao = new UserDao(createDataSource());
+
+        DataSource dataSource = createDataSource();
+        httpServer.questionDao =  new QuestionDao(dataSource);
+        httpServer.surveyDao =  new SurveyDao(dataSource);
+        httpServer.answerDao = new AnswerDao(dataSource);
+        httpServer.userDao = new UserDao(dataSource);
+        httpServer.optionDao = new OptionDao(dataSource);
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
     }
 

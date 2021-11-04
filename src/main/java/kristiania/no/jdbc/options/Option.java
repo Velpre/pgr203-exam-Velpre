@@ -8,8 +8,7 @@ public class Option {
     public Option() {
     }
 
-    public Option(long id, String optionName, int questionId) {
-        this.id = id;
+    public Option( String optionName, int questionId) {
         this.optionName = optionName;
         this.questionId = questionId;
     }

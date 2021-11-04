@@ -11,16 +11,16 @@
     <a href="index.html">Home</a>
     <div class = "container">
         <h3>Add survey</h3>
-        <form action="/api/newSurvey" method="post">
-            <p><label>Add survey name: <input type="text" name="title"></label></p>
+        <form action="/api/newSurvey" method="post" onsubmit="fetchQuestions()">
+            <p><label>Add survey name: <input required type="text" name="title"></label></p>
             <button>Add</button>
         </form>
     </div>
 
     <div class = "container">
         <h3>Delete</h3>
-        <form action="/api/deleteSurvey" method="post" >
-            <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
+        <form action="/api/deleteSurvey" method="post" onsubmit="fetchQuestions()" >
+            <p><label>Select survey <select required name="survey" id="survey1"></select></label></p>
             <button>Delete</button>
         </form>
     </div>
@@ -29,10 +29,10 @@
         <h3>Add question</h3>
         <form action="/api/newQuestion" method="post" >
             <p><label>Choose survey <select name="survey" id="survey2"></select></label></p>
-            <p><label>Add question: <input type="text" name="title"></label></p>
-            <p><label>Add option: <input type="text" name="option1"></label></p>
-            <p><label>Add option: <input type="text" name="option2"></label></p>
-            <p><label>Add option: <input type="text" name="option3"></label></p>
+            <p><label>Add question: <input required type="text" name="title"></label></p>
+            <p><label>Add option 1: <input required type="text" name="option1"></label></p>
+            <p><label>Add option 2: <input required type="text" name="option2"></label></p>
+            <p><label>Add option 3: <input required type="text" name="option3"></label></p>
             <button>Add</button>
         </form>
 
@@ -42,7 +42,9 @@
 <script>
 
 
-
+    const fetchQuestions = function () {
+        setTimeout(function(){window.location.reload();},10);
+    }
 
 
 

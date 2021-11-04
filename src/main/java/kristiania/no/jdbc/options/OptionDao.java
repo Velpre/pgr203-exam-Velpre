@@ -1,9 +1,12 @@
 package kristiania.no.jdbc.options;
 
 import kristiania.no.jdbc.options.Option;
+import kristiania.no.jdbc.question.Question;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OptionDao {
     private final DataSource dataSource;
@@ -51,5 +54,21 @@ public class OptionDao {
         options.setOptionName(rs.getString("option_name"));
         options.setQuestionId(rs.getInt("question_id"));
         return options;
+    }
+
+    public List<Option> retrieveFromQuestionId(long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from options where question_id = ?")) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Option> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
+                }
+            }
+        }
     }
 }
