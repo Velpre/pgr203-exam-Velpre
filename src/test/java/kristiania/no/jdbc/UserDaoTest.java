@@ -34,7 +34,7 @@ public class UserDaoTest {
     void shouldAddAndDeleteUser() throws SQLException {
         User user = new User("testUser");
         dao.save(user);
-        dao.delete((int) user.id);
+        dao.delete((int) user.getId());
         assertThat(dao.listAll()).doesNotContain(user);
     }
 }

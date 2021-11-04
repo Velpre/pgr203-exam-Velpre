@@ -48,7 +48,7 @@ public class QuestionDaoTest {
     void shouldAddAndDeleteQuestion() throws SQLException {
         Question question = new Question("Question", 1);
         dao.save(question);
-        dao.delete((int) question.id);
+        dao.delete((int) question.getId());
         assertThat(dao.listAll()).doesNotContain(question);
     }
 }

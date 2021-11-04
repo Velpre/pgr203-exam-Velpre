@@ -220,12 +220,12 @@ public class HttpServer {
 
     public static void main(String[] args) throws IOException {
         HttpServer httpServer = new HttpServer(8070);
+        System.out.println("Server running at: http://localhost:"+ httpServer.getPort() + "/");
         httpServer.questionDao =  new QuestionDao(createDataSource());
         httpServer.surveyDao =  new SurveyDao(createDataSource());
         httpServer.answerDao = new AnswerDao(createDataSource());
         httpServer.userDao = new UserDao(createDataSource());
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
-
     }
 
 }
