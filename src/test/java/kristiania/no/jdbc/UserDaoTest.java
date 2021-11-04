@@ -1,5 +1,7 @@
 package kristiania.no.jdbc;
 
+import kristiania.no.jdbc.user.User;
+import kristiania.no.jdbc.user.UserDao;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

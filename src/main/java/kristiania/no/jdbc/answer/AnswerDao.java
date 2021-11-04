@@ -1,40 +1,44 @@
-package kristiania.no.jdbc;
+package kristiania.no.jdbc.answer;
+
+import kristiania.no.jdbc.answer.Answer;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SurveyDao {
+public class AnswerDao {
+
     private final DataSource dataSource;
-    public SurveyDao(DataSource dataSource) {
+
+    public AnswerDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public void save(Survey survey) throws SQLException {
+    public void save(Answer answer) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into survey (survey_name) values (?)",
+                    "insert into answers (answer, question_id, user_id) values (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
 
             )) {
-                statement.setString(1, survey.getName());
-
+                statement.setString(1, answer.getAnswer());
+                statement.setInt(2, answer.getQuestionId());
+                statement.setInt(3, answer.userId());
 
                 statement.executeUpdate();
 
                 try (ResultSet rs = statement.getGeneratedKeys()) {
                     rs.next();
-                    survey.setId(rs.getLong("id"));
+                    answer.setId(rs.getLong("id"));
                 }
             }
         }
     }
 
-
-    public Survey retrieve(long id) throws SQLException {
+    public Answer retrieve(long id) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from survey where id = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers where id = ?")) {
                 statement.setLong(1, id);
 
                 try (ResultSet rs = statement.executeQuery()) {
@@ -46,19 +50,20 @@ public class SurveyDao {
         }
     }
 
-    private Survey readFromResultSet(ResultSet rs) throws SQLException {
-        Survey survey = new Survey();
-        survey.setId(rs.getLong("id"));
-        survey.setName(rs.getString("survey_name"));
-
-        return survey;
+    private Answer readFromResultSet(ResultSet rs) throws SQLException {
+        Answer answer  = new Answer();
+        answer.setId(rs.getLong("id"));
+        answer.setAnswer(rs.getString("answer"));
+        answer.setQuestionId(rs.getInt("question_id"));
+        answer.setUserId(rs.getInt("user_id"));
+        return answer;
     }
 
-    public List<Survey> listAll() throws SQLException {
+    public List<Answer> listAll() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from survey")) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers")) {
                 try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<Survey> result = new ArrayList<>();
+                    ArrayList<Answer> result = new ArrayList<>();
                     while (rs.next()) {
                         result.add(readFromResultSet(rs));
                     }
@@ -67,11 +72,11 @@ public class SurveyDao {
             }
         }
     }
-    //Teste denne
+
     public void delete(int id) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "delete from survey where id = ?"
+                    "delete from answers where id = ?"
             )) {
                 statement.setLong(1, id);
 
@@ -81,4 +86,3 @@ public class SurveyDao {
     }
 
 }
-

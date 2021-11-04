@@ -1,11 +1,17 @@
 package kristiania.no.http;
 
-import kristiania.no.jdbc.*;
+import kristiania.no.jdbc.answer.Answer;
+import kristiania.no.jdbc.answer.AnswerDao;
+import kristiania.no.jdbc.question.Question;
+import kristiania.no.jdbc.question.QuestionDao;
+import kristiania.no.jdbc.survey.Survey;
+import kristiania.no.jdbc.survey.SurveyDao;
+import kristiania.no.jdbc.user.User;
+import kristiania.no.jdbc.user.UserDao;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

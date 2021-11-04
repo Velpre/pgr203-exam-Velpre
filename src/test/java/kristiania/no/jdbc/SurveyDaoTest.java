@@ -1,5 +1,7 @@
 package kristiania.no.jdbc;
 
+import kristiania.no.jdbc.survey.Survey;
+import kristiania.no.jdbc.survey.SurveyDao;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

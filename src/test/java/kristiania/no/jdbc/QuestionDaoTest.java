@@ -1,11 +1,12 @@
 package kristiania.no.jdbc;
 
+import kristiania.no.jdbc.question.Question;
+import kristiania.no.jdbc.question.QuestionDao;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionDaoTest {

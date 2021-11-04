@@ -1,9 +1,10 @@
 package kristiania.no.http;
 
 import kristiania.no.jdbc.*;
+import kristiania.no.jdbc.question.Question;
+import kristiania.no.jdbc.question.QuestionDao;
+import kristiania.no.jdbc.survey.SurveyDao;
 import org.junit.jupiter.api.Test;
-
-import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

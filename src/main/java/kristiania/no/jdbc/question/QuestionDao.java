@@ -1,4 +1,4 @@
-package kristiania.no.jdbc;
+package kristiania.no.jdbc.question;
 
 import javax.sql.DataSource;
 import java.sql.*;
