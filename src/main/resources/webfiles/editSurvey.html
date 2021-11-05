@@ -27,26 +27,23 @@
 
     <div class = "container">
         <h3>Add question</h3>
-        <form action="/api/newQuestion" method="post" >
-            <p><label>Choose survey <select name="survey" id="survey2"></select></label></p>
-            <p><label>Add question: <input required type="text" name="title"></label></p>
-            <p><label>Add option 1: <input required type="text" name="option1"></label></p>
-            <p><label>Add option 2: <input required type="text" name="option2"></label></p>
-            <p><label>Add option 3: <input required type="text" name="option3"></label></p>
+        <form action="/api/newQuestion" method="post" onsubmit="fetchQuestions()">
+            <p><label>Choose survey <select required name="survey" id="survey2"></select></label></p>
+            <b><label>Add question: <input required type="text" name="title"></label></b>
+            <p><label>Add option 1: <input type="text" name="option1"></label></p>
+            <p><label>Add option 2: <input type="text" name="option2"></label></p>
+            <p><label>Add option 3: <input type="text" name="option3"></label></p>
+            <p><label>Add option 4: <input type="text" name="option4"></label></p>
+            <p><label>Add option 5: <input type="text" name="option5"></label></p>
+            <p>(Leave empty to use a slider with values 1-5.)</p>
             <button>Add</button>
         </form>
-
     </div>
-
 </main>
 <script>
-
-
     const fetchQuestions = function () {
         setTimeout(function(){window.location.reload();},10);
     }
-
-
 
     fetch("/api/listSurveyOptions").then(function(res){
         return res.text();
@@ -54,9 +51,8 @@
         document.getElementById("survey1").innerHTML=text;
         document.getElementById("survey2").innerHTML=text;
     });
-
-
 </script>
+
 </body>
 
 </html>

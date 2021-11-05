@@ -1,5 +1,6 @@
-package kristiania.no.http;
+package kristiania.no.http.controllers;
 
+import kristiania.no.http.HttpMessage;
 import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
 
@@ -8,7 +9,7 @@ import java.util.Map;
 
 import static kristiania.no.http.HttpServer.parseRequestParameters;
 
-public class NewSurveyController implements HttpController{
+public class NewSurveyController implements HttpController {
     private final SurveyDao surveyDao;
 
     public NewSurveyController(SurveyDao surveyDao) {

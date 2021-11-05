@@ -1,7 +1,5 @@
 package kristiania.no.jdbc;
 
-import org.flywaydb.core.Flyway;
-import org.postgresql.ds.PGSimpleDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

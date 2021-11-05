@@ -1,8 +1,8 @@
-package kristiania.no.http;
+package kristiania.no.http.controllers;
 
+import kristiania.no.http.HttpMessage;
 import kristiania.no.jdbc.answer.Answer;
 import kristiania.no.jdbc.answer.AnswerDao;
-import kristiania.no.jdbc.question.QuestionDao;
 import kristiania.no.jdbc.user.User;
 import kristiania.no.jdbc.user.UserDao;
 
@@ -11,38 +11,34 @@ import java.util.Map;
 
 import static kristiania.no.http.HttpServer.parseRequestParameters;
 
-public class AnswerQuestionsController implements HttpController{
-    private final QuestionDao questionDao;
+public class AnswerQuestionsController implements HttpController {
     private final AnswerDao answerDao;
     private final UserDao userDao;
-    ;
 
-
-    public AnswerQuestionsController(QuestionDao questionDao, AnswerDao answerDao, UserDao userDao) {
-        this.questionDao = questionDao;
+    public AnswerQuestionsController(AnswerDao answerDao, UserDao userDao) {
         this.answerDao = answerDao;
         this.userDao = userDao;
     }
 
-
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
-        String responseText = "You have added: ";
-
         Map<String, String> queryMap = parseRequestParameters(request.messageBody);
         User user = new User(queryMap.get("userName"));
+
+        StringBuilder responseText = new StringBuilder("You ("+ user.getUserName() +") have answered: ");
+
         userDao.save(user);
         queryMap.remove("userName");
 
         Object[] keySet = queryMap.keySet().toArray();
 
-        for (int i = 0; i < keySet.length; i++) {
-            Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
+        for (Object o : keySet) {
+            Answer a = new Answer(queryMap.get(o), Integer.parseInt((String) o), (int) user.getId());
             answerDao.save(a);
-            responseText += " " + a.getAnswer();
+            responseText.append(" ").append(a.getAnswer());
         }
 
-        responseText += " with user" + user.getUserName();
-        return new HttpMessage("HTTP/1.1 200", responseText);
+        responseText.append(" with user").append(user.getUserName());
+        return new HttpMessage("HTTP/1.1 200", responseText.toString());
     }
 }

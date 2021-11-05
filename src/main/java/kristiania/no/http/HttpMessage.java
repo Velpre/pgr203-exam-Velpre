@@ -27,9 +27,6 @@ public class HttpMessage {
         return Integer.parseInt(headerFields.get("Content-Length"));
     }
 
-    public String getHeader(String headerName) {
-        return headerFields.get(headerName);
-    }
 
     static String readBytes(Socket socket, int contentLength) throws IOException {
         StringBuilder buffer = new StringBuilder();

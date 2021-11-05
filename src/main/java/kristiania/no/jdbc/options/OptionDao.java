@@ -27,11 +27,12 @@ public class OptionDao extends AbstractDao {
             )) {
                 statement.setString(1, option.getOptionName());
                 statement.setInt(2, option.getQuestionId());
-                statement.executeUpdate();
-
-                try (ResultSet rs = statement.getGeneratedKeys()) {
-                    rs.next();
-                    option.setId(rs.getLong("id"));
+                if (option.getOptionName() != "") {
+                    statement.executeUpdate();
+                    try (ResultSet rs = statement.getGeneratedKeys()) {
+                        rs.next();
+                        option.setId(rs.getLong("id"));
+                    }
                 }
             }
         }

@@ -1,4 +1,6 @@
-package kristiania.no.http;
+package kristiania.no.http.controllers;
+
+import kristiania.no.http.HttpMessage;
 
 import java.io.IOException;
 import java.sql.SQLException;

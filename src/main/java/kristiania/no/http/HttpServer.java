@@ -1,25 +1,13 @@
 package kristiania.no.http;
 
-import kristiania.no.jdbc.answer.Answer;
-import kristiania.no.jdbc.answer.AnswerDao;
-import kristiania.no.jdbc.options.Option;
-import kristiania.no.jdbc.options.OptionDao;
-import kristiania.no.jdbc.question.Question;
-import kristiania.no.jdbc.question.QuestionDao;
-import kristiania.no.jdbc.survey.Survey;
-import kristiania.no.jdbc.survey.SurveyDao;
-import kristiania.no.jdbc.user.User;
-import kristiania.no.jdbc.user.UserDao;
-import org.flywaydb.core.Flyway;
-import org.postgresql.ds.PGSimpleDataSource;
+import kristiania.no.http.controllers.HttpController;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -72,7 +60,7 @@ public class HttpServer {
                 }
                 String responseText = "<p>Hello " + yourName + "</p>";
 
-                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, StandardCharsets.UTF_8), "text/html; charset=utf-8");
             } else {
                 if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                     String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
@@ -82,8 +70,7 @@ public class HttpServer {
                     }else if (requestTarget.endsWith(".css")) {
                         contentType = "text/css";
                     }
-
-                    writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), contentType);
+                    writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, StandardCharsets.UTF_8), contentType);
                     return;
                 }
 
@@ -126,7 +113,6 @@ public class HttpServer {
     public void setRoot(Path path) {
         this.rootDirectory = path;
     }
-
 
     public void addController(String path, HttpController controller) {
         controllers.put(path, controller);

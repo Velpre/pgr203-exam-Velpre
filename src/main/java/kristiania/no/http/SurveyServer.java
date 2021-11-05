@@ -1,8 +1,8 @@
 package kristiania.no.http;
 
+import kristiania.no.http.controllers.*;
 import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.options.OptionDao;
-import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
 import kristiania.no.jdbc.survey.SurveyDao;
 import kristiania.no.jdbc.user.UserDao;
@@ -36,7 +36,7 @@ public class SurveyServer {
         HttpServer httpServer = new HttpServer(8012);
         httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao,optionDao));
         httpServer.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
-        httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(questionDao,answerDao,userDao));
+        httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao,userDao));
         httpServer.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
         httpServer.addController("/api/newSurvey", new NewSurveyController(surveyDao));
         httpServer.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));

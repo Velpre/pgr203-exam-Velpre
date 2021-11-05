@@ -1,9 +1,11 @@
 package kristiania.no.http;
 
+import kristiania.no.http.controllers.*;
 import kristiania.no.jdbc.*;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
+import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
 import org.junit.jupiter.api.Test;
 
@@ -104,8 +106,8 @@ public class HttpServerTest {
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
-                "<option value=1>survey1</option>" +
-                        "<option value=2>survey2</option>"
+                "<option value=1>Client Questionnaire</option><option value=2>Website Questionnaire</option>" +
+                        "<option value=3>Customer Satisfaction Questionnaire</option>"
                 ,
                 client.getMessageBody()
         );
@@ -120,7 +122,10 @@ public class HttpServerTest {
 
         server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
 
-        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),"/api/newQuestion", "title=title1&questionText=text1&survey=1&option1=o1&option2=o2&option3=o3");
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),
+                "/api/newQuestion",
+                "title=title1&questionText=text1&survey" +
+                        "=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
         assertEquals(200, postClient.getStatusCode());
         List<Question> questionList = questionDao.listAll();
 
@@ -129,5 +134,4 @@ public class HttpServerTest {
                 .contains(1L);
 
     }
-
 }
