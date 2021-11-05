@@ -50,4 +50,16 @@ public class QuestionDao extends AbstractDao {
     public List<Question> retrieveFromSurveyId(long id) throws SQLException {
         return retrieveFromParentId(id, "select * from questions where survey_id = ?");
     }
+    public void edit(long id, String newValue) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "update questions set title = ? where id = ?",
+                    Statement.RETURN_GENERATED_KEYS
+            )) {
+                statement.setString(1, newValue);
+                statement.setLong(2, id);
+                statement.executeUpdate();
+            }
+        }
+    }
 }

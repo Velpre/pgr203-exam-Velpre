@@ -33,7 +33,7 @@ public class SurveyServer {
         UserDao userDao = new UserDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
 
-        HttpServer httpServer = new HttpServer(8012);
+        HttpServer httpServer = new HttpServer(8014);
         httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao,optionDao));
         httpServer.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
         httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao,userDao));
