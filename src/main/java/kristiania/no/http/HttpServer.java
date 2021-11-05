@@ -109,14 +109,21 @@ public class HttpServer {
 
                 for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
-                    for (Answer answerByQuestionId : answerDao.retrieveFromQuestionId(question.getId())){
-                        if(answerByQuestionId.getUserId() == userId ){
-                            responseText += "<p>" + answerByQuestionId.getAnswer() + "</p>\r\n";
+
+                    //Sjekker om det er Admin som er bruker - i så fall printer ut alle answers for valgt survey
+                    if(userId == 1){
+                        for (Answer allAnswers : answerDao.retrieveFromQuestionId(question.getId())){
+                            responseText += "<p>" + allAnswers.getAnswer() + "</p>\r\n";
+                        }
+                    }else{
+                        for (Answer answerByQuestionId : answerDao.retrieveFromQuestionId(question.getId())){
+                            if(answerByQuestionId.getUserId() == userId ){
+                                responseText += "<p>" + answerByQuestionId.getAnswer() + "</p>\r\n";
+                            }
                         }
                     }
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-
             } else if(fileTarget.equals("/api/answerQuestions")){
                 String responseText = "You have added: ";
 
