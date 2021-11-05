@@ -1,9 +1,12 @@
 package kristiania.no.jdbc.answer;
 
 import kristiania.no.jdbc.AbstractDao;
+import kristiania.no.jdbc.answer.Answer;
+import kristiania.no.jdbc.options.Option;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AnswerDao extends AbstractDao {
@@ -47,8 +50,52 @@ public class AnswerDao extends AbstractDao {
     }
 
 
+
     public List<Answer> listAll() throws SQLException {
         return listAll("select * from answers");
+    }
+
+    //Denne må testes
+    public List<Answer> retrieveFromQuestionId(long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers where question_id = ?")) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Answer> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+
+    //Denne må testes
+    public List<Answer> retrieveFromUserId(long id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from answers where user_id = ?")) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<Answer> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(readFromResultSet(rs));
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+
+    private Answer readFromResultSet(ResultSet rs) throws SQLException {
+        Answer answer  = new Answer();
+        answer.setId(rs.getLong("id"));
+        answer.setAnswer(rs.getString("answer"));
+        answer.setQuestionId(rs.getInt("question_id"));
+        answer.setUserId(rs.getInt("user_id"));
+        return answer;
     }
 
     public void delete(int id) throws SQLException {

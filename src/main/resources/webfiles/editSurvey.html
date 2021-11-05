@@ -38,12 +38,21 @@
             <p>(Leave empty to use a slider with values 1-5.)</p>
             <button>Add</button>
         </form>
+
     </div>
+
+
+    <button><a href="index.html">Home</a></button>
+
 </main>
 <script>
+
+
     const fetchQuestions = function () {
         setTimeout(function(){window.location.reload();},10);
     }
+
+
 
     fetch("/api/listSurveyOptions").then(function(res){
         return res.text();
@@ -51,8 +60,9 @@
         document.getElementById("survey1").innerHTML=text;
         document.getElementById("survey2").innerHTML=text;
     });
-</script>
 
+
+</script>
 </body>
 
 </html>
