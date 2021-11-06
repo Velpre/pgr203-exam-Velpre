@@ -16,7 +16,7 @@
             </form>
         </div>
         <div class ="container">
-            <h3>Survey</h3>
+            <h3>Choose or create user before answering</h3>
             <form action="/api/answerQuestions" method="post" id=questions>
             </form>
         </div>
@@ -37,6 +37,16 @@
         }).then(function(text) {
         document.getElementById("questions").innerHTML = text;
     });
+
+
+
+    fetch("/api/listUsers")
+        .then(function(response) {
+            return response.text();
+        }).then(function(text) {
+        document.getElementById("existingUsers").innerHTML = text;
+    });
+
 
     const fetchQuestions = function () {
         setTimeout(function(){window.location.reload();},10);

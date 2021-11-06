@@ -86,8 +86,11 @@ public class HttpServer {
                 if (queryMap.size() != 0){
                     surveyId = Integer.parseInt(queryMap.get("survey"));
                 }
-                responseText += "<p>Write username:</p>";
-                responseText += "<input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
+                responseText += "<p>Create New user:</p>";
+                responseText += "<input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br>";
+
+                responseText += "<p>Chose one of existing users<p>";
+                responseText += "<p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p>";
 
                 for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
@@ -125,23 +128,45 @@ public class HttpServer {
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             } else if(fileTarget.equals("/api/answerQuestions")){
-                String responseText = "You have added: ";
+                String responseText = "You have answered: ";
 
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                User user = new User(queryMap.get("userName"));
-                userDao.save(user);
-                queryMap.remove("userName");
+                //Finner ut av om bruker lager ny user eller velger eksisterende
+                User newUser;
+                User existingUser;
+                if (queryMap.get("newUser") == ""){
+                    //user = new User(userDao.retrieve(Long.parseLong(queryMap.get("existingUsers"))).getUserName());
+                  existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
+                    queryMap.remove("newUser");
+                    queryMap.remove("existingUsers");
+                    Object[] keySet = queryMap.keySet().toArray();
 
-                Object[] keySet = queryMap.keySet().toArray();
+                    for (int i = 0; i < keySet.length; i++) {
+                        Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) existingUser.getId());
+                        answerDao.save(a);
 
-                for (int i = 0; i < keySet.length; i++) {
-                    Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
-                    answerDao.save(a);
+                        responseText += " " + a.getAnswer();
+                    }
 
-                    responseText += " " + a.getAnswer();
+                    responseText += " with user " + existingUser.getUserName();
+
+                }else {
+                    newUser = new User(queryMap.get("newUser"));
+                    userDao.save(newUser);
+                    queryMap.remove("newUser");
+                    queryMap.remove("existingUsers");
+
+                    Object[] keySet = queryMap.keySet().toArray();
+
+                    for (int i = 0; i < keySet.length; i++) {
+                        Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) newUser.getId());
+                        answerDao.save(a);
+
+                        responseText += " " + a.getAnswer();
+                    }
+
+                    responseText += " with user " + newUser.getUserName();
                 }
-
-                responseText += " with user" + user.getUserName();
 
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
