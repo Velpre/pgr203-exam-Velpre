@@ -80,16 +80,17 @@ public class HttpServerTest {
         assertEquals("<p>Hello Veljko, Premovic</p>", client.getMessageBody());
     }
 
+    //Testen tester helt feil ting denne må rettes
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         server.setQuestionDao(questionDao);
 
 
-        //question1 & question2 objekt blir lagt til i DB gjennom V005 migrering
+        //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
         assertEquals(
-                "<p>Write username:</p><input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br><br><button>Answer</button>"
+                "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
                 ,
                 client.getMessageBody()
         );
@@ -103,7 +104,7 @@ public class HttpServerTest {
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
-                "<option value=1>Sport_Survey</option><option value=2>Mat_Survey</option>"
+                "<option value=1>Sport Survey</option><option value=2>Mat Survey</option>"
                 ,
                 client.getMessageBody()
         );

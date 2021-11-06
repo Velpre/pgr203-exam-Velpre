@@ -135,7 +135,6 @@ public class HttpServer {
                 User newUser;
                 User existingUser;
                 if (queryMap.get("newUser") == ""){
-                    //user = new User(userDao.retrieve(Long.parseLong(queryMap.get("existingUsers"))).getUserName());
                   existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
                     queryMap.remove("newUser");
                     queryMap.remove("existingUsers");
