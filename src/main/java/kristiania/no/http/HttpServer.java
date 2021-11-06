@@ -127,7 +127,16 @@ public class HttpServer {
                     }
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
-            } else if(fileTarget.equals("/api/answerQuestions")){
+            } else if (fileTarget.equals("/api/changeQuestion")){
+                Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
+                long id = Long.parseLong(queryMap.get("question"));
+                String newQuestion = queryMap.get("title");
+
+                questionDao.updateQuestion(id, newQuestion);
+                String responseText = "Done";
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+            }
+            else if(fileTarget.equals("/api/answerQuestions")){
                 String responseText = "You have answered: ";
 
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
@@ -210,6 +219,14 @@ public class HttpServer {
                 String responseText = "";
                 for (User user : userDao.listAll()) {
                     responseText += "<option value=" + user.getId() + ">" + user.getUserName() + "</option>";
+                }
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
+
+            }
+            else if(fileTarget.equals("/api/listAllQuestions")){
+                String responseText = "";
+                for (Question question : questionDao.listAll()) {
+                    responseText += "<option value=" + question.getId() + ">" + question.getTitle() + "</option>";
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
@@ -299,7 +316,7 @@ public class HttpServer {
 
 
     public static void main(String[] args) throws IOException {
-        HttpServer httpServer = new HttpServer(8070);
+        HttpServer httpServer = new HttpServer(8010);
         System.out.println("Server running at: http://localhost:"+ httpServer.getPort() + "/");
 
         DataSource dataSource = createDataSource();
