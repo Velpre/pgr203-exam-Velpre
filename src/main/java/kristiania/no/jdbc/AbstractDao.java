@@ -29,6 +29,7 @@ public abstract class AbstractDao<T> {
             }
         }
     }
+
     public List<T> listAll(String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -42,6 +43,7 @@ public abstract class AbstractDao<T> {
             }
         }
     }
+
     public void delete(int id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -50,6 +52,7 @@ public abstract class AbstractDao<T> {
             }
         }
     }
+
     public T retrieve(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {

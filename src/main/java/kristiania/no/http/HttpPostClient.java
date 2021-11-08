@@ -23,7 +23,8 @@ public class HttpPostClient {
         String[] statusLine = httpMessage.startLine.split(" ");
         this.statusCode = Integer.parseInt(statusLine[1]);
     }
-    public int getStatusCode(){
+
+    public int getStatusCode() {
         return statusCode;
     }
 }

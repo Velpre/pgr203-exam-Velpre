@@ -36,9 +36,9 @@ public class NewQuestionController implements HttpController {
         optionDao.save(o4);
         optionDao.save(o5);
 
-        String responseText = "You have added: Question: " + q.getTitle()  + " Survey: " + q.getSurveyId() +
+        String responseText = "You have added: Question: " + q.getTitle() + " Survey: " + q.getSurveyId() +
                 " Options:" + o1.getOptionName() + " " + o2.getOptionName() + " " +
-                o3.getOptionName() + " " + o4.getOptionName() + " " + o5.getOptionName() +".";
+                o3.getOptionName() + " " + o4.getOptionName() + " " + o5.getOptionName() + ".";
 
 
         return new HttpMessage("HTTP/1.1 200", responseText);

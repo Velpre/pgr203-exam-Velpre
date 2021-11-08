@@ -1,25 +1,25 @@
 package kristiania.no.http;
 
-import kristiania.no.http.controllers.*;
-import kristiania.no.jdbc.*;
+import kristiania.no.http.controllers.ListQuestionsController;
+import kristiania.no.http.controllers.ListSurveyOptionsController;
+import kristiania.no.http.controllers.NewQuestionController;
+import kristiania.no.jdbc.TestData;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
-import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpServerTest {
     HttpServer server = new HttpServer(0);
@@ -28,7 +28,7 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldReturn404ForUnknowRequestTarget() throws IOException {
+    void shouldReturn404ForUnknownRequestTarget() throws IOException {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/non-existing");
         assertEquals(404, client.getStatusCode());
     }
@@ -40,7 +40,7 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldRespondWith200FoKnownRequestTrarget() throws IOException {
+    void shouldRespondWith200FoKnownRequestTarget() throws IOException {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/hello");
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
@@ -48,16 +48,18 @@ public class HttpServerTest {
                 () -> assertEquals("<p>Hello world</p>", client.getMessageBody())
         );
     }
+
     @Test
     void shouldServeFiles() throws IOException {
         server.setRoot(Paths.get("target/test-classes"));
 
-        String fileContent= "Det funker";
+        String fileContent = "Det funker";
         Files.write(Paths.get("target/test-classes/test.txt"), fileContent.getBytes());
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/test.txt");
         assertEquals(fileContent, client.getMessageBody());
     }
+
     //Sjekk om nødvendig
     @Test
     void shouldUseFileExtensionForContentType() throws IOException {

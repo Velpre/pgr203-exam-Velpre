@@ -3,43 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Kristiania Questionnaire</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <main>
-        <h1>Surveys</h1>
-        <div class = "container">
-            <h3>Answer Surveys:</h3>
-            <form action="/api/listQuestions" method="post" onsubmit="fetchQuestions()">
-                <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
-                <button>Select</button>
-            </form>
-        </div>
-        <div class ="container">
-            <h3>Survey</h3>
-            <form action="/api/answerQuestions" method="post" id=questions>
-            </form>
-        </div>
+<main>
+    <h1>Surveys</h1>
+    <div class="container">
+        <h3>Answer Surveys:</h3>
+        <form action="/api/listQuestions" method="post" onsubmit="fetchQuestions()">
+            <p><label>Select survey <select id="survey1" name="survey"></select></label></p>
+            <button>Select</button>
+        </form>
+    </div>
+    <div class="container">
+        <h3>Survey</h3>
+        <form action="/api/answerQuestions" id=questions method="post" onsubmit="fetchQuestions()">
+        </form>
+    </div>
 
-        <button><a href="index.html">Home</a></button>
-    </main>
+    <button><a href="index.html">Home</a></button>
+</main>
 </body>
 <script>
-    fetch("/api/listSurveyOptions").then(function(res){
+    fetch("/api/listSurveyOptions").then(function (res) {
         return res.text();
-    }).then(function(text){
-        document.getElementById("survey1").innerHTML=text;
+    }).then(function (text) {
+        document.getElementById("survey1").innerHTML = text;
     });
 
     fetch("/api/listQuestions")
-        .then(function(response) {
+        .then(function (response) {
             return response.text();
-        }).then(function(text) {
+        }).then(function (text) {
         document.getElementById("questions").innerHTML = text;
     });
 
     const fetchQuestions = function () {
-        setTimeout(function(){window.location.reload();},10);
+        setTimeout(function () {
+            window.location.reload();
+        }, 10);
     }
 </script>
 </html>

@@ -6,6 +6,7 @@ import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.user.User;
 import kristiania.no.jdbc.user.UserDao;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -21,11 +22,11 @@ public class AnswerQuestionsController implements HttpController {
     }
 
     @Override
-    public HttpMessage handle(HttpMessage request) throws SQLException {
+    public HttpMessage handle(HttpMessage request) throws SQLException, UnsupportedEncodingException {
         Map<String, String> queryMap = parseRequestParameters(request.messageBody);
         User user = new User(queryMap.get("userName"));
 
-        StringBuilder responseText = new StringBuilder("You ("+ user.getUserName() +") have answered: ");
+        StringBuilder responseText = new StringBuilder("You (" + user.getUserName() + ") have answered: ");
 
         userDao.save(user);
         queryMap.remove("userName");

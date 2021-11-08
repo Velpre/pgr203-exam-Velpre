@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.survey;
 
 import kristiania.no.jdbc.AbstractDao;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;

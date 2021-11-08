@@ -1,8 +1,6 @@
 package kristiania.no.jdbc.answer;
 
 import kristiania.no.jdbc.AbstractDao;
-import kristiania.no.jdbc.answer.Answer;
-import kristiania.no.jdbc.options.Option;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -16,7 +14,7 @@ public class AnswerDao extends AbstractDao {
 
     @Override
     protected Answer mapFromResultSet(ResultSet rs) throws SQLException {
-        Answer answer  = new Answer();
+        Answer answer = new Answer();
         answer.setId(rs.getLong("id"));
         answer.setAnswer(rs.getString("answer"));
         answer.setQuestionId(rs.getInt("question_id"));
@@ -46,9 +44,8 @@ public class AnswerDao extends AbstractDao {
     }
 
     public Answer retrieve(long id) throws SQLException {
-       return (Answer) retrieve(id, "select * from answers where id = ?");
+        return (Answer) retrieve(id, "select * from answers where id = ?");
     }
-
 
 
     public List<Answer> listAll() throws SQLException {
@@ -90,7 +87,7 @@ public class AnswerDao extends AbstractDao {
     }
 
     private Answer readFromResultSet(ResultSet rs) throws SQLException {
-        Answer answer  = new Answer();
+        Answer answer = new Answer();
         answer.setId(rs.getLong("id"));
         answer.setAnswer(rs.getString("answer"));
         answer.setQuestionId(rs.getInt("question_id"));

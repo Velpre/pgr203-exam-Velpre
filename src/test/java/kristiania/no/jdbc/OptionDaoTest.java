@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OptionDaoTest {
-    private OptionDao dao = new OptionDao(TestData.testDataSource());
+    private final OptionDao dao = new OptionDao(TestData.testDataSource());
 
     @Test
     void shouldRetrieveSavedOptions() throws SQLException {

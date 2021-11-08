@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.user;
 
 import kristiania.no.jdbc.AbstractDao;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
@@ -9,9 +10,10 @@ public class UserDao extends AbstractDao {
     public UserDao(DataSource dataSource) {
         super(dataSource);
     }
+
     @Override
     protected User mapFromResultSet(ResultSet rs) throws SQLException {
-        User user  = new User();
+        User user = new User();
         user.setId(rs.getLong("id"));
         user.setUserName(rs.getString("username"));
         return user;
@@ -40,7 +42,8 @@ public class UserDao extends AbstractDao {
     public List<User> listAll() throws SQLException {
         return listAll("select * from users");
     }
+
     public void delete(int id) throws SQLException {
-        delete(id,"delete from users where id = ?");
+        delete(id, "delete from users where id = ?");
     }
 }

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SurveyDaoTest {
-    private SurveyDao dao = new SurveyDao(TestData.testDataSource());
+    private final SurveyDao dao = new SurveyDao(TestData.testDataSource());
 
     @Test
     void shouldRetrieveSavedSurvey() throws SQLException {
@@ -29,6 +29,7 @@ public class SurveyDaoTest {
                 .extracting(Survey::getName)
                 .contains("Website Questionnaire", "Customer Satisfaction Questionnaire", "Survey");
     }
+
     @Test
     void shouldAddAndDeleteSurvey() throws SQLException {
         Survey survey = new Survey("Survey");

@@ -14,9 +14,9 @@ import java.util.Map;
 public class ListQuestionsController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
-    private int savedQuery;
+    private int surveyId;
 
-    public ListQuestionsController(QuestionDao questionDao, OptionDao optionDao){
+    public ListQuestionsController(QuestionDao questionDao, OptionDao optionDao) {
         this.questionDao = questionDao;
         this.optionDao = optionDao;
     }
@@ -25,14 +25,14 @@ public class ListQuestionsController implements HttpController {
     public HttpMessage handle(HttpMessage request) throws SQLException, IOException {
         String responseText = "";
         Map<String, String> queryMap = HttpServer.parseRequestParameters(request.messageBody);
-        if (queryMap.size() != 0){
-            savedQuery = Integer.parseInt(queryMap.get("survey"));
+        if (queryMap.size() != 0) {
+            surveyId = Integer.parseInt(queryMap.get("survey"));
         }
         responseText += "<p>Write username:</p>";
         responseText += "<input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
         String optionsString = "";
 
-        for (Question question : questionDao.retrieveFromSurveyId(savedQuery)) {
+        for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
             responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
 
             for (Option option : optionDao.retrieveFromQuestionId(question.getId())) {

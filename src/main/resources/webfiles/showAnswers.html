@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Kristiania Questionnaire</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
 <main>
     <h1>Show answers</h1>
-    <div class = "container">
+    <div class="container">
         <form action="/api/listAnswers" method="post" onsubmit="fetchQuestions()">
-            <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
-            <p><label>Select user <select name="user" id="users"></select></label></p>
+            <p><label>Select survey <select id="survey1" name="survey"></select></label></p>
+            <p><label>Select user <select id="users" name="user"></select></label></p>
             <button>Select</button>
         </form>
     </div>
-    <div class ="container">
+    <div class="container">
         <h3>Answers</h3>
-        <form method="get" id=answers>
+        <form id=answers method="get">
         </form>
     </div>
 
@@ -25,27 +25,29 @@
 </main>
 </body>
 <script>
-    fetch("/api/listSurveyOptions").then(function(res){
+    fetch("/api/listSurveyOptions").then(function (res) {
         return res.text();
-    }).then(function(text){
-        document.getElementById("survey1").innerHTML=text;
+    }).then(function (text) {
+        document.getElementById("survey1").innerHTML = text;
     });
 
-    fetch("/api/listUsers").then(function(res){
+    fetch("/api/listUsers").then(function (res) {
         return res.text();
-    }).then(function(text){
-        document.getElementById("users").innerHTML=text;
+    }).then(function (text) {
+        document.getElementById("users").innerHTML = text;
     });
 
     fetch("/api/listAnswers")
-        .then(function(response) {
+        .then(function (response) {
             return response.text();
-        }).then(function(text) {
+        }).then(function (text) {
         document.getElementById("answers").innerHTML = text;
     });
 
     const fetchQuestions = function () {
-        setTimeout(function(){window.location.reload();},10);
+        setTimeout(function () {
+            window.location.reload();
+        }, 10);
     }
 </script>
 </html>

@@ -15,6 +15,7 @@ public class NewSurveyController implements HttpController {
     public NewSurveyController(SurveyDao surveyDao) {
         this.surveyDao = surveyDao;
     }
+
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
         Map<String, String> queryMap = parseRequestParameters(request.messageBody);

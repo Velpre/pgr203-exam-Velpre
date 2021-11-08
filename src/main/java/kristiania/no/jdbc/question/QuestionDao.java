@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.question;
 
 import kristiania.no.jdbc.AbstractDao;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
@@ -35,6 +36,7 @@ public class QuestionDao extends AbstractDao {
             }
         }
     }
+
     public List<Question> listAll() throws SQLException {
         return listAll("select * from questions");
     }
@@ -50,6 +52,7 @@ public class QuestionDao extends AbstractDao {
     public List<Question> retrieveFromSurveyId(long id) throws SQLException {
         return retrieveFromParentId(id, "select * from questions where survey_id = ?");
     }
+
     public void edit(long id, String newValue) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(

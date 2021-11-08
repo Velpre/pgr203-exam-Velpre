@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.options;
 
 import kristiania.no.jdbc.AbstractDao;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
@@ -9,9 +10,10 @@ public class OptionDao extends AbstractDao {
     public OptionDao(DataSource dataSource) {
         super(dataSource);
     }
+
     @Override
     protected Option mapFromResultSet(ResultSet rs) throws SQLException {
-        Option options  = new Option();
+        Option options = new Option();
         options.setId(rs.getLong("id"));
         options.setOptionName(rs.getString("option_name"));
         options.setQuestionId(rs.getInt("question_id"));
@@ -39,7 +41,7 @@ public class OptionDao extends AbstractDao {
     }
 
     public Option retrieve(long id) throws SQLException {
-        return (Option) retrieve(id,"select * from options where id = ?");
+        return (Option) retrieve(id, "select * from options where id = ?");
     }
 
     public List<Option> retrieveFromQuestionId(long id) throws SQLException {

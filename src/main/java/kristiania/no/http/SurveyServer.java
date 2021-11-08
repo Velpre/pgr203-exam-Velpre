@@ -27,22 +27,24 @@ public class SurveyServer {
 
     public static void main(String[] args) throws IOException {
         DataSource dataSource = createDataSource();
-        QuestionDao questionDao =  new QuestionDao(dataSource);
-        SurveyDao surveyDao =  new SurveyDao(dataSource);
+        QuestionDao questionDao = new QuestionDao(dataSource);
+        SurveyDao surveyDao = new SurveyDao(dataSource);
         AnswerDao answerDao = new AnswerDao(dataSource);
         UserDao userDao = new UserDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
 
         HttpServer httpServer = new HttpServer(8014);
-        httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao,optionDao));
+        httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
         httpServer.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
-        httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao,userDao));
+        httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
         httpServer.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
         httpServer.addController("/api/newSurvey", new NewSurveyController(surveyDao));
         httpServer.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
+        httpServer.addController("/api/listUsers", new ListUsersController(userDao));
+        httpServer.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
 
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
-        System.out.println("Server running at: http://localhost:"+ httpServer.getPort() + "/");
+        System.out.println("Server running at: http://localhost:" + httpServer.getPort() + "/");
     }
 }

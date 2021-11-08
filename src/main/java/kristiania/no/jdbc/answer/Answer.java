@@ -6,7 +6,8 @@ public class Answer {
     int questionId;
     int userId;
 
-    public Answer(){}
+    public Answer() {
+    }
 
     public Answer(String answer, int questionId, int userId) {
         this.answer = answer;

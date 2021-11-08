@@ -8,7 +8,7 @@ public class Option {
     public Option() {
     }
 
-    public Option( String optionName, int questionId) {
+    public Option(String optionName, int questionId) {
         this.optionName = optionName;
         this.questionId = questionId;
     }
@@ -17,16 +17,16 @@ public class Option {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public int getQuestionId() {
         return questionId;
     }
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getOptionName() {
