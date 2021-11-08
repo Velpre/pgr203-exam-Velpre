@@ -65,4 +65,15 @@ public class QuestionDao extends AbstractDao {
             }
         }
     }
+
+    //teste denne, skal det være int id eller long id
+    public void updateQuestion(long id, String name) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("update questions set title = ? where id = ? ")) {
+                statement.setString(1, name);
+                statement.setLong(2, id);
+                statement.executeUpdate();
+            }
+        }
+    }
 }

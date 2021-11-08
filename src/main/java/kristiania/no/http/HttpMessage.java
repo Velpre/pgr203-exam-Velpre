@@ -2,12 +2,13 @@ package kristiania.no.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpMessage {
-    public final Map<String, String> headerFields = new HashMap<>();
     public String startLine;
+    public final Map<String, String> headerFields = new HashMap<>();
     public String messageBody;
 
     public HttpMessage(Socket socket) throws IOException {
@@ -18,9 +19,12 @@ public class HttpMessage {
         }
     }
 
-    public HttpMessage(String startLine, String messageBody) {
-        this.startLine = startLine;
-        this.messageBody = messageBody;
+    public int getContentLength() {
+        return Integer.parseInt(headerFields.get("Content-Length"));
+    }
+
+    public String getHeader(String headerName) {
+        return headerFields.get(headerName);
     }
 
     static String readBytes(Socket socket, int contentLength) throws IOException {
@@ -28,7 +32,7 @@ public class HttpMessage {
         for (int i = 0; i < contentLength; i++) {
             buffer.append((char) socket.getInputStream().read());
         }
-        return buffer.toString();
+        return URLDecoder.decode(buffer.toString(),"UTF-8");
     }
 
     static String readLine(Socket socket) throws IOException {
@@ -39,7 +43,7 @@ public class HttpMessage {
         }
         int expectedNewline = socket.getInputStream().read();
         assert expectedNewline == '\n';
-        return buffer.toString();
+        return URLDecoder.decode(buffer.toString(),"UTF-8");
     }
 
     public int getContentLength() {

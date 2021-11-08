@@ -47,4 +47,15 @@ public class OptionDao extends AbstractDao {
     public List<Option> retrieveFromQuestionId(long id) throws SQLException {
         return retrieveFromParentId(id, "select * from options where question_id = ?");
     }
+
+    //teste denne
+    public void updateOption(String name, int id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("update options set option_name = ? where question_id = ? ")) {
+                statement.setString(1, name);
+                statement.setLong(2, id);
+                statement.executeUpdate();
+            }
+        }
+    }
 }

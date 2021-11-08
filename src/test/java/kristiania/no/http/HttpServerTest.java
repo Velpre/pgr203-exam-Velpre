@@ -28,7 +28,7 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldReturn404ForUnknownRequestTarget() throws IOException {
+    void shouldReturn404ForUnknowRequestTarget() throws IOException {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/non-existing");
         assertEquals(404, client.getStatusCode());
     }
@@ -48,18 +48,16 @@ public class HttpServerTest {
                 () -> assertEquals("<p>Hello world</p>", client.getMessageBody())
         );
     }
-
     @Test
     void shouldServeFiles() throws IOException {
         server.setRoot(Paths.get("target/test-classes"));
 
-        String fileContent = "Det funker";
+        String fileContent= "Det funker";
         Files.write(Paths.get("target/test-classes/test.txt"), fileContent.getBytes());
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/test.txt");
         assertEquals(fileContent, client.getMessageBody());
     }
-
     //Sjekk om nødvendig
     @Test
     void shouldUseFileExtensionForContentType() throws IOException {
@@ -84,6 +82,7 @@ public class HttpServerTest {
         assertEquals("<p>Hello Veljko, Premovic</p>", client.getMessageBody());
     }
 
+    //Testen tester helt feil ting denne må rettes
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
@@ -91,10 +90,10 @@ public class HttpServerTest {
         server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
 
 
-        //question1 & question2 objekt blir lagt til i DB gjennom V005 migrering
+        //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
         assertEquals(
-                "<p>Write username:</p><input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br><br><button>Answer</button>"
+                "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
                 ,
                 client.getMessageBody()
         );
@@ -108,6 +107,7 @@ public class HttpServerTest {
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
+                "<option value=1>Sport Survey</option><option value=2>Mat Survey</option>"
                 "<option value=1>Client Questionnaire</option><option value=2>Website Questionnaire</option>" +
                         "<option value=3>Customer Satisfaction Questionnaire</option>"
                 ,
@@ -136,4 +136,5 @@ public class HttpServerTest {
                 .contains(1L);
 
     }
+
 }

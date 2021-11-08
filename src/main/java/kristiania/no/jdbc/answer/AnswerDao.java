@@ -48,6 +48,7 @@ public class AnswerDao extends AbstractDao {
     }
 
 
+
     public List<Answer> listAll() throws SQLException {
         return listAll("select * from answers");
     }
@@ -87,7 +88,7 @@ public class AnswerDao extends AbstractDao {
     }
 
     private Answer readFromResultSet(ResultSet rs) throws SQLException {
-        Answer answer = new Answer();
+        Answer answer  = new Answer();
         answer.setId(rs.getLong("id"));
         answer.setAnswer(rs.getString("answer"));
         answer.setQuestionId(rs.getInt("question_id"));

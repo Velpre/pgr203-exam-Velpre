@@ -27,9 +27,8 @@ public class SurveyDaoTest {
         dao.save(survey);
         assertThat(dao.listAll())
                 .extracting(Survey::getName)
-                .contains("Website Questionnaire", "Customer Satisfaction Questionnaire", "Survey");
+                .contains("Sport_Survey", "Mat_Survey");
     }
-
     @Test
     void shouldAddAndDeleteSurvey() throws SQLException {
         Survey survey = new Survey("Survey");
