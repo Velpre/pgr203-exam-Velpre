@@ -43,9 +43,11 @@ public class AnswerDao {
                 statement.setLong(1, id);
 
                 try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-
-                    return readFromResultSet(rs);
+                    if (rs.next()){
+                        return readFromResultSet(rs);
+                    }else{
+                        return null;
+                    }
                 }
             }
         }

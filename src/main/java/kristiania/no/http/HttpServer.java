@@ -42,6 +42,7 @@ public class HttpServer {
         new Thread(this::handleClients).start();
     }
 
+
     private void handleClients() {
         try{
             while (true){
@@ -51,6 +52,7 @@ public class HttpServer {
             e.printStackTrace();
         }
     }
+
 
     private void handleClient() throws IOException, SQLException {
             Socket clientSocket = serverSocket.accept();
@@ -129,10 +131,11 @@ public class HttpServer {
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             } else if (fileTarget.equals("/api/changeQuestion")){
                 Map<String, String> queryMap = parseRequestParameters(httpMessage.messageBody);
-                long id = Long.parseLong(queryMap.get("question"));
-                String newQuestion = queryMap.get("title");
 
-                questionDao.updateQuestion(id, newQuestion);
+                questionDao.updateQuestion(Long.parseLong(queryMap.get("question")), queryMap.get("title"));
+                optionDao.updateOption(queryMap.get("option1"), Integer.parseInt(queryMap.get("question")));
+                optionDao.updateOption(queryMap.get("option2"), Integer.parseInt(queryMap.get("question")));
+                optionDao.updateOption(queryMap.get("option3"), Integer.parseInt(queryMap.get("question")));
                 String responseText = "Done";
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
@@ -207,6 +210,7 @@ public class HttpServer {
                 }
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
             }
+
             else if (fileTarget.equals("/api/listSurveyOptions")) {
                 String responseText = "";
 
@@ -217,13 +221,41 @@ public class HttpServer {
             }
             else if(fileTarget.equals("/api/listUsers")){
                 String responseText = "";
+
                 for (User user : userDao.listAll()) {
                     responseText += "<option value=" + user.getId() + ">" + user.getUserName() + "</option>";
                 }
+
+
+                /*
+                if(requestTarget.equals("/takeSurvey.html")){
+
+                    for (User user : userDao.listAll()) {
+
+                        if (user.getId() == 1) {
+                            System.out.println("test");
+                            responseText += "";
+
+                        } else {
+                            String responseText1 = "";
+                            for (User user1 : userDao.listAll()) {
+
+                                responseText1 += "<option value=" + user1.getId() + ">" + user1.getUserName() + "</option>";
+                            }
+
+                        }
+                    }
+                }else {
+                    /*
+                    for (User user : userDao.listAll()) {
+                        responseText += "<option value=" + user.getId() + ">" + user.getUserName() + "</option>";
+                    }
+
+                     */
+
                 writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), "text/html; charset=utf-8");
 
-            }
-            else if(fileTarget.equals("/api/listAllQuestions")){
+            } else if(fileTarget.equals("/api/listAllQuestions")){
                 String responseText = "";
                 for (Question question : questionDao.listAll()) {
                     responseText += "<option value=" + question.getId() + ">" + question.getTitle() + "</option>";
@@ -256,6 +288,18 @@ public class HttpServer {
 
     private void writeOkResponse(Socket clientSocket, String responseText, String contentType) throws IOException {
         String response = "HTTP/1.1 200 OK\r\n" +
+                "Content-Length: " + responseText.getBytes().length + "\r\n" +
+                "Content-Type:" + contentType + "\r\n" +
+                "Connection: close\r\n" +
+                "\r\n" +
+                responseText;
+        clientSocket.getOutputStream().write(response.getBytes());
+    }
+
+    //Spørre, er det på den måten vi skal sende 303 response
+
+    private void writeRedirectResponse(Socket clientSocket, String responseText, String contentType) throws IOException {
+        String response = "HTTP/1.1 303 See Other\r\n" +
                 "Content-Length: " + responseText.getBytes().length + "\r\n" +
                 "Content-Type:" + contentType + "\r\n" +
                 "Connection: close\r\n" +
