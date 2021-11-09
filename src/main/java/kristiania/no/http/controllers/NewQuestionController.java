@@ -14,6 +14,7 @@ import static kristiania.no.http.HttpServer.parseRequestParameters;
 public class NewQuestionController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
+    String responseText;
 
     public NewQuestionController(QuestionDao questionDao, OptionDao optionDao) {
         this.questionDao = questionDao;
@@ -22,25 +23,25 @@ public class NewQuestionController implements HttpController {
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
-        Map<String, String> queryMap = parseRequestParameters(request.messageBody);
-        Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
-        questionDao.save(q);
-        Option o1 = new Option(queryMap.get("option1"), (int) q.getId());
-        Option o2 = new Option(queryMap.get("option2"), (int) q.getId());
-        Option o3 = new Option(queryMap.get("option3"), (int) q.getId());
-        Option o4 = new Option(queryMap.get("option4"), (int) q.getId());
-        Option o5 = new Option(queryMap.get("option5"), (int) q.getId());
-        optionDao.save(o1);
-        optionDao.save(o2);
-        optionDao.save(o3);
-        optionDao.save(o4);
-        optionDao.save(o5);
+        if (request.messageBody != null) {
+            Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+            Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
+            questionDao.save(q);
+            Option o1 = new Option(queryMap.get("option1"), (int) q.getId());
+            Option o2 = new Option(queryMap.get("option2"), (int) q.getId());
+            Option o3 = new Option(queryMap.get("option3"), (int) q.getId());
+            Option o4 = new Option(queryMap.get("option4"), (int) q.getId());
+            Option o5 = new Option(queryMap.get("option5"), (int) q.getId());
+            optionDao.save(o1);
+            optionDao.save(o2);
+            optionDao.save(o3);
+            optionDao.save(o4);
+            optionDao.save(o5);
 
-        String responseText = "You have added: Question: " + q.getTitle() + " Survey: " + q.getSurveyId() +
-                " Options:" + o1.getOptionName() + " " + o2.getOptionName() + " " +
-                o3.getOptionName() + " " + o4.getOptionName() + " " + o5.getOptionName() + ".";
-
-
+            responseText = "You have added: Question: " + q.getTitle() + " Survey: " + q.getSurveyId() +
+                    " Options:" + o1.getOptionName() + " " + o2.getOptionName() + " " +
+                    o3.getOptionName() + " " + o4.getOptionName() + " " + o5.getOptionName() + ".";
+        }
         return new HttpMessage("HTTP/1.1 200", responseText);
     }
 }

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpMessage {
-    public String startLine;
     public final Map<String, String> headerFields = new HashMap<>();
+    public String startLine;
     public String messageBody;
 
     public HttpMessage(Socket socket) throws IOException {
@@ -19,20 +19,18 @@ public class HttpMessage {
         }
     }
 
-    public int getContentLength() {
-        return Integer.parseInt(headerFields.get("Content-Length"));
+    public HttpMessage(String startLine, String messageBody) {
+        this.startLine = startLine;
+        this.messageBody = messageBody;
     }
 
-    public String getHeader(String headerName) {
-        return headerFields.get(headerName);
-    }
 
     static String readBytes(Socket socket, int contentLength) throws IOException {
         StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < contentLength; i++) {
             buffer.append((char) socket.getInputStream().read());
         }
-        return URLDecoder.decode(buffer.toString(),"UTF-8");
+        return URLDecoder.decode(buffer.toString(), "UTF-8");
     }
 
     static String readLine(Socket socket) throws IOException {
@@ -43,12 +41,17 @@ public class HttpMessage {
         }
         int expectedNewline = socket.getInputStream().read();
         assert expectedNewline == '\n';
-        return URLDecoder.decode(buffer.toString(),"UTF-8");
+        return URLDecoder.decode(buffer.toString(), "UTF-8");
     }
 
     public int getContentLength() {
         return Integer.parseInt(headerFields.get("Content-Length"));
     }
+
+    public String getHeader(String headerName) {
+        return headerFields.get(headerName);
+    }
+
 
     private void readHeaders(Socket socket) throws IOException {
         String headerLine;
@@ -64,6 +67,7 @@ public class HttpMessage {
         String response = startLine + "\r\n" +
                 "Content-Length: " + messageBody.length() + "\r\n" +
                 "Connection: close\r\n" +
+                "Content-Type: text/html; charset=utf-8\r\n" +
                 "\r\n" +
                 messageBody;
         socket.getOutputStream().write(response.getBytes());

@@ -42,6 +42,8 @@ public class SurveyServer {
         httpServer.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
         httpServer.addController("/api/listUsers", new ListUsersController(userDao));
         httpServer.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
+        httpServer.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
+        httpServer.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
 
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 

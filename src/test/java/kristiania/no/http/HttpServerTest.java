@@ -1,13 +1,13 @@
 package kristiania.no.http;
 
-import kristiania.no.http.controllers.ListQuestionsController;
-import kristiania.no.http.controllers.ListSurveyOptionsController;
-import kristiania.no.http.controllers.NewQuestionController;
+import kristiania.no.http.controllers.*;
 import kristiania.no.jdbc.TestData;
+import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
 import kristiania.no.jdbc.survey.SurveyDao;
+import kristiania.no.jdbc.user.UserDao;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -25,6 +25,23 @@ public class HttpServerTest {
     HttpServer server = new HttpServer(0);
 
     public HttpServerTest() throws IOException {
+        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
+        AnswerDao answerDao = new AnswerDao(TestData.testDataSource());
+        UserDao userDao = new UserDao(TestData.testDataSource());
+        OptionDao optionDao = new OptionDao(TestData.testDataSource());
+
+        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
+        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        server.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
+        server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
+        server.addController("/api/newSurvey", new NewSurveyController(surveyDao));
+        server.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
+        server.addController("/api/listUsers", new ListUsersController(userDao));
+        server.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
+        server.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
+        server.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
+
     }
 
     @Test
@@ -40,24 +57,27 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldRespondWith200FoKnownRequestTarget() throws IOException {
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/hello");
+    void shouldRespondWith200ForKnownRequestTarget() throws IOException {
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/answerQuestions", "newUser=test");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/answerQuestions?newUser=test");
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
                 () -> assertEquals("text/html; charset=utf-8", client.getHeader("Content-Type")),
-                () -> assertEquals("<p>Hello world</p>", client.getMessageBody())
+                () -> assertEquals("You have answered:  with user test", client.getMessageBody())
         );
     }
+
     @Test
     void shouldServeFiles() throws IOException {
         server.setRoot(Paths.get("target/test-classes"));
 
-        String fileContent= "Det funker";
+        String fileContent = "Det funker";
         Files.write(Paths.get("target/test-classes/test.txt"), fileContent.getBytes());
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/test.txt");
         assertEquals(fileContent, client.getMessageBody());
     }
+
     //Sjekk om nødvendig
     @Test
     void shouldUseFileExtensionForContentType() throws IOException {
@@ -71,15 +91,19 @@ public class HttpServerTest {
 
     @Test
     void shouldHandelMoreThanOneRequest() throws IOException {
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/hello").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listAllQuestions").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listAllQuestions").getStatusCode());
     }
 
 
     @Test
     void shouldEchoMoreThanOneQueryParameter() throws IOException {
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/hello?firstName=Veljko&lastName=Premovic");
-        assertEquals("<p>Hello Veljko, Premovic</p>", client.getMessageBody());
+        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/newQuestion",
+                "title=test&survey=1&option1=test1&option2=test1&option3=test1&option4=test1&option5=test1");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/newQuestion");
+
+        assertEquals("You have added: Question: test Survey: 1 Options:test1 test1 test1 test1 test1.", client.getMessageBody());
+
     }
 
     //Testen tester helt feil ting denne må rettes
@@ -107,8 +131,8 @@ public class HttpServerTest {
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
-                "<option value=1>Sport Survey</option><option value=2>Mat Survey</option>"
-                "<option value=1>Client Questionnaire</option><option value=2>Website Questionnaire</option>" +
+                "<option value=1>Client Questionnaire</option>" +
+                        "<option value=2>Website Questionnaire</option>" +
                         "<option value=3>Customer Satisfaction Questionnaire</option>"
                 ,
                 client.getMessageBody()

@@ -28,8 +28,12 @@ public class ListQuestionsController implements HttpController {
         if (queryMap.size() != 0) {
             surveyId = Integer.parseInt(queryMap.get("survey"));
         }
-        responseText += "<p>Write username:</p>";
-        responseText += "<input required type=\"text\" id=\"userName\" name=\"userName\" label =\"Username:\"> </input><br>";
+        responseText += "<p>Create New user:</p>";
+        responseText += "<input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br>";
+
+        responseText += "<p>Chose one of existing users<p>";
+        responseText += "<p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p>";
+
         String optionsString = "";
 
         for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {

@@ -15,6 +15,7 @@ import static kristiania.no.http.HttpServer.parseRequestParameters;
 public class AnswerQuestionsController implements HttpController {
     private final AnswerDao answerDao;
     private final UserDao userDao;
+    String responseText;
 
     public AnswerQuestionsController(AnswerDao answerDao, UserDao userDao) {
         this.answerDao = answerDao;
@@ -23,23 +24,44 @@ public class AnswerQuestionsController implements HttpController {
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException, UnsupportedEncodingException {
-        Map<String, String> queryMap = parseRequestParameters(request.messageBody);
-        User user = new User(queryMap.get("userName"));
+        if (request.messageBody != null) {
+            responseText = "You have answered: ";
 
-        StringBuilder responseText = new StringBuilder("You (" + user.getUserName() + ") have answered: ");
+            Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+            //Finner ut av om bruker lager ny user eller velger eksisterende
+            User newUser;
+            User existingUser;
+            if (queryMap.get("newUser") == "") {
+                existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
+                queryMap.remove("newUser");
+                queryMap.remove("existingUsers");
+                Object[] keySet = queryMap.keySet().toArray();
 
-        userDao.save(user);
-        queryMap.remove("userName");
+                for (int i = 0; i < keySet.length; i++) {
+                    Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) existingUser.getId());
+                    answerDao.save(a);
 
-        Object[] keySet = queryMap.keySet().toArray();
+                    responseText += " " + a.getAnswer();
+                }
+                responseText += " with user " + existingUser.getUserName();
+            } else {
+                newUser = new User(queryMap.get("newUser"));
+                userDao.save(newUser);
+                queryMap.remove("newUser");
+                queryMap.remove("existingUsers");
 
-        for (Object o : keySet) {
-            Answer a = new Answer(queryMap.get(o), Integer.parseInt((String) o), (int) user.getId());
-            answerDao.save(a);
-            responseText.append(" ").append(a.getAnswer());
+                Object[] keySet = queryMap.keySet().toArray();
+
+                for (int i = 0; i < keySet.length; i++) {
+                    Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) newUser.getId());
+                    answerDao.save(a);
+
+                    responseText += " " + a.getAnswer();
+                }
+
+                responseText += " with user " + newUser.getUserName();
+            }
         }
-
-        responseText.append(" with user").append(user.getUserName());
         return new HttpMessage("HTTP/1.1 200", responseText.toString());
     }
 }
