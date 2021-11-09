@@ -140,3 +140,7 @@ insert into options (option_name, question_id)
 VALUES ('Yes', 15);
 insert into options (option_name, question_id)
 VALUES ('No', 15);
+
+
+insert into users(user_name)
+values('User1')

@@ -15,14 +15,14 @@ public class UserDao extends AbstractDao {
     protected User mapFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getLong("id"));
-        user.setUserName(rs.getString("username"));
+        user.setUserName(rs.getString("user_name"));
         return user;
     }
 
     public void save(User user) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into users (username) values (?)",
+                    "insert into users (user_name) values (?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
                 statement.setString(1, user.getUserName());

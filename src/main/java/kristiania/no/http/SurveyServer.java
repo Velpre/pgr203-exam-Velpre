@@ -19,7 +19,7 @@ public class SurveyServer {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
         dataSource.setUser("question_dbuser");
-        dataSource.setPassword("sKKA4rPjM6ZQ2eNH8MxQ");
+        dataSource.setPassword("P545v#C@ZZ");
         Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
