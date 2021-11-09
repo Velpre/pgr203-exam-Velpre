@@ -29,6 +29,7 @@ public class AnswerQuestionsController implements HttpController {
 
             Map<String, String> queryMap = parseRequestParameters(request.messageBody);
             //Finner ut av om bruker lager ny user eller velger eksisterende
+            //LAG EN METHODE FOR BEGGE IF
             User newUser;
             User existingUser;
             if (queryMap.get("newUser") == "") {

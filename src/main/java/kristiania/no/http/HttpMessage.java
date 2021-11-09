@@ -32,7 +32,7 @@ public class HttpMessage {
         }
         return URLDecoder.decode(buffer.toString(), "UTF-8");
     }
-
+/*
     static String readLine(Socket socket) throws IOException {
         StringBuilder buffer = new StringBuilder();
         int c;
@@ -42,6 +42,24 @@ public class HttpMessage {
         int expectedNewline = socket.getInputStream().read();
         assert expectedNewline == '\n';
         return URLDecoder.decode(buffer.toString(), "UTF-8");
+    }
+
+ */
+
+
+    //Tester denne istedenfor. prøver å fikse heap space feilen
+
+    public static String readLine(Socket socket) throws IOException {
+        StringBuilder line = new StringBuilder();
+        int c;
+        while((c = socket.getInputStream().read()) != -1){
+            if(c == '\r'){
+                socket.getInputStream().read();
+                break;
+            }
+            line.append((char) c);
+        }
+        return line.toString();
     }
 
     public int getContentLength() {
