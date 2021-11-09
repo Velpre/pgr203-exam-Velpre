@@ -132,9 +132,9 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
                 "<option value=1>Client Questionnaire</option>" +
-                        "<option value=2>Website Questionnaire</option>" +
-                        "<option value=3>Customer Satisfaction Questionnaire</option>"
+                        "<option value=2>Test Questionnaire</option>"
                 ,
+
                 client.getMessageBody()
         );
     }

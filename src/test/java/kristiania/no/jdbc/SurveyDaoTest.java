@@ -27,7 +27,7 @@ public class SurveyDaoTest {
         dao.save(survey);
         assertThat(dao.listAll())
                 .extracting(Survey::getName)
-                .contains("Website Questionnaire", "Customer Satisfaction Questionnaire");
+                .contains("Client Questionnaire", "Test Questionnaire", "Survey");
     }
 
     @Test
