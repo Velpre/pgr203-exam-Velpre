@@ -1,4 +1,19 @@
 
+[![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
+
+## Hvordan kjøre dette programmet
+
+## Ekstra Funksjonalitet
+
+#### Liste svar
+Bortsett fra den funksjonaliteten som er beskrevet i oppgaven har vi lagt til en ekstra tabell som lagrer users som besvarer spørreundersøkelser. På HTML siden hvor vi lister svarene gir vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de. Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
+#### Legge til spørsmål
+Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal besvares med options(radio buttons) eller slider.
+#### Annet
+* Mulighet for å legge til og slette eksisterende spørreundersøkelser
+* Mulighet for å legge til eller bruke eksisterende users
+* Mulighet for å oppdatere eksisterende spørsmål
+
 ## UML Diagram som beskriver forutsetninger vi har tatt for løsningen
 
 <img width="1011" alt="DB java" src="https://user-images.githubusercontent.com/65472724/141207340-974c2d00-ac59-4f47-8cb0-d3983e0d43fe.PNG">
@@ -59,5 +74,5 @@
 * [x] Avansert funksjonalitet (skala på spørsmål, spørreundersøkelser)
 * [x] Rammeverk rundt Http-håndtering (en god HttpMessage class med HttpRequest og HttpResponse subtyper) som gjenspeiler RFC7230
 * [ ] Implementasjon av Chunked Transfer Encoding: https://tools.ietf.org/html/rfc7230#section-4.1
-
+* [ ] Annet 
   
