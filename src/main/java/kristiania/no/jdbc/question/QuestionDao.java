@@ -49,31 +49,14 @@ public class QuestionDao extends AbstractDao {
         delete(id, "delete from questions where id = ?");
     }
 
-    public List<Question> retrieveFromSurveyId(long id) throws SQLException {
+    public List<Question> retriveFromParentId(long id) throws SQLException {
         return retrieveFromParentId(id, "select * from questions where survey_id = ?");
     }
 
-    public void edit(long id, String newValue) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "update questions set title = ? where id = ?",
-                    Statement.RETURN_GENERATED_KEYS
-            )) {
-                statement.setString(1, newValue);
-                statement.setLong(2, id);
-                statement.executeUpdate();
-            }
-        }
+
+    public void updateQuestion(String name, long id) throws SQLException {
+        updateQuestion(name, id, "update questions set title = ? where id = ? ");
     }
 
-    //teste denne, skal det være int id eller long id
-    public void updateQuestion(long id, String name) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("update questions set title = ? where id = ? ")) {
-                statement.setString(1, name);
-                statement.setLong(2, id);
-                statement.executeUpdate();
-            }
-        }
-    }
+
 }

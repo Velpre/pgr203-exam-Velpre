@@ -40,7 +40,7 @@ public class QuestionDaoTest {
         Question question2 = new Question("q2", 2);
         dao.save(question2);
 
-        assertThat(dao.retrieveFromSurveyId(1))
+        assertThat(dao.retriveFromParentId(1))
                 .extracting(Question::getId)
                 .contains(question.getId())
                 .doesNotContain(question2.getId());

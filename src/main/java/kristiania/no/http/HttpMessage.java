@@ -51,21 +51,6 @@ public class HttpMessage {
         }
         return queryMap;
     }
-/*
-    static String readLine(Socket socket) throws IOException {
-        StringBuilder buffer = new StringBuilder();
-        int c;
-        while ((c = socket.getInputStream().read()) != '\r') {
-            buffer.append((char) c);
-        }
-        int expectedNewline = socket.getInputStream().read();
-        assert expectedNewline == '\n';
-        return URLDecoder.decode(buffer.toString(), "UTF-8");
-    }
-
- */
-
-    //Tester denne istedenfor. prøver å fikse heap space feilen
 
     public static String readLine(Socket socket) throws IOException {
         StringBuilder buffer = new StringBuilder();

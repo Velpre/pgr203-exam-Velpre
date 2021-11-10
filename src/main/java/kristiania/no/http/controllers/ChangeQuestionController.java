@@ -35,7 +35,7 @@ public class ChangeQuestionController implements HttpController {
             allOptions.add(option);
         }
 
-        questionDao.updateQuestion(Long.parseLong(queryMap.get("question")), queryMap.get("title"));
+        questionDao.updateQuestion(queryMap.get("title"), Long.parseLong(queryMap.get("question")));
 
         for (int i = 1; i < 6; i++) {
             if (queryMap.get("option" + i) != "" && allOptions.size() > i) {

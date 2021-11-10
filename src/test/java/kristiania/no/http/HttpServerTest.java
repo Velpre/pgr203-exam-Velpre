@@ -104,8 +104,9 @@ public class HttpServerTest {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/newQuestion");
 
         assertEquals("You have added: Question: test Survey: 1 Options:test1 test1 test1 test1 test1.", client.getMessageBody());
-
     }
+
+
 
     //Testen tester helt feil ting denne må rettes
     @Test

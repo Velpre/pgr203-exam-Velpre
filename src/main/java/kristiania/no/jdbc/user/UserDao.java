@@ -46,4 +46,5 @@ public class UserDao extends AbstractDao {
         user.setUserName(rs.getString("user_name"));
         return user;
     }
+
 }

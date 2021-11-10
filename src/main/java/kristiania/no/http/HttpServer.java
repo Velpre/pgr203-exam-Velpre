@@ -17,8 +17,6 @@ public class HttpServer {
     private final ServerSocket serverSocket;
     private Path rootDirectory;
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
-
 
     public HttpServer(int serverPort) throws IOException {
         serverSocket = new ServerSocket(serverPort);
@@ -26,13 +24,14 @@ public class HttpServer {
     }
 
 
-    private void handleClients() {
+    private void handleClients(){
         try {
             while (true) {
                 handleClient();
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 

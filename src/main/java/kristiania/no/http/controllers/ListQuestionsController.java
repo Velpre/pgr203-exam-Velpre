@@ -38,7 +38,7 @@ public class ListQuestionsController implements HttpController {
 
             String optionsString = "";
 
-            for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
+            for (Question question : questionDao.retriveFromParentId(surveyId)) {
                 responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
 
                 for (Option option : optionDao.retrieveFromQuestionId(question.getId())) {

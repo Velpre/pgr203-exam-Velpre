@@ -15,6 +15,19 @@ public abstract class AbstractDao<T> {
         this.dataSource = dataSource;
     }
 
+    public T retrieve(long id, String sql) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    rs.next();
+
+                    return mapFromResultSet(rs);
+                }
+            }
+        }
+    }
     protected T retrieveById(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -25,6 +38,25 @@ public abstract class AbstractDao<T> {
                     } else {
                         return null;
                     }
+                }
+            }
+        }
+    }
+
+
+
+
+    public List<T> retrieveFromParentId(long id, String sql) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, id);
+
+                try (ResultSet rs = statement.executeQuery()) {
+                    ArrayList<T> result = new ArrayList<>();
+                    while (rs.next()) {
+                        result.add(mapFromResultSet(rs));
+                    }
+                    return result;
                 }
             }
         }
@@ -44,6 +76,18 @@ public abstract class AbstractDao<T> {
         }
     }
 
+    //teste denne, skal det være int id eller long id
+    public void updateQuestion(String name, long id, String sql) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, name);
+                statement.setLong(2, id);
+                statement.executeUpdate();
+            }
+        }
+    }
+
+
     public void delete(int id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -53,35 +97,6 @@ public abstract class AbstractDao<T> {
         }
     }
 
-    public T retrieve(long id, String sql) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-
-                    return mapFromResultSet(rs);
-                }
-            }
-        }
-    }
-
-    public List<T> retrieveFromParentId(long id, String sql) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<T> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(mapFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
-    }
-
     protected abstract T mapFromResultSet(ResultSet rs) throws SQLException;
+
 }
