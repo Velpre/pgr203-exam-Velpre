@@ -40,8 +40,8 @@
             <groupId>org.logevents</groupId>
             <artifactId>logevents</artifactId>
             <version>0.2.2</version>
-            <scope>runtime</scope>
         </dependency>
+
     </dependencies>
 
     <build>

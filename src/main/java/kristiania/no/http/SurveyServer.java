@@ -8,12 +8,21 @@ import kristiania.no.jdbc.survey.SurveyDao;
 import kristiania.no.jdbc.user.UserDao;
 import org.flywaydb.core.Flyway;
 import org.postgresql.ds.PGSimpleDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Properties;
+
 
 public class SurveyServer {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
+
+/*
 
     private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
@@ -24,6 +33,22 @@ public class SurveyServer {
         return dataSource;
     }
 
+ */
+private static DataSource createDataSource() throws IOException {
+    Properties properties = new Properties();
+    try (FileReader reader = new FileReader("pgr203.properties")) {
+        properties.load(reader);
+    }
+
+    PGSimpleDataSource dataSource = new PGSimpleDataSource();
+    dataSource.setUrl(properties.getProperty("dataSource.url"));
+    dataSource.setUser(properties.getProperty("dataSource.username"));
+    dataSource.setPassword(properties.getProperty("dataSource.password"));
+    Flyway.configure().dataSource(dataSource).load().migrate();
+    return dataSource;
+}
+
+
 
     public static void main(String[] args) throws IOException {
         DataSource dataSource = createDataSource();
@@ -33,7 +58,7 @@ public class SurveyServer {
         UserDao userDao = new UserDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
 
-        HttpServer httpServer = new HttpServer(8000);
+        HttpServer httpServer = new HttpServer(8001);
         httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
         httpServer.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
         httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
@@ -47,6 +72,8 @@ public class SurveyServer {
 
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
-        System.out.println("Server running at: http://localhost:" + httpServer.getPort() + "/");
+        logger.info("Server running at http://localhost:{}/", httpServer.getPort());
     }
+
+
 }

@@ -1,6 +1,8 @@
 package kristiania.no.http;
 
 import kristiania.no.http.controllers.HttpController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,6 +16,8 @@ public class HttpServer {
     private final HashMap<String, HttpController> controllers = new HashMap<>();
     private final ServerSocket serverSocket;
     private Path rootDirectory;
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
 
 
     public HttpServer(int serverPort) throws IOException {
