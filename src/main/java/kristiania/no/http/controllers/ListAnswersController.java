@@ -19,7 +19,7 @@ public class ListAnswersController implements HttpController {
 
     private int surveyId;
     private int userId;
-    private String allUsers;
+    private String showAllUsers;
 
     public ListAnswersController(QuestionDao questionDao, AnswerDao answerDao) {
         this.questionDao = questionDao;
@@ -34,12 +34,10 @@ public class ListAnswersController implements HttpController {
         if (queryMap.size() != 0) {
             surveyId = Integer.parseInt(queryMap.get("survey"));
             userId = Integer.parseInt(queryMap.get("user"));
-            allUsers = queryMap.get("allUsers");
+            showAllUsers = queryMap.get("allUsers");
         }
 
-
-
-        if (allUsers == "on"){
+        if (showAllUsers == null){
             for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                 responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
                 for (Answer answerByQuestionId : answerDao.retrieveFromQuestionId(question.getId())) {
@@ -58,19 +56,7 @@ public class ListAnswersController implements HttpController {
             }
         }
 
-
-
-
         return new HttpMessage("HTTP/1.1 200", responseText);
     }
 
-
-    /*
-       //Sjekker om det er Admin som er bruker - i så fall printer ut alle answers for valgt survey
-            if (userId == 1) {
-                for (Answer allAnswers : answerDao.retrieveFromQuestionId(question.getId())) {
-                    responseText += "<p>" + allAnswers.getAnswer() + "</p>\r\n";
-                }
-            }
-     */
 }
