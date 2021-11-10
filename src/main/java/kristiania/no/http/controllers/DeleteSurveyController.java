@@ -6,8 +6,6 @@ import kristiania.no.jdbc.survey.SurveyDao;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static kristiania.no.http.HttpServer.parseRequestParameters;
-
 public class DeleteSurveyController implements HttpController {
     private final SurveyDao surveyDao;
 
@@ -19,7 +17,7 @@ public class DeleteSurveyController implements HttpController {
     public HttpMessage handle(HttpMessage request) throws SQLException {
         String responseText = "";
         if (!(request.messageBody.equals(""))) {
-            Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+            Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
             surveyDao.delete(Integer.parseInt(queryMap.get("survey")));
             responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
         }

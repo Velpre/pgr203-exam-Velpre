@@ -1,7 +1,6 @@
 package kristiania.no.http.controllers;
 
 import kristiania.no.http.HttpMessage;
-import kristiania.no.http.HttpServer;
 import kristiania.no.jdbc.options.Option;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
@@ -24,7 +23,7 @@ public class ListQuestionsController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException, IOException {
         String responseText = "";
-        Map<String, String> queryMap = HttpServer.parseRequestParameters(request.messageBody);
+        Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
         if (queryMap.size() != 0) {
             surveyId = Integer.parseInt(queryMap.get("survey"));
         }

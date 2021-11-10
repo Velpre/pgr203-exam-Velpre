@@ -9,7 +9,6 @@ import kristiania.no.jdbc.question.QuestionDao;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static kristiania.no.http.HttpServer.parseRequestParameters;
 
 public class NewQuestionController implements HttpController {
     private final QuestionDao questionDao;
@@ -24,7 +23,7 @@ public class NewQuestionController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
         if (request.messageBody != null) {
-            Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+            Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
             Question q = new Question(queryMap.get("title"), Integer.parseInt(queryMap.get("survey")));
             questionDao.save(q);
             Option o1 = new Option(queryMap.get("option1"), (int) q.getId());

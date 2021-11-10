@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static kristiania.no.http.HttpServer.parseRequestParameters;
+
 
 public class ChangeQuestionController implements HttpController {
     private final QuestionDao questionDao;
@@ -23,7 +23,7 @@ public class ChangeQuestionController implements HttpController {
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
-        Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+        Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
         List<Option> allOptions = new ArrayList<>();
 
         for (Option option : optionDao.retrieveFromQuestionId(Long.parseLong(queryMap.get("question")))) {

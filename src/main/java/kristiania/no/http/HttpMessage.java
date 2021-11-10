@@ -32,6 +32,19 @@ public class HttpMessage {
         }
         return URLDecoder.decode(buffer.toString(), "UTF-8");
     }
+
+    public static Map<String, String> parseRequestParameters(String query) {
+        Map<String, String> queryMap = new HashMap<>();
+        if (query != null) {
+            for (String queryParameter : query.split("&")) {
+                int equalsPos = queryParameter.indexOf("=");
+                String parameterName = queryParameter.substring(0, equalsPos);
+                String parameterValue = queryParameter.substring(equalsPos + 1);
+                queryMap.put(parameterName, parameterValue);
+            }
+        }
+        return queryMap;
+    }
 /*
     static String readLine(Socket socket) throws IOException {
         StringBuilder buffer = new StringBuilder();
@@ -46,20 +59,19 @@ public class HttpMessage {
 
  */
 
-
     //Tester denne istedenfor. prøver å fikse heap space feilen
 
     public static String readLine(Socket socket) throws IOException {
-        StringBuilder line = new StringBuilder();
+        StringBuilder buffer = new StringBuilder();
         int c;
         while((c = socket.getInputStream().read()) != -1){
             if(c == '\r'){
                 socket.getInputStream().read();
                 break;
             }
-            line.append((char) c);
+            buffer.append((char) c);
         }
-        return line.toString();
+        return URLDecoder.decode(buffer.toString(), "UTF-8");
     }
 
     public int getContentLength() {

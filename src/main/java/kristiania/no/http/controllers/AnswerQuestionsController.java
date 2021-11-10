@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static kristiania.no.http.HttpServer.parseRequestParameters;
+
 
 public class AnswerQuestionsController implements HttpController {
     private final AnswerDao answerDao;
@@ -27,7 +27,7 @@ public class AnswerQuestionsController implements HttpController {
         if (request.messageBody != null) {
             responseText = "You have answered: ";
 
-            Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+            Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
             //Finner ut av om bruker lager ny user eller velger eksisterende
             User newUser;
             User existingUser;

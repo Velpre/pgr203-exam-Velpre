@@ -3,11 +3,9 @@ package kristiania.no.http.controllers;
 import kristiania.no.http.HttpMessage;
 import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
-
 import java.sql.SQLException;
 import java.util.Map;
 
-import static kristiania.no.http.HttpServer.parseRequestParameters;
 
 public class NewSurveyController implements HttpController {
     private final SurveyDao surveyDao;
@@ -18,7 +16,7 @@ public class NewSurveyController implements HttpController {
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
-        Map<String, String> queryMap = parseRequestParameters(request.messageBody);
+        Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
         Survey s = new Survey(queryMap.get("title"));
         surveyDao.save(s);
         String responseText = "You have added: Title: " + s.getName() + ".";

@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class HttpServer {
     private final HashMap<String, HttpController> controllers = new HashMap<>();
@@ -44,7 +43,7 @@ public class HttpServer {
 
         int questionPos = requestTarget.indexOf('?');
         String fileTarget;
-        //SKal vi slette query?
+        //Skal vi slette query?
         String query = null;
         if (questionPos != -1) {
             fileTarget = requestTarget.substring(0, questionPos);
@@ -89,18 +88,6 @@ public class HttpServer {
         clientSocket.getOutputStream().write(response.getBytes());
     }
 
-    public static Map<String, String> parseRequestParameters(String query) {
-        Map<String, String> queryMap = new HashMap<>();
-        if (query != null) {
-            for (String queryParameter : query.split("&")) {
-                int equalsPos = queryParameter.indexOf("=");
-                String parameterName = queryParameter.substring(0, equalsPos);
-                String parameterValue = queryParameter.substring(equalsPos + 1);
-                queryMap.put(parameterName, parameterValue);
-            }
-        }
-        return queryMap;
-    }
 
     public int getPort() {
         return serverSocket.getLocalPort();
