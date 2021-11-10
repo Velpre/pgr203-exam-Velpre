@@ -20,13 +20,17 @@ public abstract class AbstractDao<T> {
                 statement.setLong(1, id);
 
                 try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-
-                    return mapFromResultSet(rs);
+                    if (rs.next()) {
+                        return mapFromResultSet(rs);
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
     }
+
+    //Kan vi slette denne siden vi har retrive
     protected T retrieveById(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
