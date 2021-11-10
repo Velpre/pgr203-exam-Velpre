@@ -46,7 +46,7 @@ public class ChangeQuestionController implements HttpController {
             }
         }
 
-        String responseText = "Done";
+        String responseText = "Question has been changed";
         return new HttpMessage("HTTP/1.1 200", responseText);
     }
 }

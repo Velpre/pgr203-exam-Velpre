@@ -22,32 +22,6 @@ public class ListUsersController implements HttpController {
             responseText += "<option value=" + user.getId() + ">" + user.getUserName() + "</option>";
         }
 
-
-                /*
-                if(requestTarget.equals("/takeSurvey.html")){
-
-                    for (User user : userDao.listAll()) {
-
-                        if (user.getId() == 1) {
-                            System.out.println("test");
-                            responseText += "";
-
-                        } else {
-                            String responseText1 = "";
-                            for (User user1 : userDao.listAll()) {
-
-                                responseText1 += "<option value=" + user1.getId() + ">" + user1.getUserName() + "</option>";
-                            }
-
-                        }
-                    }
-                }else {
-                    /*
-                    for (User user : userDao.listAll()) {
-                        responseText += "<option value=" + user.getId() + ">" + user.getUserName() + "</option>";
-                    }
-
-                     */
         return new HttpMessage("HTTP/1.1 200", responseText);
     }
 }

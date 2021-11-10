@@ -29,40 +29,40 @@ public class AnswerQuestionsController implements HttpController {
 
             Map<String, String> queryMap = parseRequestParameters(request.messageBody);
             //Finner ut av om bruker lager ny user eller velger eksisterende
-            //LAG EN METHODE FOR BEGGE IF
             User newUser;
             User existingUser;
             if (queryMap.get("newUser") == "") {
                 existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
                 queryMap.remove("newUser");
                 queryMap.remove("existingUsers");
-                Object[] keySet = queryMap.keySet().toArray();
 
-                for (int i = 0; i < keySet.length; i++) {
-                    Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) existingUser.getId());
-                    answerDao.save(a);
+                //Methode som lagrer answers
+                saveAnswers(queryMap,existingUser);
 
-                    responseText += " " + a.getAnswer();
-                }
-                responseText += " with user " + existingUser.getUserName();
+                responseText += "Questions are answered with user " + existingUser.getUserName();
             } else {
                 newUser = new User(queryMap.get("newUser"));
                 userDao.save(newUser);
                 queryMap.remove("newUser");
                 queryMap.remove("existingUsers");
 
-                Object[] keySet = queryMap.keySet().toArray();
+                //Methode som lagrer answers
+                saveAnswers(queryMap, newUser);
 
-                for (int i = 0; i < keySet.length; i++) {
-                    Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) newUser.getId());
-                    answerDao.save(a);
-
-                    responseText += " " + a.getAnswer();
-                }
-
-                responseText += " with user " + newUser.getUserName();
+                responseText += " Questions are answered with user " + newUser.getUserName();
             }
         }
-        return new HttpMessage("HTTP/1.1 200", responseText.toString());
+        return new HttpMessage("HTTP/1.1 200", responseText);
     }
+
+
+    public void saveAnswers(Map<String, String> queryMap, User user) throws SQLException {
+        Object[] keySet = queryMap.keySet().toArray();
+
+        for (int i = 0; i < keySet.length; i++) {
+            Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
+            answerDao.save(a);
+        }
+    }
+
 }

@@ -11,14 +11,6 @@ public class UserDao extends AbstractDao {
         super(dataSource);
     }
 
-    @Override
-    protected User mapFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getLong("id"));
-        user.setUserName(rs.getString("user_name"));
-        return user;
-    }
-
     public void save(User user) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
@@ -45,5 +37,13 @@ public class UserDao extends AbstractDao {
 
     public void delete(int id) throws SQLException {
         delete(id, "delete from users where id = ?");
+    }
+
+    @Override
+    protected User mapFromResultSet(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getLong("id"));
+        user.setUserName(rs.getString("user_name"));
+        return user;
     }
 }

@@ -12,6 +12,8 @@
         <form action="/api/listAnswers" method="post" onsubmit="fetchQuestions()">
             <p><label>Select survey <select id="survey1" name="survey"></select></label></p>
             <p><label>Select user <select id="users" name="user"></select></label></p>
+            <input type="checkbox" id="allUsers"name="allUsers">
+            <label for="allUsers"> Show answers for all users</label><br>
             <button>Select</button>
         </form>
     </div>

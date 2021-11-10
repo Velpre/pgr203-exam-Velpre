@@ -40,7 +40,7 @@ public class ListQuestionsController implements HttpController {
             responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
 
             for (Option option : optionDao.retrieveFromQuestionId(question.getId())) {
-                responseText += "<label required class =\"radioLabel\"><input type=\"radio\" id=\"myRange\" name=\"" +
+                responseText += "<label class =\"radioLabel\"><input required type=\"radio\" id=\"myRange\" name=\"" +
                         question.getId() + "\" value=\"" +
                         option.getOptionName() + "\">" +
                         option.getOptionName() + "</label>";

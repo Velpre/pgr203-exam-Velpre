@@ -25,11 +25,12 @@ public class HttpServerTest {
     HttpServer server = new HttpServer(0);
 
     public HttpServerTest() throws IOException {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-        SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
-        AnswerDao answerDao = new AnswerDao(TestData.testDataSource());
-        UserDao userDao = new UserDao(TestData.testDataSource());
-        OptionDao optionDao = new OptionDao(TestData.testDataSource());
+        DataSource dataSource = TestData.testDataSource();
+        QuestionDao questionDao = new QuestionDao(dataSource);
+        SurveyDao surveyDao = new SurveyDao(dataSource);
+        AnswerDao answerDao = new AnswerDao(dataSource);
+        UserDao userDao = new UserDao(dataSource);
+        OptionDao optionDao = new OptionDao(dataSource);
 
         server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
         server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
@@ -63,7 +64,7 @@ public class HttpServerTest {
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
                 () -> assertEquals("text/html; charset=utf-8", client.getHeader("Content-Type")),
-                () -> assertEquals("You have answered:  with user test", client.getMessageBody())
+                () -> assertEquals("You have answered:  Questions are answered with user test", client.getMessageBody())
         );
     }
 
