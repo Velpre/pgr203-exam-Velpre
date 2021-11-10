@@ -14,6 +14,7 @@ public class ListQuestionsController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
     private int surveyId;
+    private HttpMessage httpMessage;
 
     public ListQuestionsController(QuestionDao questionDao, OptionDao optionDao) {
         this.questionDao = questionDao;
@@ -24,34 +25,38 @@ public class ListQuestionsController implements HttpController {
     public HttpMessage handle(HttpMessage request) throws SQLException, IOException {
         String responseText = "";
         Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
-        if (queryMap.size() != 0) {
+        if (request.startLine.startsWith("POST")) {
             surveyId = Integer.parseInt(queryMap.get("survey"));
-        }
-        responseText += "<p>Create New user:</p>";
-        responseText += "<input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br>";
+            responseText = "Selected survey with id: " + surveyId;
+            httpMessage = new HttpMessage("HTTP/1.1 303", responseText, "../takeSurvey.html");
+        } else {
+            responseText += "<p>Create New user:</p>";
+            responseText += "<input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br>";
 
-        responseText += "<p>Chose one of existing users<p>";
-        responseText += "<p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p>";
+            responseText += "<p>Chose one of existing users<p>";
+            responseText += "<p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p>";
 
-        String optionsString = "";
+            String optionsString = "";
 
-        for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
-            responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
+            for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
+                responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
 
-            for (Option option : optionDao.retrieveFromQuestionId(question.getId())) {
-                responseText += "<label class =\"radioLabel\"><input required type=\"radio\" id=\"myRange\" name=\"" +
-                        question.getId() + "\" value=\"" +
-                        option.getOptionName() + "\">" +
-                        option.getOptionName() + "</label>";
+                for (Option option : optionDao.retrieveFromQuestionId(question.getId())) {
+                    responseText += "<label class =\"radioLabel\"><input required type=\"radio\" id=\"myRange\" name=\"" +
+                            question.getId() + "\" value=\"" +
+                            option.getOptionName() + "\">" +
+                            option.getOptionName() + "</label>";
+                }
+                if (optionDao.retrieveFromQuestionId(question.getId()).size() == 0) {
+                    responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"5\" value=\"3\" class=\"slider\" id=\"myRange\">";
+                }
             }
-            if (optionDao.retrieveFromQuestionId(question.getId()).size() == 0) {
-                responseText += "<input name = \"" + question.getId() + "\" type=\"range\" min=\"1\" max=\"5\" value=\"3\" class=\"slider\" id=\"myRange\">";
-            }
+            responseText += optionsString;
+
+            responseText += "<br><button>Answer</button>";
+            httpMessage = new HttpMessage("HTTP/1.1 200", responseText);
         }
-        responseText += optionsString;
 
-        responseText += "<br><button>Answer</button>";
-
-        return new HttpMessage("HTTP/1.1 200", responseText);
+        return httpMessage;
     }
 }

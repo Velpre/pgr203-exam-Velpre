@@ -11,11 +11,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 
-
 public class AnswerQuestionsController implements HttpController {
     private final AnswerDao answerDao;
     private final UserDao userDao;
-    String responseText;
 
     public AnswerQuestionsController(AnswerDao answerDao, UserDao userDao) {
         this.answerDao = answerDao;
@@ -24,35 +22,29 @@ public class AnswerQuestionsController implements HttpController {
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException, UnsupportedEncodingException {
-        if (request.messageBody != null) {
-            responseText = "You have answered: ";
+        String responseText = "";
 
-            Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
-            //Finner ut av om bruker lager ny user eller velger eksisterende
-            User newUser;
-            User existingUser;
-            if (queryMap.get("newUser") == "") {
-                existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
-                queryMap.remove("newUser");
-                queryMap.remove("existingUsers");
-
-                //Methode som lagrer answers
-                saveAnswers(queryMap,existingUser);
-
-                responseText += "Questions are answered with user " + existingUser.getUserName();
-            } else {
-                newUser = new User(queryMap.get("newUser"));
-                userDao.save(newUser);
-                queryMap.remove("newUser");
-                queryMap.remove("existingUsers");
-
-                //Methode som lagrer answers
-                saveAnswers(queryMap, newUser);
-
-                responseText += " Questions are answered with user " + newUser.getUserName();
-            }
+        Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
+        //Finner ut av om bruker lager ny user eller velger eksisterende
+        User newUser;
+        User existingUser;
+        if (queryMap.get("newUser") == "") {
+            existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
+            queryMap.remove("newUser");
+            queryMap.remove("existingUsers");
+            //Methode som lagrer answers
+            saveAnswers(queryMap, existingUser);
+        } else {
+            newUser = new User(queryMap.get("newUser"));
+            userDao.save(newUser);
+            queryMap.remove("newUser");
+            queryMap.remove("existingUsers");
+            //Methode som lagrer answers
+            saveAnswers(queryMap, newUser);
         }
-        return new HttpMessage("HTTP/1.1 200", responseText);
+
+        responseText = "Completed";
+        return new HttpMessage("HTTP/1.1 303", responseText, "../takeSurvey.html");
     }
 
 
@@ -64,5 +56,4 @@ public class AnswerQuestionsController implements HttpController {
             answerDao.save(a);
         }
     }
-
 }

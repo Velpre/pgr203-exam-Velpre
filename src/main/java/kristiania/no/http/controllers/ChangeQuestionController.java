@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class ChangeQuestionController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
@@ -47,6 +46,6 @@ public class ChangeQuestionController implements HttpController {
         }
 
         String responseText = "Question has been changed";
-        return new HttpMessage("HTTP/1.1 200", responseText);
+        return new HttpMessage("HTTP/1.1 303", responseText, "../editSurvey.html");
     }
 }

@@ -3,6 +3,7 @@ package kristiania.no.http.controllers;
 import kristiania.no.http.HttpMessage;
 import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
+
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -20,6 +21,6 @@ public class NewSurveyController implements HttpController {
         Survey s = new Survey(queryMap.get("title"));
         surveyDao.save(s);
         String responseText = "You have added: Title: " + s.getName() + ".";
-        return new HttpMessage("HTTP/1.1 200", responseText);
+        return new HttpMessage("HTTP/1.1 303", responseText, "../editSurvey.html");
     }
 }

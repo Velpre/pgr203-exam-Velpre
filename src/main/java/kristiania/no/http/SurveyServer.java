@@ -22,32 +22,19 @@ public class SurveyServer {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
 
-/*
+    private static DataSource createDataSource() throws IOException {
+        Properties properties = new Properties();
+        try (FileReader reader = new FileReader("pgr203.properties")) {
+            properties.load(reader);
+        }
 
-    private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/question_db");
-        dataSource.setUser("question_dbuser");
-        dataSource.setPassword("P545v#C@ZZ");
+        dataSource.setUrl(properties.getProperty("dataSource.url"));
+        dataSource.setUser(properties.getProperty("dataSource.username"));
+        dataSource.setPassword(properties.getProperty("dataSource.password"));
         Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
-
- */
-private static DataSource createDataSource() throws IOException {
-    Properties properties = new Properties();
-    try (FileReader reader = new FileReader("pgr203.properties")) {
-        properties.load(reader);
-    }
-
-    PGSimpleDataSource dataSource = new PGSimpleDataSource();
-    dataSource.setUrl(properties.getProperty("dataSource.url"));
-    dataSource.setUser(properties.getProperty("dataSource.username"));
-    dataSource.setPassword(properties.getProperty("dataSource.password"));
-    Flyway.configure().dataSource(dataSource).load().migrate();
-    return dataSource;
-}
-
 
 
     public static void main(String[] args) throws IOException {

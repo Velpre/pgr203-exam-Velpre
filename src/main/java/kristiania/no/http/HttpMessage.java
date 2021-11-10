@@ -10,6 +10,7 @@ public class HttpMessage {
     public final Map<String, String> headerFields = new HashMap<>();
     public String startLine;
     public String messageBody;
+    private String location;
 
     public HttpMessage(Socket socket) throws IOException {
         startLine = HttpMessage.readLine(socket);
@@ -24,6 +25,11 @@ public class HttpMessage {
         this.messageBody = messageBody;
     }
 
+    public HttpMessage(String startLine, String messageBody, String location) {
+        this.startLine = startLine;
+        this.messageBody = messageBody;
+        this.location = location;
+    }
 
     static String readBytes(Socket socket, int contentLength) throws IOException {
         StringBuilder buffer = new StringBuilder();
@@ -64,8 +70,8 @@ public class HttpMessage {
     public static String readLine(Socket socket) throws IOException {
         StringBuilder buffer = new StringBuilder();
         int c;
-        while((c = socket.getInputStream().read()) != -1){
-            if(c == '\r'){
+        while ((c = socket.getInputStream().read()) != -1) {
+            if (c == '\r') {
                 socket.getInputStream().read();
                 break;
             }
@@ -98,6 +104,7 @@ public class HttpMessage {
                 "Content-Length: " + messageBody.length() + "\r\n" +
                 "Connection: close\r\n" +
                 "Content-Type: text/html; charset=utf-8\r\n" +
+                "Location: " + location + "\r\n" +
                 "\r\n" +
                 messageBody;
         socket.getOutputStream().write(response.getBytes());

@@ -21,6 +21,6 @@ public class DeleteSurveyController implements HttpController {
             surveyDao.delete(Integer.parseInt(queryMap.get("survey")));
             responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
         }
-        return new HttpMessage("HTTP/1.1 200", responseText);
+        return new HttpMessage("HTTP/1.1 303", responseText, "../editSurvey.html");
     }
 }

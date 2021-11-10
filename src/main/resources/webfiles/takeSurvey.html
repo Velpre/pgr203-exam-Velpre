@@ -6,20 +6,20 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body>
-    <main>
-        <h1>Surveys</h1>
-        <div class = "container">
-            <h3>Answer Surveys:</h3>
-            <form action="/api/listQuestions" method="post" onsubmit="fetchQuestions()">
-                <p><label>Select survey <select name="survey" id="survey1"></select></label></p>
-                <button>Select</button>
-            </form>
-        </div>
-        <div class ="container">
-            <h3>Choose or create user before answering</h3>
-            <form action="/api/answerQuestions" method="post" id=questions>
-            </form>
-        </div>
+<main>
+    <h1>Surveys</h1>
+    <div class="container">
+        <h3>Answer Surveys:</h3>
+        <form action="/api/listQuestions" method="post">
+            <p><label>Select survey <select id="survey1" name="survey"></select></label></p>
+            <button>Select</button>
+        </form>
+    </div>
+    <div class="container">
+        <h3>Choose or create user before answering</h3>
+        <form action="/api/answerQuestions" id=questions method="post">
+        </form>
+    </div>
 
     <button><a href="index.html">Home</a></button>
 </main>
@@ -39,19 +39,11 @@
     });
 
 
-
     fetch("/api/listUsers")
-        .then(function(response) {
+        .then(function (response) {
             return response.text();
-        }).then(function(text) {
+        }).then(function (text) {
         document.getElementById("existingUsers").innerHTML = text;
     });
-
-
-    const fetchQuestions = function () {
-        setTimeout(function () {
-            window.location.reload();
-        }, 10);
-    }
 </script>
 </html>
