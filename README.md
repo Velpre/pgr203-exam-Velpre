@@ -1,3 +1,8 @@
+
+## UML Diagram som beskriver forutsetninger vi har tatt for løsningen
+
+<img width="1011" alt="DB java" src="https://user-images.githubusercontent.com/65472724/141207340-974c2d00-ac59-4f47-8cb0-d3983e0d43fe.PNG">
+
 ## Sjekkliste
 
 ## Vedlegg: Sjekkliste for innlevering
