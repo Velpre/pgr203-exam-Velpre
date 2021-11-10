@@ -2,7 +2,7 @@
 
 ## Vedlegg: Sjekkliste for innlevering
 
-* [ ] Dere har lest eksamensteksten
+* [x] Dere har lest eksamensteksten
 * [ ] Dere har lastet opp en ZIP-fil med navn basert på navnet på deres Github repository
 * [ ] Koden er sjekket inn på github.com/pgr203-2021-repository
 * [ ] Dere har committed kode med begge prosjektdeltagernes GitHub konto (alternativt: README beskriver arbeidsform)
