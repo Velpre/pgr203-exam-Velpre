@@ -50,9 +50,9 @@
 * [x] FARLIG: I løpet av kurset har HttpServer og tester fått funksjonalitet som ikke lenger er nødvendig. Klarer dere å fjerne alt som er overflødig nå uten å også fjerne kode som fortsatt har verdi? (Advarsel: Denne kan trekke ned dersom dere gjør det feil!)
 
 ### Ekstraspørsmål fra eksamens dokumentet
-  [x] Avansert datamodell (mer enn 3 tabeller)
-  [x] Avansert funksjonalitet (skala på spørsmål, spørreundersøkelser)
-  [x] Rammeverk rundt Http-håndtering (en god HttpMessage class med HttpRequest og HttpResponse subtyper) som gjenspeiler RFC7230
-  [ ] Implementasjon av Chunked Transfer Encoding: https://tools.ietf.org/html/rfc7230#section-4.1
+* [x] Avansert datamodell (mer enn 3 tabeller)
+* [x] Avansert funksjonalitet (skala på spørsmål, spørreundersøkelser)
+* [x] Rammeverk rundt Http-håndtering (en god HttpMessage class med HttpRequest og HttpResponse subtyper) som gjenspeiler RFC7230
+* [ ] Implementasjon av Chunked Transfer Encoding: https://tools.ietf.org/html/rfc7230#section-4.1
 
   
