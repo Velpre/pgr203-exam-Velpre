@@ -34,11 +34,4 @@ public class AnswerDaoTest {
                 .contains(answer1.getId(), answer2.getId());
     }
 
-    @Test
-    void shouldAddAndDeleteQuestion() throws SQLException, UnsupportedEncodingException {
-        Answer answer1 = new Answer("TestAnswer", 1, 1);
-        dao.save(answer1);
-        dao.delete(answer1.getQuestionId());
-        assertThat(dao.listAll()).doesNotContain(answer1);
-    }
 }

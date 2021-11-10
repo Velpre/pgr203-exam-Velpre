@@ -11,6 +11,7 @@ public class OptionDao extends AbstractDao {
         super(dataSource);
     }
 
+
     @Override
     protected Option mapFromResultSet(ResultSet rs) throws SQLException {
         Option options = new Option();
@@ -19,6 +20,7 @@ public class OptionDao extends AbstractDao {
         options.setQuestionId(rs.getInt("question_id"));
         return options;
     }
+
 
     public void save(Option option) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
@@ -48,20 +50,14 @@ public class OptionDao extends AbstractDao {
         return retrieveFromParentId(id, "select * from options where question_id = ?");
     }
 
+    //Denne må testes
     public void delete(long id) throws SQLException {
         delete((int) id, "delete from options where id = ?");
     }
 
-
     //teste denne
-    public void updateOption(String name, int id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("update options set option_name = ? where id = ?")) {
-                statement.setString(1, name);
-                statement.setLong(2, id);
-                statement.executeUpdate();
-            }
-        }
+    public void update(String name, long id) throws SQLException {
+        update(name, id, "update options set option_name = ? where id = ?");
     }
 
     public List<Option> listAll() throws SQLException {

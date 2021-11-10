@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.user;
 
 import kristiania.no.jdbc.AbstractDao;
+import kristiania.no.jdbc.survey.Survey;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -10,6 +11,9 @@ public class UserDao extends AbstractDao {
     public UserDao(DataSource dataSource) {
         super(dataSource);
     }
+
+
+
 
     public void save(User user) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
@@ -46,5 +50,7 @@ public class UserDao extends AbstractDao {
         user.setUserName(rs.getString("user_name"));
         return user;
     }
+
+
 
 }

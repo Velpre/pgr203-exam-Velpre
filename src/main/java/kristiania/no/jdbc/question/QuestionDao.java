@@ -54,8 +54,8 @@ public class QuestionDao extends AbstractDao {
     }
 
 
-    public void updateQuestion(String name, long id) throws SQLException {
-        updateQuestion(name, id, "update questions set title = ? where id = ? ");
+    public void update(String name, long id) throws SQLException {
+        update(name, id, "update questions set title = ? where id = ? ");
     }
 
 

@@ -35,11 +35,11 @@ public class ChangeQuestionController implements HttpController {
             allOptions.add(option);
         }
 
-        questionDao.updateQuestion(queryMap.get("title"), Long.parseLong(queryMap.get("question")));
+        questionDao.update(queryMap.get("title"), Long.parseLong(queryMap.get("question")));
 
         for (int i = 1; i < 6; i++) {
             if (queryMap.get("option" + i) != "" && allOptions.size() > i) {
-                optionDao.updateOption(queryMap.get("option" + i), (int) allOptions.get(i - 1).getId());
+                optionDao.update(queryMap.get("option" + i), (int) allOptions.get(i - 1).getId());
             } else {
                 optionDao.delete(allOptions.get(i - 1).getId());
             }

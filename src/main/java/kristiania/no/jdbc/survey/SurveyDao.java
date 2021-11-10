@@ -19,21 +19,20 @@ public class SurveyDao extends AbstractDao {
         return survey;
     }
 
-    public void save(Survey survey) throws SQLException {
+
+    public long save(Survey survey) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into survey (survey_name) values (?)",
-                    Statement.RETURN_GENERATED_KEYS
-            )) {
+            try (PreparedStatement statement = connection.prepareStatement("insert into survey (survey_name) values (?)", Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, survey.getName());
                 statement.executeUpdate();
                 try (ResultSet rs = statement.getGeneratedKeys()) {
                     rs.next();
-                    survey.setId(rs.getLong("id"));
+                    return rs.getLong("id");
                 }
             }
         }
     }
+
 
     public Survey retrieve(long id) throws SQLException {
         return (Survey) retrieve(id, "select * from survey where id = ?");

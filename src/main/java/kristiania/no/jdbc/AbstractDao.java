@@ -1,10 +1,9 @@
 package kristiania.no.jdbc;
 
+import kristiania.no.jdbc.survey.Survey;
+
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +42,6 @@ public abstract class AbstractDao<T> {
         }
     }
 
-
-
-
     public List<T> retrieveFromParentId(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -77,7 +73,7 @@ public abstract class AbstractDao<T> {
     }
 
     //teste denne, skal det være int id eller long id
-    public void updateQuestion(String name, long id, String sql) throws SQLException {
+    public void update(String name, long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, name);
@@ -97,6 +93,8 @@ public abstract class AbstractDao<T> {
         }
     }
 
+
     protected abstract T mapFromResultSet(ResultSet rs) throws SQLException;
+
 
 }
