@@ -3,9 +3,11 @@ package kristiania.no.http;
 import kristiania.no.http.controllers.*;
 import kristiania.no.jdbc.TestData;
 import kristiania.no.jdbc.answer.AnswerDao;
+import kristiania.no.jdbc.options.Option;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
+import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
 import kristiania.no.jdbc.user.UserDao;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,7 @@ public class HttpServerTest {
     AnswerDao answerDao = new AnswerDao(dataSource);
     UserDao userDao = new UserDao(dataSource);
     OptionDao optionDao = new OptionDao(dataSource);
+    SurveyDao surveyDao = new SurveyDao(dataSource);
 
 
     public HttpServerTest() throws IOException {
@@ -35,6 +38,8 @@ public class HttpServerTest {
         server.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
         server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
         server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
+        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+
 
     }
 
@@ -103,29 +108,35 @@ public class HttpServerTest {
         );
     }
 
-    @Test
-    void shouldReturnOptionsFromServer() throws IOException {
-        SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
-        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
-        //Client Questionnaire & Test Questionnaire objekt blir lagt til i DB gjennom V006 migrering
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
-        assertEquals(
-                "<option value=1>Client Questionnaire</option>" +
-                        "<option value=2>Test Questionnaire</option>"
-                ,
 
-                client.getMessageBody()
-        );
+
+    @Test
+    void shouldReturnSurveyFromServer() throws IOException, SQLException {
+        Survey survey1 = new Survey("test1");
+        Survey survey2 = new Survey("test2");
+        surveyDao.save(survey1);
+        surveyDao.save(survey2);
+        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        //Andre survey objekter blir også lagt til i DB gjennom V006 migrering
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
+        assertThat(client.getMessageBody()).contains("<option value=" + survey1.getId() + ">test1</option><option value=" + survey2.getId() + ">test2</option>");
     }
+
+  //Trenger vi denne under? la den til
+
+    @Test
+    void shouldListAllQuestionsFromServer() throws IOException, SQLException {
+        Question question1 = new Question("test1",1);
+        Question question2 = new Question("test2",2);
+        questionDao.save(question1);
+        questionDao.save(question2);
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listAllQuestions");
+        assertThat(client.getMessageBody()).contains("<option value=" + question1.getId() + ">test1</option><option value=" + question2.getId() + ">test2</option>");
+    }
+
 
     @Test
     void shouldAddQuestions() throws IOException, SQLException {
-        DataSource dataSource = TestData.testDataSource();
-        QuestionDao questionDao = new QuestionDao(dataSource);
-        OptionDao optionDao = new OptionDao(dataSource);
-        //Skal vi add den på nytt siden vi adder alle controllers øverst?
-        server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
-
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),
                 "/api/newQuestion",
                 "title=title1&questionText=text1&survey=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
@@ -139,6 +150,8 @@ public class HttpServerTest {
     }
 
 /*
+
+Tror at denne kan slettes
     //Testen tester helt feil ting denne må rettes.
 
     @Test
