@@ -43,10 +43,6 @@ public class OptionDao extends AbstractDao {
         }
     }
 
-    public Option retrieve(long id) throws SQLException {
-        List<Option> option = retrieve(id, "select * from options where id = ?");
-        return option.get(0);
-    }
 
     public List<Option> retrieveFromQuestionId(long id) throws SQLException {
         return (List<Option>) retrieve(id, "select * from options where question_id = ?");
@@ -62,6 +58,7 @@ public class OptionDao extends AbstractDao {
         update(name, id, "update options set option_name = ? where id = ?");
     }
 
+    //Teste denne
     public List<Option> listAll() throws SQLException {
         return listAll("select * from options");
     }

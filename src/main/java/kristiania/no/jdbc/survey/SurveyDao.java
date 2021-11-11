@@ -35,10 +35,6 @@ public class SurveyDao extends AbstractDao {
     }
 
 
-    public Survey retrieve(long id) throws SQLException {
-        List<Survey> survey = retrieve(id, "select * from survey where id = ?");
-        return survey.get(0);
-    }
 
     public List<Survey> listAll() throws SQLException {
         return listAll("select * from survey");

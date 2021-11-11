@@ -42,20 +42,18 @@ public class QuestionDao extends AbstractDao {
         return listAll("select * from questions");
     }
 
-    public Question retrieve(long id) throws SQLException {
-        List<Question> question = retrieve(id, "select * from questions where id = ?");
-        return question.get(0);
-    }
-
-    public void delete(int id) throws SQLException {
-        delete(id, "delete from questions where id = ?");
-    }
-
     public List<Question> retriveFromParentId(long id) throws SQLException {
         return (List<Question>) retrieve(id, "select * from questions where survey_id = ?");
     }
 
 
+
+//Teste denne
+    public void delete(int id) throws SQLException {
+        delete(id, "delete from questions where id = ?");
+    }
+
+    //Teste denne
     public void update(String name, long id) throws SQLException {
         update(name, id, "update questions set title = ? where id = ? ");
     }

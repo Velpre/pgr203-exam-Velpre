@@ -11,15 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OptionDaoTest {
     private final OptionDao dao = new OptionDao(TestData.testDataSource());
 
-    @Test
-    void shouldRetrieveSavedOptions() throws SQLException {
-        Option option = new Option("o1", 1);
-        dao.save(option);
-        assertThat(dao.retrieve(option.getId()))
-                .hasNoNullFieldsOrProperties()
-                .usingRecursiveComparison()
-                .isEqualTo(option);
-    }
 
     @Test
     void shouldListAllOptionsById() throws SQLException {
