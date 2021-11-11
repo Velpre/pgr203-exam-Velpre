@@ -1,7 +1,6 @@
 package kristiania.no.jdbc.question;
 
 import kristiania.no.jdbc.AbstractDao;
-import kristiania.no.jdbc.options.Option;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -17,7 +16,7 @@ public class QuestionDao extends AbstractDao {
         Question question = new Question();
         question.setId(rs.getLong("id"));
         question.setTitle(rs.getString("title"));
-        question.setSurveyId(rs.getInt("survey_id"));
+        question.setSurveyId(rs.getLong("survey_id"));
         return question;
     }
 
@@ -28,7 +27,7 @@ public class QuestionDao extends AbstractDao {
                     Statement.RETURN_GENERATED_KEYS
             )) {
                 statement.setString(1, question.getTitle());
-                statement.setInt(2, question.getSurveyId());
+                statement.setLong(2, question.getSurveyId());
                 statement.executeUpdate();
                 try (ResultSet rs = statement.getGeneratedKeys()) {
                     rs.next();
@@ -42,14 +41,13 @@ public class QuestionDao extends AbstractDao {
         return listAll("select * from questions");
     }
 
-    public List<Question> retriveFromParentId(long id) throws SQLException {
-        return (List<Question>) retrieve(id, "select * from questions where survey_id = ?");
+    public List<Question> retrieveFromSurveyId(long id) throws SQLException {
+        return retrieve(id, "select * from questions where survey_id = ?");
     }
 
 
-
-//Teste denne
-    public void delete(int id) throws SQLException {
+    //Teste denne
+    public void delete(long id) throws SQLException {
         delete(id, "delete from questions where id = ?");
     }
 

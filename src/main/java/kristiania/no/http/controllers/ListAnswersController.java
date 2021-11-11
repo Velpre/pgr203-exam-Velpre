@@ -37,7 +37,7 @@ public class ListAnswersController implements HttpController {
             httpMessage = new HttpMessage("HTTP/1.1 303", responseText, "../showAnswers.html");
         } else if (request.startLine.startsWith("GET")) {
             if (showAllUsers == null) {
-                for (Question question : questionDao.retriveFromParentId(surveyId)) {
+                for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
                     for (Answer answerByQuestionId : answerDao.retrieveFromQuestionId(question.getId())) {
                         if (answerByQuestionId.getUserId() == userId) {
@@ -47,7 +47,7 @@ public class ListAnswersController implements HttpController {
 
                 }
             } else {
-                for (Question question : questionDao.retriveFromParentId(surveyId)) {
+                for (Question question : questionDao.retrieveFromSurveyId(surveyId)) {
                     responseText += "<h3>" + question.getTitle() + "</h3>\r\n";
                     for (Answer allAnswers : answerDao.retrieveFromQuestionId(question.getId())) {
                         responseText += "<p>" + allAnswers.getAnswer() + "</p>\r\n";

@@ -31,7 +31,7 @@ public class QuestionDaoTest {
         Question question2 = new Question("q2", 2);
         dao.save(question2);
 
-        assertThat(dao.retriveFromParentId(1))
+        assertThat(dao.retrieveFromSurveyId(1))
                 .extracting(Question::getId)
                 .contains(question.getId())
                 .doesNotContain(question2.getId());
@@ -41,7 +41,19 @@ public class QuestionDaoTest {
     void shouldAddAndDeleteQuestion() throws SQLException {
         Question question = new Question("Question", 1);
         dao.save(question);
-        dao.delete((int) question.getId());
+        dao.delete(question.getId());
         assertThat(dao.listAll()).doesNotContain(question);
+    }
+
+    @Test
+    void shouldUpdateQuestion() throws SQLException {
+        Question question = new Question("Question", 1);
+        dao.save(question);
+        dao.update("NewName", question.getId());
+
+        assertThat(dao.listAll())
+                .extracting(Question::getTitle)
+                .contains("NewName")
+                .doesNotContain("Question");
     }
 }

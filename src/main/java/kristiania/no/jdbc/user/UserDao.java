@@ -1,8 +1,6 @@
 package kristiania.no.jdbc.user;
 
 import kristiania.no.jdbc.AbstractDao;
-import kristiania.no.jdbc.answer.Answer;
-import kristiania.no.jdbc.survey.Survey;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,8 +10,6 @@ public class UserDao extends AbstractDao {
     public UserDao(DataSource dataSource) {
         super(dataSource);
     }
-
-
 
 
     public void save(User user) throws SQLException {
@@ -41,7 +37,7 @@ public class UserDao extends AbstractDao {
         return listAll("select * from users");
     }
 
-    public void delete(int id) throws SQLException {
+    public void delete(long id) throws SQLException {
         delete(id, "delete from users where id = ?");
     }
 
@@ -52,7 +48,6 @@ public class UserDao extends AbstractDao {
         user.setUserName(rs.getString("user_name"));
         return user;
     }
-
 
 
 }

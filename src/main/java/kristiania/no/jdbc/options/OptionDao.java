@@ -1,7 +1,6 @@
 package kristiania.no.jdbc.options;
 
 import kristiania.no.jdbc.AbstractDao;
-import kristiania.no.jdbc.answer.Answer;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -18,7 +17,7 @@ public class OptionDao extends AbstractDao {
         Option options = new Option();
         options.setId(rs.getLong("id"));
         options.setOptionName(rs.getString("option_name"));
-        options.setQuestionId(rs.getInt("question_id"));
+        options.setQuestionId(rs.getLong("question_id"));
         return options;
     }
 
@@ -31,7 +30,7 @@ public class OptionDao extends AbstractDao {
 
             )) {
                 statement.setString(1, option.getOptionName());
-                statement.setInt(2, option.getQuestionId());
+                statement.setLong(2, option.getQuestionId());
                 if (option.getOptionName() != "") {
                     statement.executeUpdate();
                     try (ResultSet rs = statement.getGeneratedKeys()) {
@@ -50,7 +49,7 @@ public class OptionDao extends AbstractDao {
 
     //Denne må testes
     public void delete(long id) throws SQLException {
-        delete((int) id, "delete from options where id = ?");
+        delete(id, "delete from options where id = ?");
     }
 
     //teste denne

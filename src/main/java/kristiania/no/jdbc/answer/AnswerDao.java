@@ -1,11 +1,9 @@
 package kristiania.no.jdbc.answer;
 
 import kristiania.no.jdbc.AbstractDao;
-import kristiania.no.jdbc.question.Question;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AnswerDao extends AbstractDao {
@@ -18,8 +16,8 @@ public class AnswerDao extends AbstractDao {
         Answer answer = new Answer();
         answer.setId(rs.getLong("id"));
         answer.setAnswer(rs.getString("answer"));
-        answer.setQuestionId(rs.getInt("question_id"));
-        answer.setUserId(rs.getInt("user_id"));
+        answer.setQuestionId(rs.getLong("question_id"));
+        answer.setUserId(rs.getLong("user_id"));
         return answer;
     }
 
@@ -34,8 +32,8 @@ public class AnswerDao extends AbstractDao {
 
             )) {
                 statement.setString(1, answer.getAnswer());
-                statement.setInt(2, answer.getQuestionId());
-                statement.setInt(3, answer.userId());
+                statement.setLong(2, answer.getQuestionId());
+                statement.setLong(3, answer.userId());
 
                 statement.executeUpdate();
 
