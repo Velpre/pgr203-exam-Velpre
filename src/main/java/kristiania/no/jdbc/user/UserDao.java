@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.user;
 
 import kristiania.no.jdbc.AbstractDao;
+import kristiania.no.jdbc.answer.Answer;
 import kristiania.no.jdbc.survey.Survey;
 
 import javax.sql.DataSource;
@@ -32,7 +33,8 @@ public class UserDao extends AbstractDao {
     }
 
     public User retrieve(long id) throws SQLException {
-        return (User) retrieve(id, "select * from users where id = ?");
+        List<User> user = retrieve(id, "select * from users where id = ?");
+        return user.get(0);
     }
 
     public List<User> listAll() throws SQLException {

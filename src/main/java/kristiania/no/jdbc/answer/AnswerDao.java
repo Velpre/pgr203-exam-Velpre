@@ -22,7 +22,6 @@ public class AnswerDao extends AbstractDao {
         return answer;
     }
 
-// readFromResultSet Methoden er erstatet med mapFromResultSet
 // Må også rette opp retrive mothoder med å retunere null hvis det ikke finnes rs.next()
 
 
@@ -49,7 +48,8 @@ public class AnswerDao extends AbstractDao {
 
 
     public Answer retrieve(long id) throws SQLException {
-        return (Answer) retrieve(id, "select * from answers where id = ?");
+        List<Answer> answer = retrieve(id, "select * from answers where id = ?");
+        return answer.get(0);
     }
 
 
@@ -77,26 +77,4 @@ public class AnswerDao extends AbstractDao {
             }
         }
     }
-
-
-
-    //Denne må testes
-    public List<Answer> retrieveFromUserId(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from answers where user_id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<Answer> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(mapFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
-    }
-
-
-
 }
