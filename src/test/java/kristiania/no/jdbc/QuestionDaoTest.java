@@ -11,15 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class QuestionDaoTest {
     private final QuestionDao dao = new QuestionDao(TestData.testDataSource());
 
-    @Test
-    void shouldRetrieveSavedQuestion() throws SQLException {
-        Question question = new Question("q1", 1);
-        dao.save(question);
-        assertThat(dao.retrieve(question.getId()))
-                .hasNoNullFieldsOrProperties()
-                .usingRecursiveComparison()
-                .isEqualTo(question);
-    }
 
     @Test
     void shouldListAllQuestions() throws SQLException {

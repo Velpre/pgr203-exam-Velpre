@@ -13,25 +13,13 @@ public class AnswerDaoTest {
     private final AnswerDao dao = new AnswerDao(TestData.testDataSource());
 
     @Test
-    void shouldRetrieveSavedQuestion() throws SQLException, UnsupportedEncodingException {
+    void shouldRetrieveSavedAnswersFromQuestionId() throws SQLException, UnsupportedEncodingException {
         Answer answer = new Answer("TestAnswer", 1, 1);
         dao.save(answer);
-        assertThat(dao.retrieve(answer.getId()))
-                .hasNoNullFieldsOrProperties()
-                .usingRecursiveComparison()
-                .isEqualTo(answer);
-    }
-
-    @Test
-    void shouldListAllQuestions() throws SQLException, UnsupportedEncodingException {
-        Answer answer1 = new Answer("TestAnswer", 1, 1);
-        dao.save(answer1);
-        Answer answer2 = new Answer("TestAnswer2", 1, 1);
-        dao.save(answer2);
-
-        assertThat(dao.listAll())
+        assertThat(dao.retrieveFromQuestionId(answer.getQuestionId()))
                 .extracting(Answer::getId)
-                .contains(answer1.getId(), answer2.getId());
+                .contains(answer.getId());
+
     }
 
 }

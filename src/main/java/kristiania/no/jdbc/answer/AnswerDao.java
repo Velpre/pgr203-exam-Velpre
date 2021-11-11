@@ -48,19 +48,7 @@ public class AnswerDao extends AbstractDao {
     }
 
 
-    public Answer retrieve(long id) throws SQLException {
-        List<Answer> answer = retrieve(id, "select * from answers where id = ?");
-        return answer.get(0);
-    }
-
-
-
-    public List<Answer> listAll() throws SQLException {
-        return listAll("select * from answers");
-    }
-
     //Denne må testes og byttes til Abstract DAO methoden
-
     public List<Answer> retrieveFromQuestionId(long id) throws SQLException {
         return (List<Answer>) retrieve(id, "select * from answers where question_id = ?");
     }
