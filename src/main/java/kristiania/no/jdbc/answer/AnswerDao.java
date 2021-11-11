@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.answer;
 
 import kristiania.no.jdbc.AbstractDao;
+import kristiania.no.jdbc.question.Question;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -58,23 +59,11 @@ public class AnswerDao extends AbstractDao {
         return listAll("select * from answers");
     }
 
-
-
     //Denne må testes og byttes til Abstract DAO methoden
 
     public List<Answer> retrieveFromQuestionId(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from answers where question_id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<Answer> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(mapFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
+        return (List<Answer>) retrieve(id, "select * from answers where question_id = ?");
     }
+
+
 }
