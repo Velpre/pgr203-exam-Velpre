@@ -45,15 +45,13 @@ public class SurveyServer {
 
         HttpServer httpServer = new HttpServer(8001);
         httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-        httpServer.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        httpServer.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
         httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
-        httpServer.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
-        httpServer.addController("/api/newSurvey", new NewSurveyController(surveyDao));
+        httpServer.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
         httpServer.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
         httpServer.addController("/api/listUsers", new ListUsersController(userDao));
         httpServer.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
         httpServer.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
-        httpServer.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
 
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 

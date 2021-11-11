@@ -38,15 +38,13 @@ public class HttpServerTest {
     public HttpServerTest() throws IOException {
 
         server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        server.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
         server.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
-        server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
-        server.addController("/api/newSurvey", new NewSurveyController(surveyDao));
+        server.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
         server.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
         server.addController("/api/listUsers", new ListUsersController(userDao));
         server.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
         server.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
-        server.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
 
     }
 
@@ -111,8 +109,8 @@ public class HttpServerTest {
     @Test
     void shouldListAllQuestions() throws SQLException {
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
-        ListAllQuestionsController listAllQuestionsController = new ListAllQuestionsController(questionDao);
-        HttpMessage response = listAllQuestionsController.handle(httpMessage);
+        AddAndListAllQuestionsController addAndListAllQuestionsController = new AddAndListAllQuestionsController(questionDao, optionDao);
+        HttpMessage response = addAndListAllQuestionsController.handle(httpMessage);
         assertThat(response.messageBody).contains("<option value=1>How much time do you spend using facebook? (per day)</option>" +
                 "<option value=2>In the last month, what has been your biggest pain point?</option>" +
                 "<option value=3>What is your biggest priority right now?</option>" +
@@ -145,9 +143,9 @@ public class HttpServerTest {
     @Test
     void shouldReturnOptionsFromServer() throws IOException {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
-        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        server.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/addAndListSurvey");
         assertEquals(
                 "<option value=1>Client Questionnaire</option>" +
                         "<option value=2>Test Questionnaire</option>"
@@ -163,10 +161,10 @@ public class HttpServerTest {
         QuestionDao questionDao = new QuestionDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
 
-        server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
+        server.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
 
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),
-                "/api/newQuestion",
+                "/api/addAndListAllQuestions",
                 "title=title1&questionText=text1&survey" +
                         "=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
         assertEquals(303, postClient.getStatusCode());

@@ -27,7 +27,7 @@
 </main>
 </body>
 <script>
-    fetch("/api/listSurveyOptions").then(function (res) {
+    fetch("/api/addAndListSurvey").then(function (res) {
         return res.text();
     }).then(function (text) {
         document.getElementById("survey1").innerHTML = text;
