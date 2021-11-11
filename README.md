@@ -1,11 +1,8 @@
 
-<<<<<<< HEAD
-[![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
 
 ## Hvordan kjøre dette programmet
-=======
+
 ## Beskriv hvordan programmet skal testes:
->>>>>>> SaveCode
 
 ## Ekstra Funksjonalitet
 
@@ -21,16 +18,11 @@ Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal bes
 
 ## Database struktur
 
-<<<<<<< HEAD
 <img width="1011" alt="DB java" src="https://user-images.githubusercontent.com/65472724/141207340-974c2d00-ac59-4f47-8cb0-d3983e0d43fe.PNG">
 
 ## Server struktur
 <img width="636" alt="Server struktur" src="https://user-images.githubusercontent.com/65472724/141211031-f998f0e5-7639-4eb8-a8ba-529ee2f9b77c.PNG">
 
-=======
-**Det er viktig å være klar over at eksempel HTML i eksamensoppgaven kun er til illustrasjon. Eksemplene er ikke
-tilstrekkelig for å løse alle ekstraoppgavene og kandidatene må endre HTML-en for å være tilpasset sin besvarelse**
->>>>>>> SaveCode
 
 ## Sjekkliste
 
@@ -70,7 +62,6 @@ tilstrekkelig for å løse alle ekstraoppgavene og kandidatene må endre HTML-en
 
 ### Ekstraspørsmål (dere må løse mange/noen av disse for å oppnå A/B)
 
-<<<<<<< HEAD
 * [ ] Før en bruker svarer på et spørsmål hadde det vært fint å la brukeren registrere navnet sitt. Klarer dere å implementere dette med cookies? Lag en form med en POST request der serveren sender tilbake Set-Cookie headeren. Browseren vil sende en Cookie header tilbake i alle requester. Bruk denne til å legge inn navnet på brukerens svar
 * [x] Når brukeren utfører en POST hadde det vært fint å sende brukeren tilbake til dit de var før. Det krever at man svarer med response code 303 See other og headeren Location
 * [x] Når brukeren skriver inn en tekst på norsk må man passe på å få encoding riktig. Klarer dere å lage en <form> med action=POST og encoding=UTF-8 som fungerer med norske tegn? Klarer dere å få æøå til å fungere i tester som gjør både POST og GET?
@@ -92,37 +83,4 @@ tilstrekkelig for å løse alle ekstraoppgavene og kandidatene må endre HTML-en
 * [x] Rammeverk rundt Http-håndtering (en god HttpMessage class med HttpRequest og HttpResponse subtyper) som gjenspeiler RFC7230
 * [ ] Implementasjon av Chunked Transfer Encoding: https://tools.ietf.org/html/rfc7230#section-4.1
 * [ ] Annet 
-  
-=======
-* [ ] Før en bruker svarer på et spørsmål hadde det vært fint å la brukeren registrere navnet sitt. Klarer dere å
-  implementere dette med cookies? Lag en form med en POST request der serveren sender tilbake Set-Cookie headeren.
-  Browseren vil sende en Cookie header tilbake i alle requester. Bruk denne til å legge inn navnet på brukerens svar
-* [x] Når brukeren utfører en POST hadde det vært fint å sende brukeren tilbake til dit de var før. Det krever at man
-  svarer med response code 303 See other og headeren Location
-* [ ] Når brukeren skriver inn en tekst på norsk må man passe på å få encoding riktig. Klarer dere å lage en <form> med
-  action=POST og encoding=UTF-8 som fungerer med norske tegn? Klarer dere å få æøå til å fungere i tester som gjør både
-  POST og GET?
-* [x] Å opprette og liste spørsmål hadde vært logisk og REST-fult å gjøre med GET /api/questions og POST /api/questions.
-  Klarer dere å endre måten dere hånderer controllers på slik at en GET og en POST request kan ha samme request target?
-* [ ] Vi har sett på hvordan å bruke AbstractDao for å få felles kode for retrieve og list. Kan dere bruke felles kode i
-  AbstractDao for å unngå duplisering av inserts og updates?
-* [ ] Dersom noe alvorlig galt skjer vil serveren krasje. Serveren burde i stedet logge dette og returnere en status
-  code 500 til brukeren
-* [x] Dersom brukeren går til http://localhost:8080 får man 404. Serveren burde i stedet returnere innholdet av
-  index.html
-* [ ] Et favorittikon er et lite ikon som nettleseren viser i tab-vinduer for en webapplikasjon. Kan dere lage et
-  favorittikon for deres server? Tips: ikonet er en binærfil og ikke en tekst og det går derfor ikke an å laste den inn
-  i en StringBuilder
-* [ ] I forelesningen har vi sett på å innføre begrepet Controllers for å organisere logikken i serveren. Unntaket fra
-  det som håndteres med controllers er håndtering av filer på disk. Kan dere skrive om HttpServer til å bruke en
-  FileController for å lese filer fra disk?
-* [ ] Kan dere lage noen diagrammer som illustrerer hvordan programmet deres virker?
-* [ ] JDBC koden fra forelesningen har en feil ved retrieve dersom id ikke finnes. Kan dere rette denne?
-* [x] I forelesningen fikk vi en rar feil med CSS når vi hadde `<!DOCTYPE html>`. Grunnen til det er feil content-type.
-  Klarer dere å fikse det slik at det fungerer å ha `<!DOCTYPE html>` på starten av alle HTML-filer?
-* [ ] Klarer dere å lage en Coverage-rapport med GitHub Actions med Coveralls? (Advarsel: Foreleser har nylig opplevd
-  feil med Coveralls så det er ikke sikkert dere får det til å virke)
-* [ ] FARLIG: I løpet av kurset har HttpServer og tester fått funksjonalitet som ikke lenger er nødvendig. Klarer dere å
-  fjerne alt som er overflødig nå uten å også fjerne kode som fortsatt har verdi? (Advarsel: Denne kan trekke ned dersom
-  dere gjør det feil!)
->>>>>>> SaveCode
+ 
