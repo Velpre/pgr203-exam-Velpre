@@ -178,7 +178,13 @@ public class HttpServerTest {
 
     }
 
+    void æøåTest() {
+        DataSource dataSource = TestData.testDataSource();
+        QuestionDao questionDao = new QuestionDao(dataSource);
+        OptionDao optionDao = new OptionDao(dataSource);
 
+
+    }
 
 /*
     //Testen tester helt feil ting denne må rettes
