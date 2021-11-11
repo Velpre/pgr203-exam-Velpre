@@ -113,12 +113,12 @@ public class HttpServerTest {
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         ListAllQuestionsController listAllQuestionsController = new ListAllQuestionsController(questionDao);
         HttpMessage response = listAllQuestionsController.handle(httpMessage);
-        assertThat(response.messageBody.contains("\"<option value=1>How much time do you spend using facebook? (per day)</option>\" +\n" +
-                "                \"<option value=2>In the last month, what has been your biggest pain point?</option>\" +\n" +
-                "                \"<option value=3>What is your biggest priority right now?</option>\" +\n" +
-                "                \"<option value=4>Please rate your knowledge on the following term: Knowledgeable __ __ __ __ __ Inexperienced</option>\" +\n" +
-                "                \"<option value=5>Please rate our staff on the following term: Professional __ __ __ __ __ Inappropriate</option>\" +\n" +
-                "                \"<option value=6>How much time do you spend using facebook? (per day)</option>\""));
+        assertThat(response.messageBody).contains("<option value=1>How much time do you spend using facebook? (per day)</option>" +
+                "<option value=2>In the last month, what has been your biggest pain point?</option>" +
+                "<option value=3>What is your biggest priority right now?</option>" +
+                "<option value=4>Please rate your knowledge on the following term: Knowledgeable __ __ __ __ __ Inexperienced</option>" +
+                "<option value=5>Please rate our staff on the following term: Professional __ __ __ __ __ Inappropriate</option>" +
+                "<option value=6>How much time do you spend using facebook? (per day)</option>");
     }
 
     // Tester ListUsersController - DONE
@@ -127,13 +127,13 @@ public class HttpServerTest {
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         ListUsersController listUsersController = new ListUsersController(userDao);
         HttpMessage response = listUsersController.handle(httpMessage);
-        assertThat(response.messageBody.contains("<option value=1>User1</option>"));
+        assertThat(response.messageBody).contains("<option value=1>User1</option>");
     }
 
 
     @Test
     void shouldRespondWith200ForKnownRequestTarget() throws IOException {
-        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/answerQuestions", "newUser=test");
+        new HttpPostClient("localhost", server.getPort(), "/api/answerQuestions", "newUser=test");
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/answerQuestions");
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
@@ -143,7 +143,7 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldReturnOptionsFromServer() throws IOException, SQLException {
+    void shouldReturnOptionsFromServer() throws IOException {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
         server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
         //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
