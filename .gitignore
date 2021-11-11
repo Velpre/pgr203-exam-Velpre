@@ -2,4 +2,3 @@
 target/
 .idea/
 /pgr203.properties
-/src/main/resources/db/runThisToAddSurveys.sql

@@ -17,6 +17,7 @@ public class ListAnswersController implements HttpController {
     private int surveyId;
     private int userId;
     private String showAllUsers;
+    private HttpMessage httpMessage;
 
     public ListAnswersController(QuestionDao questionDao, AnswerDao answerDao) {
         this.questionDao = questionDao;
@@ -33,6 +34,7 @@ public class ListAnswersController implements HttpController {
             userId = Integer.parseInt(queryMap.get("user"));
             showAllUsers = queryMap.get("allUsers");
             responseText = "POST Done";
+            httpMessage = new HttpMessage("HTTP/1.1 303", responseText, "../showAnswers.html");
         } else if (request.startLine.startsWith("GET")) {
             if (showAllUsers == null) {
                 for (Question question : questionDao.retriveFromParentId(surveyId)) {
@@ -52,9 +54,11 @@ public class ListAnswersController implements HttpController {
                     }
                 }
             }
+            httpMessage = new HttpMessage("HTTP/1.1 200", responseText);
+
         }
 
-        return new HttpMessage("HTTP/1.1 200", responseText);
+        return httpMessage;
     }
 
 }

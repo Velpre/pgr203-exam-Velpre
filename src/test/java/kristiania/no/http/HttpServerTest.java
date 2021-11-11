@@ -60,11 +60,11 @@ public class HttpServerTest {
     @Test
     void shouldRespondWith200ForKnownRequestTarget() throws IOException {
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/answerQuestions", "newUser=test");
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/answerQuestions?newUser=test");
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/answerQuestions");
         assertAll(
                 () -> assertEquals(200, client.getStatusCode()),
                 () -> assertEquals("text/html; charset=utf-8", client.getHeader("Content-Type")),
-                () -> assertEquals("You have answered:  Questions are answered with user test", client.getMessageBody())
+                () -> assertEquals("Questions answered", client.getMessageBody())
         );
     }
 
@@ -96,7 +96,7 @@ public class HttpServerTest {
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listAllQuestions").getStatusCode());
     }
 
-
+/*
     @Test
     void shouldEchoMoreThanOneQueryParameter() throws IOException {
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/newQuestion",
@@ -105,7 +105,7 @@ public class HttpServerTest {
 
         assertEquals("You have added: Question: test Survey: 1 Options:test1 test1 test1 test1 test1.", client.getMessageBody());
     }
-
+*/
 
 
     //Testen tester helt feil ting denne må rettes
@@ -154,7 +154,7 @@ public class HttpServerTest {
                 "/api/newQuestion",
                 "title=title1&questionText=text1&survey" +
                         "=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
-        assertEquals(200, postClient.getStatusCode());
+        assertEquals(303, postClient.getStatusCode());
         List<Question> questionList = questionDao.listAll();
 
         assertThat(questionList)
