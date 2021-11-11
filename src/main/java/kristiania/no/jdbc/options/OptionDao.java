@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.options;
 
 import kristiania.no.jdbc.AbstractDao;
+import kristiania.no.jdbc.answer.Answer;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -43,11 +44,12 @@ public class OptionDao extends AbstractDao {
     }
 
     public Option retrieve(long id) throws SQLException {
-        return (Option) retrieve(id, "select * from options where id = ?");
+        List<Option> option = retrieve(id, "select * from options where id = ?");
+        return option.get(0);
     }
 
     public List<Option> retrieveFromQuestionId(long id) throws SQLException {
-        return retrieveFromParentId(id, "select * from options where question_id = ?");
+        return (List<Option>) retrieve(id, "select * from options where question_id = ?");
     }
 
     //Denne må testes

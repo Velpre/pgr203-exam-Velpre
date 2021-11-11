@@ -1,6 +1,7 @@
 package kristiania.no.jdbc.question;
 
 import kristiania.no.jdbc.AbstractDao;
+import kristiania.no.jdbc.options.Option;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -42,7 +43,8 @@ public class QuestionDao extends AbstractDao {
     }
 
     public Question retrieve(long id) throws SQLException {
-        return (Question) retrieveById(id, "select * from questions where id = ?");
+        List<Question> question = retrieve(id, "select * from questions where id = ?");
+        return question.get(0);
     }
 
     public void delete(int id) throws SQLException {
@@ -50,7 +52,7 @@ public class QuestionDao extends AbstractDao {
     }
 
     public List<Question> retriveFromParentId(long id) throws SQLException {
-        return retrieveFromParentId(id, "select * from questions where survey_id = ?");
+        return (List<Question>) retrieve(id, "select * from questions where survey_id = ?");
     }
 
 

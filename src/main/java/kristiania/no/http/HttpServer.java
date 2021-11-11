@@ -46,11 +46,8 @@ public class HttpServer {
 
         int questionPos = requestTarget.indexOf('?');
         String fileTarget;
-        //Skal vi slette query?
-        String query = null;
         if (questionPos != -1) {
             fileTarget = requestTarget.substring(0, questionPos);
-            query = requestTarget.substring(questionPos + 1);
         } else {
             fileTarget = requestTarget;
         }
