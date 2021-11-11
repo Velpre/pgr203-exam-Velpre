@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class ChangeQuestionController implements HttpController {
@@ -23,11 +24,8 @@ public class ChangeQuestionController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
         Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
-        List<Option> allOptions = new ArrayList<>();
 
-        for (Option option : optionDao.retrieveFromQuestionId(Long.parseLong(queryMap.get("question")))) {
-            allOptions.add(option);
-        }
+        List<Option> allOptions = new ArrayList<>(optionDao.retrieveFromQuestionId(Long.parseLong(queryMap.get("question"))));
 
         while (allOptions.size() < 5) {
             Option option = new Option("name", Integer.parseInt(queryMap.get("question")));
@@ -38,7 +36,7 @@ public class ChangeQuestionController implements HttpController {
         questionDao.update(queryMap.get("title"), Long.parseLong(queryMap.get("question")));
 
         for (int i = 1; i < 6; i++) {
-            if (queryMap.get("option" + i) != "" && allOptions.size() > i) {
+            if (!Objects.equals(queryMap.get("option" + i), "") && allOptions.size() > i) {
                 optionDao.update(queryMap.get("option" + i), (int) allOptions.get(i - 1).getId());
             } else {
                 optionDao.delete(allOptions.get(i - 1).getId());

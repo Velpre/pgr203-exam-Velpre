@@ -1,12 +1,11 @@
 package kristiania.no.http;
 
 import kristiania.no.http.controllers.HttpController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -24,7 +23,7 @@ public class HttpServer {
     }
 
 
-    private void handleClients(){
+    private void handleClients() {
         try {
             while (true) {
                 handleClient();
@@ -65,7 +64,7 @@ public class HttpServer {
                     contentType = "text/css";
                 }
 
-                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, "UTF-8"), contentType);
+                writeOkResponse(clientSocket, java.net.URLDecoder.decode(responseText, StandardCharsets.UTF_8), contentType);
                 return;
             }
 

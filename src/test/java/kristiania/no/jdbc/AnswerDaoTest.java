@@ -5,7 +5,6 @@ import kristiania.no.jdbc.answer.AnswerDao;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;

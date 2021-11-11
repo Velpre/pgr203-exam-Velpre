@@ -14,7 +14,6 @@ public class ListQuestionsController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
     private int surveyId;
-    private HttpMessage httpMessage;
 
     public ListQuestionsController(QuestionDao questionDao, OptionDao optionDao) {
         this.questionDao = questionDao;
@@ -25,6 +24,7 @@ public class ListQuestionsController implements HttpController {
     public HttpMessage handle(HttpMessage request) throws SQLException, IOException {
         String responseText = "";
         Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
+        HttpMessage httpMessage;
         if (request.startLine.startsWith("POST")) {
             surveyId = Integer.parseInt(queryMap.get("survey"));
             responseText = "Selected survey with id: " + surveyId;

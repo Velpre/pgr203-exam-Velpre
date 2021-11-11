@@ -23,13 +23,13 @@ public class AnswerQuestionsController implements HttpController {
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException, UnsupportedEncodingException {
-        String responseText = "";
+        String responseText;
         if (request.startLine.startsWith("POST")) {
             Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
             //Finner ut av om bruker lager ny user eller velger eksisterende
             User newUser;
             User existingUser;
-            if (queryMap.get("newUser") == "") {
+            if (queryMap.get("newUser").equals("")) {
                 existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
                 queryMap.remove("newUser");
                 queryMap.remove("existingUsers");
@@ -57,8 +57,8 @@ public class AnswerQuestionsController implements HttpController {
     public void saveAnswers(Map<String, String> queryMap, User user) throws SQLException {
         Object[] keySet = queryMap.keySet().toArray();
 
-        for (int i = 0; i < keySet.length; i++) {
-            Answer a = new Answer(queryMap.get(keySet[i]), Integer.parseInt((String) keySet[i]), (int) user.getId());
+        for (Object o : keySet) {
+            Answer a = new Answer(queryMap.get(o), Integer.parseInt((String) o), (int) user.getId());
             answerDao.save(a);
         }
     }

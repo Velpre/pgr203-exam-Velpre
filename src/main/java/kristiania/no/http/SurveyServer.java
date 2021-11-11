@@ -27,7 +27,6 @@ public class SurveyServer {
         try (FileReader reader = new FileReader("pgr203.properties")) {
             properties.load(reader);
         }
-
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setUrl(properties.getProperty("dataSource.url"));
         dataSource.setUser(properties.getProperty("dataSource.username"));
@@ -35,7 +34,6 @@ public class SurveyServer {
         Flyway.configure().dataSource(dataSource).load().migrate();
         return dataSource;
     }
-
 
     public static void main(String[] args) throws IOException {
         DataSource dataSource = createDataSource();

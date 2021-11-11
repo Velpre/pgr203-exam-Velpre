@@ -3,6 +3,7 @@ package kristiania.no.http;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class HttpMessage {
         for (int i = 0; i < contentLength; i++) {
             buffer.append((char) socket.getInputStream().read());
         }
-        return URLDecoder.decode(buffer.toString(), "UTF-8");
+        return URLDecoder.decode(buffer.toString(), StandardCharsets.UTF_8);
     }
 
     public static Map<String, String> parseRequestParameters(String query) {
@@ -62,7 +63,7 @@ public class HttpMessage {
             }
             buffer.append((char) c);
         }
-        return URLDecoder.decode(buffer.toString(), "UTF-8");
+        return URLDecoder.decode(buffer.toString(), StandardCharsets.UTF_8);
     }
 
     public int getContentLength() {

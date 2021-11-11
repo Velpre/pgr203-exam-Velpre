@@ -16,7 +16,7 @@ public class DeleteSurveyController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
         String responseText = "";
-        if (!(request.messageBody.equals(""))) {
+        if (request.startLine.startsWith("POST")) {
             Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
             surveyDao.delete(Long.parseLong(queryMap.get("survey")));
             responseText = "You have removed survey with id: " + queryMap.get("survey") + ".";
