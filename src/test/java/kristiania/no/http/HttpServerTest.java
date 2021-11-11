@@ -33,7 +33,6 @@ public class HttpServerTest {
     OptionDao optionDao = new OptionDao(dataSource);
 
 
-
     //Sjekke om vi trenger denne
 
     public HttpServerTest() throws IOException {
@@ -54,7 +53,7 @@ public class HttpServerTest {
     //HttpServer tester
 
     @Test
-    void shouldReturn404ForUnknowRequestTarget() throws IOException {
+    void shouldReturn404ForUnknownRequestTarget() throws IOException {
         HttpClient client = new HttpClient("localhost", server.getPort(), "/non-existing");
         assertEquals(404, client.getStatusCode());
     }
@@ -105,15 +104,13 @@ public class HttpServerTest {
      */
 
 
-
-
 //Controller tester
 
     //Tester ListALlQuestionsController - DONE
 
     @Test
     void shouldListAllQuestions() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200","" );
+        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         ListAllQuestionsController listAllQuestionsController = new ListAllQuestionsController(questionDao);
         HttpMessage response = listAllQuestionsController.handle(httpMessage);
         assertThat(response.messageBody.contains("\"<option value=1>How much time do you spend using facebook? (per day)</option>\" +\n" +
@@ -127,17 +124,11 @@ public class HttpServerTest {
     // Tester ListUsersController - DONE
     @Test
     void shouldListAllUsers() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200","" );
+        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         ListUsersController listUsersController = new ListUsersController(userDao);
         HttpMessage response = listUsersController.handle(httpMessage);
         assertThat(response.messageBody.contains("<option value=1>User1</option>"));
     }
-
-
-
-
-
-
 
 
     @Test
@@ -206,10 +197,6 @@ public class HttpServerTest {
     }
 
  */
-
-
-
-
 
 
 }

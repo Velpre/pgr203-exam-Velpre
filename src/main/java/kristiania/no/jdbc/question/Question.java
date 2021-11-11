@@ -3,22 +3,22 @@ package kristiania.no.jdbc.question;
 public class Question {
     long id;
     String title;
-    int surveyId;
+    long surveyId;
 
     public Question() {
     }
 
-    public Question(String title, int surveyId) {
+    public Question(String title, long surveyId) {
         this.title = title;
         this.surveyId = surveyId;
     }
 
 
-    public int getSurveyId() {
+    public long getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(int surveyId) {
+    public void setSurveyId(long surveyId) {
         this.surveyId = surveyId;
     }
 

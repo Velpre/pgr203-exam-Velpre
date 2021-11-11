@@ -3,23 +3,23 @@ package kristiania.no.jdbc.answer;
 public class Answer {
     long id;
     String answer;
-    int questionId;
-    int userId;
+    long questionId;
+    long userId;
 
     public Answer() {
     }
 
-    public Answer(String answer, int questionId, int userId) {
+    public Answer(String answer, long questionId, long userId) {
         this.answer = answer;
         this.questionId = questionId;
         this.userId = userId;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -39,15 +39,15 @@ public class Answer {
         this.answer = answer;
     }
 
-    public int getQuestionId() {
+    public long getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(int questionId) {
+    public void setQuestionId(long questionId) {
         this.questionId = questionId;
     }
 
-    public int userId() {
+    public long userId() {
         return userId;
     }
 }

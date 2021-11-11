@@ -1,7 +1,6 @@
 package kristiania.no.jdbc.survey;
 
 import kristiania.no.jdbc.AbstractDao;
-import kristiania.no.jdbc.answer.Answer;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -34,13 +33,11 @@ public class SurveyDao extends AbstractDao {
         }
     }
 
-
-
     public List<Survey> listAll() throws SQLException {
         return listAll("select * from survey");
     }
 
-    public void delete(int id) throws SQLException {
+    public void delete(long id) throws SQLException {
         delete(id, "delete from survey where id = ?");
     }
 
