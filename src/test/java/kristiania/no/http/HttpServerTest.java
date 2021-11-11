@@ -23,34 +23,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpServerTest {
     HttpServer server = new HttpServer(0);
-
     DataSource dataSource = TestData.testDataSource();
-
     QuestionDao questionDao = new QuestionDao(dataSource);
-    SurveyDao surveyDao = new SurveyDao(dataSource);
     AnswerDao answerDao = new AnswerDao(dataSource);
     UserDao userDao = new UserDao(dataSource);
     OptionDao optionDao = new OptionDao(dataSource);
 
 
-    //Sjekke om vi trenger denne
-
     public HttpServerTest() throws IOException {
-
-        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-        server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        server.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
         server.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
         server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
-        server.addController("/api/newSurvey", new NewSurveyController(surveyDao));
-        server.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
-        server.addController("/api/listUsers", new ListUsersController(userDao));
-        server.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
-        server.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
-        server.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
+        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
 
     }
-
-    //HttpServer tester
 
     @Test
     void shouldReturn404ForUnknownRequestTarget() throws IOException {
@@ -91,7 +77,7 @@ public class HttpServerTest {
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listAllQuestions").getStatusCode());
     }
 
-        /*
+/*
    @Test
     void shouldEchoMoreThanOneQueryParameter() throws IOException {
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/newQuestion",
@@ -101,34 +87,9 @@ public class HttpServerTest {
         assertEquals("You have added: Question: test Survey: 1 Options:test1 test1 test1 test1 test1.", client.getMessageBody());
     }
 
-     */
+ */
 
 
-//Controller tester
-
-    //Tester ListALlQuestionsController - DONE
-
-    @Test
-    void shouldListAllQuestions() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
-        ListAllQuestionsController listAllQuestionsController = new ListAllQuestionsController(questionDao);
-        HttpMessage response = listAllQuestionsController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=1>How much time do you spend using facebook? (per day)</option>" +
-                "<option value=2>In the last month, what has been your biggest pain point?</option>" +
-                "<option value=3>What is your biggest priority right now?</option>" +
-                "<option value=4>Please rate your knowledge on the following term: Knowledgeable __ __ __ __ __ Inexperienced</option>" +
-                "<option value=5>Please rate our staff on the following term: Professional __ __ __ __ __ Inappropriate</option>" +
-                "<option value=6>How much time do you spend using facebook? (per day)</option>");
-    }
-
-    // Tester ListUsersController - DONE
-    @Test
-    void shouldListAllUsers() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
-        ListUsersController listUsersController = new ListUsersController(userDao);
-        HttpMessage response = listUsersController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=1>User1</option>");
-    }
 
 
     @Test
@@ -146,7 +107,7 @@ public class HttpServerTest {
     void shouldReturnOptionsFromServer() throws IOException {
         SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
         server.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
-        //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
+        //Client Questionnaire & Test Questionnaire objekt blir lagt til i DB gjennom V006 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listSurveyOptions");
         assertEquals(
                 "<option value=1>Client Questionnaire</option>" +
@@ -162,13 +123,12 @@ public class HttpServerTest {
         DataSource dataSource = TestData.testDataSource();
         QuestionDao questionDao = new QuestionDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
-
+        //Skal vi add den på nytt siden vi adder alle controllers øverst?
         server.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
 
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),
                 "/api/newQuestion",
-                "title=title1&questionText=text1&survey" +
-                        "=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
+                "title=title1&questionText=text1&survey=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
         assertEquals(303, postClient.getStatusCode());
         List<Question> questionList = questionDao.listAll();
 
@@ -178,22 +138,11 @@ public class HttpServerTest {
 
     }
 
-    void æøåTest() {
-        DataSource dataSource = TestData.testDataSource();
-        QuestionDao questionDao = new QuestionDao(dataSource);
-        OptionDao optionDao = new OptionDao(dataSource);
-
-
-    }
-
 /*
-    //Testen tester helt feil ting denne må rettes
+    //Testen tester helt feil ting denne må rettes.
+
     @Test
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-        OptionDao optionDao = new OptionDao(TestData.testDataSource());
-        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-
 
         //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
@@ -204,7 +153,7 @@ public class HttpServerTest {
         );
     }
 
- */
 
+ */
 
 }
