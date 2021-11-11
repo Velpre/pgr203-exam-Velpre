@@ -13,6 +13,7 @@ Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal bes
 * Mulighet for å legge til og slette eksisterende spørreundersøkelser
 * Mulighet for å legge til eller bruke eksisterende users
 * Mulighet for å oppdatere eksisterende spørsmål
+* terminerer while loop med beak i readLine methoden for å fikse java heap feilmeldingen
 
 ## Database struktur
 
