@@ -7,20 +7,11 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuestionDaoTest {
-    private QuestionDao dao = new QuestionDao(TestData.testDataSource());
+    private final QuestionDao dao = new QuestionDao(TestData.testDataSource());
 
-    @Test
-    void shouldRetrieveSavedQuestion() throws SQLException {
-        Question question = new Question("q1", 1);
-        dao.save(question);
-        assertThat(dao.retrieve(question.getId()))
-                .hasNoNullFieldsOrProperties()
-                .usingRecursiveComparison()
-                .isEqualTo(question);
-    }
+
     @Test
     void shouldListAllQuestions() throws SQLException {
         Question question = new Question("q1", 1);
@@ -32,6 +23,7 @@ public class QuestionDaoTest {
                 .extracting(Question::getId)
                 .contains(question.getId(), question2.getId());
     }
+
     @Test
     void shouldListAllQuestionsById() throws SQLException {
         Question question = new Question("q1", 1);
@@ -44,11 +36,24 @@ public class QuestionDaoTest {
                 .contains(question.getId())
                 .doesNotContain(question2.getId());
     }
+
     @Test
     void shouldAddAndDeleteQuestion() throws SQLException {
         Question question = new Question("Question", 1);
         dao.save(question);
-        dao.delete((int) question.getId());
+        dao.delete(question.getId());
         assertThat(dao.listAll()).doesNotContain(question);
+    }
+
+    @Test
+    void shouldUpdateQuestion() throws SQLException {
+        Question question = new Question("Question", 1);
+        dao.save(question);
+        dao.update("NewName", question.getId());
+
+        assertThat(dao.listAll())
+                .extracting(Question::getTitle)
+                .contains("NewName")
+                .doesNotContain("Question");
     }
 }

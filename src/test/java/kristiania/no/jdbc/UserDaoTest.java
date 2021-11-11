@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserDaoTest {
-    private UserDao dao = new UserDao(TestData.testDataSource());
+    private final UserDao dao = new UserDao(TestData.testDataSource());
 
     @Test
     void shouldRetrieveSavedUser() throws SQLException {
@@ -24,12 +24,15 @@ public class UserDaoTest {
     @Test
     void shouldListSavedUser() throws SQLException {
         User user = new User("testUser");
+        User user1 = new User("testUser1");
         dao.save(user);
+        dao.save(user1);
 
         assertThat(dao.listAll())
                 .extracting(User::getUserName)
-                .contains("testUser");
+                .contains("testUser", "testUser1");
     }
+
     @Test
     void shouldAddAndDeleteUser() throws SQLException {
         User user = new User("testUser");

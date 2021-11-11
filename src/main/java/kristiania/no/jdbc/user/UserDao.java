@@ -1,31 +1,25 @@
 package kristiania.no.jdbc.user;
 
-import kristiania.no.jdbc.user.User;
+import kristiania.no.jdbc.AbstractDao;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao {
-
-    private final DataSource dataSource;
-
+public class UserDao extends AbstractDao {
     public UserDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
     }
+
 
     public void save(User user) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into users (username) values (?)",
+                    "insert into users (user_name) values (?)",
                     Statement.RETURN_GENERATED_KEYS
             )) {
                 statement.setString(1, user.getUserName());
-
-
                 statement.executeUpdate();
-
                 try (ResultSet rs = statement.getGeneratedKeys()) {
                     rs.next();
                     user.setId(rs.getLong("id"));
@@ -35,47 +29,25 @@ public class UserDao {
     }
 
     public User retrieve(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from users where id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-
-                    return readFromResultSet(rs);
-                }
-            }
-        }
+        List<User> user = retrieve(id, "select * from users where id = ?");
+        return user.get(0);
     }
 
-    private User readFromResultSet(ResultSet rs) throws SQLException {
-        User user  = new User();
+    public List<User> listAll() throws SQLException {
+        return listAll("select * from users");
+    }
+
+    public void delete(long id) throws SQLException {
+        delete(id, "delete from users where id = ?");
+    }
+
+    @Override
+    protected User mapFromResultSet(ResultSet rs) throws SQLException {
+        User user = new User();
         user.setId(rs.getLong("id"));
-        user.setUserName(rs.getString("username"));
+        user.setUserName(rs.getString("user_name"));
         return user;
     }
-    public List<User> listAll() throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from users")) {
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<User> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(readFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
-    }
-    public void delete(int id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "delete from users where id = ?"
-            )) {
-                statement.setLong(1, id);
 
-                statement.executeUpdate();
-            }
-        }
-    }
+
 }

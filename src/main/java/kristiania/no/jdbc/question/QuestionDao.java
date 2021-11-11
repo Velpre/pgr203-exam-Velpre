@@ -1,14 +1,23 @@
 package kristiania.no.jdbc.question;
 
+import kristiania.no.jdbc.AbstractDao;
+
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionDao {
-    private final DataSource dataSource;
+public class QuestionDao extends AbstractDao {
     public QuestionDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+        super(dataSource);
+    }
+
+    @Override
+    protected Question mapFromResultSet(ResultSet rs) throws SQLException {
+        Question question = new Question();
+        question.setId(rs.getLong("id"));
+        question.setTitle(rs.getString("title"));
+        question.setSurveyId(rs.getLong("survey_id"));
+        return question;
     }
 
     public void save(Question question) throws SQLException {
@@ -16,13 +25,10 @@ public class QuestionDao {
             try (PreparedStatement statement = connection.prepareStatement(
                     "insert into questions (title, survey_id) values (?, ?)",
                     Statement.RETURN_GENERATED_KEYS
-
             )) {
                 statement.setString(1, question.getTitle());
-                statement.setInt(2, question.getSurveyId());
-
+                statement.setLong(2, question.getSurveyId());
                 statement.executeUpdate();
-
                 try (ResultSet rs = statement.getGeneratedKeys()) {
                     rs.next();
                     question.setId(rs.getLong("id"));
@@ -31,71 +37,24 @@ public class QuestionDao {
         }
     }
 
-    //fjerne denne?
-    public Question retrieve(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from questions where id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    rs.next();
-
-                    return readFromResultSet(rs);
-                }
-            }
-        }
+    public List<Question> listAll() throws SQLException {
+        return listAll("select * from questions");
     }
-
-    //teste denne
 
     public List<Question> retrieveFromSurveyId(long id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from questions where survey_id = ?")) {
-                statement.setLong(1, id);
-
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<Question> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(readFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
+        return retrieve(id, "select * from questions where survey_id = ?");
     }
 
 
-    private Question readFromResultSet(ResultSet rs) throws SQLException {
-        Question question = new Question();
-        question.setId(rs.getLong("id"));
-        question.setTitle(rs.getString("title"));
-        question.setSurveyId(rs.getInt("survey_id"));
-        return question;
-    }
-
-    public List<Question> listAll() throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from questions")) {
-                try (ResultSet rs = statement.executeQuery()) {
-                    ArrayList<Question> result = new ArrayList<>();
-                    while (rs.next()) {
-                        result.add(readFromResultSet(rs));
-                    }
-                    return result;
-                }
-            }
-        }
-    }
     //Teste denne
-    public void delete(int id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "delete from questions where id = ?"
-            )) {
-                statement.setLong(1, id);
-
-                statement.executeUpdate();
-            }
-        }
+    public void delete(long id) throws SQLException {
+        delete(id, "delete from questions where id = ?");
     }
+
+    //Teste denne
+    public void update(String name, long id) throws SQLException {
+        update(name, id, "update questions set title = ? where id = ? ");
+    }
+
+
 }

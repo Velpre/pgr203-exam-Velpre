@@ -7,17 +7,19 @@
 </head>
 <body>
 <main>
-    <h1>Surveys</h1>
+    <h1>Show answers</h1>
     <div class="container">
-        <h3>Answer Surveys:</h3>
-        <form action="/api/listQuestions" method="post">
+        <form action="/api/listAnswers" method="post">
             <p><label>Select survey <select id="survey1" name="survey"></select></label></p>
+            <p><label>Select user <select id="users" name="user"></select></label></p>
+            <input id="allUsers" name="allUsers" type="checkbox">
+            <label for="allUsers"> Show answers for all users</label><br>
             <button>Select</button>
         </form>
     </div>
     <div class="container">
-        <h3>Choose or create user before answering</h3>
-        <form action="/api/answerQuestions" id=questions method="post">
+        <h3>Answers</h3>
+        <form id=answers method="get">
         </form>
     </div>
 
@@ -31,19 +33,17 @@
         document.getElementById("survey1").innerHTML = text;
     });
 
-    fetch("/api/listQuestions")
-        .then(function (response) {
-            return response.text();
-        }).then(function (text) {
-        document.getElementById("questions").innerHTML = text;
+    fetch("/api/listUsers").then(function (res) {
+        return res.text();
+    }).then(function (text) {
+        document.getElementById("users").innerHTML = text;
     });
 
-
-    fetch("/api/listUsers")
+    fetch("/api/listAnswers")
         .then(function (response) {
             return response.text();
         }).then(function (text) {
-        document.getElementById("existingUsers").innerHTML = text;
+        document.getElementById("answers").innerHTML = text;
     });
 </script>
 </html>

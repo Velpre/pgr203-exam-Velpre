@@ -3,12 +3,12 @@ package kristiania.no.jdbc.options;
 public class Option {
     long id;
     String optionName;
-    int questionId;
+    long questionId;
 
     public Option() {
     }
 
-    public Option( String optionName, int questionId) {
+    public Option(String optionName, long questionId) {
         this.optionName = optionName;
         this.questionId = questionId;
     }
@@ -17,16 +17,16 @@ public class Option {
         return id;
     }
 
-    public int getQuestionId() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(int questionId) {
+    public void setQuestionId(long questionId) {
         this.questionId = questionId;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getOptionName() {

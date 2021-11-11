@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class HttpPostClient {
-    private final HttpMessage httpMessage;
     private final int statusCode;
 
     public HttpPostClient(String host, int port, String requestTarget, String contentBody) throws IOException {
@@ -20,11 +19,12 @@ public class HttpPostClient {
                 contentBody;
         socket.getOutputStream().write(request.getBytes(StandardCharsets.UTF_8));
 
-        httpMessage = new HttpMessage(socket);
+        HttpMessage httpMessage = new HttpMessage(socket);
         String[] statusLine = httpMessage.startLine.split(" ");
         this.statusCode = Integer.parseInt(statusLine[1]);
     }
-    public int getStatusCode(){
+
+    public int getStatusCode() {
         return statusCode;
     }
 }
