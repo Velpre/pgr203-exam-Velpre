@@ -1,0 +1,36 @@
+@startuml
+
+class Survey {
+    id: long
+    surveyName: string
+}
+
+Survey "1" - "*" Question
+
+class Question {
+    id: long
+    title: string
+    surveyId: long
+}
+class Option {
+    id: long
+    optionName: string
+    questionId: long
+}
+Question "1" - "*" Option
+
+class Answer {
+    id: long
+    answer: string
+    questionId long;
+    userId long;
+}
+Answer "*" - "1" Question
+
+class User {
+    id: long
+    userName: string
+}
+
+User "1"  - "*" Answer
+@enduml
