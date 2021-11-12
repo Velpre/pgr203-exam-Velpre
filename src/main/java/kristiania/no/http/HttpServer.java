@@ -41,7 +41,7 @@ public class HttpServer {
         String[] requestLine = httpMessage.startLine.split(" ");
 
         String requestTarget = requestLine[1];
-        if (requestTarget.equals("/")) requestTarget = "/index.html";
+        if (requestTarget.equals("/")) requestTarget = "index.html";
 
         int questionPos = requestTarget.indexOf('?');
         String fileTarget;
@@ -65,6 +65,7 @@ public class HttpServer {
         } else {
             if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                 String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
+
                 String contentType = "text/plain";
                 if (requestTarget.endsWith(".html")) {
                     contentType = "text/html";
