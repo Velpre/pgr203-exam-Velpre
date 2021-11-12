@@ -122,7 +122,7 @@ public class HttpServerTest {
         assertThat(client.getMessageBody()).contains("<option value=" + survey1.getId() + ">test1</option><option value=" + survey2.getId() + ">test2</option>");
     }
 
-  //Trenger vi denne under? la den til
+  //Trenger vi denne under? har lagt den til
 
     @Test
     void shouldListAllQuestionsFromServer() throws IOException, SQLException {
@@ -148,25 +148,5 @@ public class HttpServerTest {
                 .contains(1L);
 
     }
-
-/*
-
-Tror at denne kan slettes
-    //Testen tester helt feil ting denne må rettes.
-
-    @Test
-    void shouldReturnQuestionsFromServer() throws IOException, SQLException {
-
-        //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
-        assertEquals(
-                "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
-                ,
-                client.getMessageBody()
-        );
-    }
-
-
- */
 
 }
