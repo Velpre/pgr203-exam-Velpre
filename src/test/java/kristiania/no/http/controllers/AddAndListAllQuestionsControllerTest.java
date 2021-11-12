@@ -26,7 +26,8 @@ public class AddAndListAllQuestionsControllerTest {
 
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         HttpMessage response = addAndListAllQuestionsController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=" + question1.getId() + ">test1</option><option value=" + question2.getId() + ">test2</option>");
+        assertThat(response.messageBody)
+                .contains("<option value=" + question1.getId() + ">test1</option><option value=" + question2.getId() + ">test2</option>");
     }
 
     @Test
@@ -34,20 +35,20 @@ public class AddAndListAllQuestionsControllerTest {
         //Henter data som er lagt inn via migration.
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         HttpMessage response = addAndListAllQuestionsController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=1>How much time do you spend using facebook? (per day)</option>" +
-                "<option value=2>In the last month, what has been your biggest pain point?</option>"
-        );
+        assertThat(response.messageBody)
+                .contains("<option value=1>How much time do you spend using facebook? (per day)</option>" +
+                        "<option value=2>In the last month, what has been your biggest pain point?</option>"
+                );
     }
-
 
     @Test
-    void shouldPostQuestionWithOptions() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("POST HTTP/1.1 200", "");
-        httpMessage.messageBody = "title=testTitle";
-        HttpMessage response = addAndListAllQuestionsController.handle(httpMessage);
+    void shouldPostQuestion() throws SQLException {
+        HttpMessage httpMessage = new HttpMessage("POST HTTP/1.1 200", "title=testTitle&survey=1&option1=option1Test&option2=option2Test" +
+                "&option3=option3Test&option4=option4Test&option5=option5Test");
+        addAndListAllQuestionsController.handle(httpMessage);
 
-
-        assertThat(response.messageBody).contains("<option value=" + question1.getId() + ">test1</option><option value=" + question2.getId() + ">test2</option>");
+        assertThat(questionDao.listAll())
+                .extracting(Question::getTitle)
+                .contains("testTitle");
     }
-
 }

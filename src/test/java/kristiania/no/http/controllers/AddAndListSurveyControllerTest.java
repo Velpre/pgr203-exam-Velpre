@@ -14,9 +14,12 @@ public class AddAndListSurveyControllerTest {
     AddAndListSurveyController addAndListSurveyController = new AddAndListSurveyController(surveyDao);
 
     @Test
-    void shouldListSurveys() throws SQLException {
+    void shouldAddAndListSurveys() throws SQLException {
+        HttpMessage httpPostMessage = new HttpMessage("POST HTTP/1.1 200", "title=TestAddAndListSurvey");
+        addAndListSurveyController.handle(httpPostMessage);
+
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         HttpMessage response = addAndListSurveyController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=1>Client Questionnaire</option>");
+        assertThat(response.messageBody).contains("<option value=3>TestAddAndListSurvey</option>");
     }
 }

@@ -27,7 +27,7 @@ public class ChangeQuestionController implements HttpController {
 
         List<Option> allOptions = new ArrayList<>(optionDao.retrieveFromQuestionId(Long.parseLong(queryMap.get("question"))));
 
-        while (allOptions.size() < 5) {
+        while (allOptions.size() < 6) {
             Option option = new Option("name", Integer.parseInt(queryMap.get("question")));
             optionDao.save(option);
             allOptions.add(option);
