@@ -41,7 +41,9 @@ public class AnswerQuestionsController implements HttpController {
                 queryMap.remove("newUser");
                 queryMap.remove("existingUsers");
                 //Methode som lagrer answers
+                System.out.println(queryMap);
                 saveAnswers(queryMap, newUser);
+
             }
 
             responseText = "Completed";
