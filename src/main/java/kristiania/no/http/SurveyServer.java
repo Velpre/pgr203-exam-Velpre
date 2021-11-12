@@ -43,7 +43,7 @@ public class SurveyServer {
         UserDao userDao = new UserDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
 
-        HttpServer httpServer = new HttpServer(8002);
+        HttpServer httpServer = new HttpServer(8080);
         httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
         httpServer.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
         httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
@@ -55,7 +55,7 @@ public class SurveyServer {
 
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
-        logger.info("Server running at http://localhost:{}/", httpServer.getPort());
+        logger.info("Server running at http://localhost:" + httpServer.getPort());
     }
 
 

@@ -16,7 +16,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Main-Class>kristiania.no.http.HttpServer</Main-Class>
+              <Main-Class>kristiania.no.http.SurveyServer</Main-Class>
             </manifestEntries>
           </archive>
         </configuration>
