@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -63,12 +61,6 @@ public class HttpServer {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 fileResource.transferTo(buffer);
                 String responseText = buffer.toString();
-
-            /*
-            if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
-                String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
-             */
-
 
                 String contentType = "text/plain";
                 if (requestTarget.endsWith(".html")) {

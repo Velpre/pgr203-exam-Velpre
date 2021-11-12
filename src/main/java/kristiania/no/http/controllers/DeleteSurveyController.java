@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class DeleteSurveyController implements HttpController {
+    public static final String PATH = "/api/deleteSurvey";
     private final SurveyDao surveyDao;
 
     public DeleteSurveyController(SurveyDao surveyDao) {

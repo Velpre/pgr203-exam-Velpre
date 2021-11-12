@@ -7,6 +7,7 @@ import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.user.UserDao;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -14,8 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class AnswerQuestionsControllerTest {
-    AnswerDao answerDao = new AnswerDao(TestData.testDataSource());
-    UserDao userDao = new UserDao(TestData.testDataSource());
+    DataSource dataSource = TestData.testDataSource();
+    AnswerDao answerDao = new AnswerDao(dataSource);
+    UserDao userDao = new UserDao(dataSource);
     AnswerQuestionsController answerQuestionsController = new AnswerQuestionsController(answerDao, userDao);
 
     @Test

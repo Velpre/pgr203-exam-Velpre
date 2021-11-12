@@ -14,13 +14,16 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 
 public class SurveyServer {
 
+
     private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
+
+
+
 
     private static DataSource createDataSource() throws IOException {
         Properties properties = new Properties();
@@ -41,17 +44,18 @@ public class SurveyServer {
         SurveyDao surveyDao = new SurveyDao(dataSource);
         AnswerDao answerDao = new AnswerDao(dataSource);
         UserDao userDao = new UserDao(dataSource);
+
         OptionDao optionDao = new OptionDao(dataSource);
 
         HttpServer httpServer = new HttpServer(8080);
-        httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-        httpServer.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
-        httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
-        httpServer.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
-        httpServer.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
-        httpServer.addController("/api/listUsers", new ListUsersController(userDao));
-        httpServer.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
-        httpServer.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
+        httpServer.addController(ListQuestionsController.PATH, new ListQuestionsController(questionDao, optionDao));
+        httpServer.addController(AddAndListSurveyController.PATH, new AddAndListSurveyController(surveyDao));
+        httpServer.addController(AnswerQuestionsController.PATH, new AnswerQuestionsController(answerDao, userDao));
+        httpServer.addController(AddAndListAllQuestionsController.PATH, new AddAndListAllQuestionsController(questionDao, optionDao));
+        httpServer.addController(DeleteSurveyController.PATH, new DeleteSurveyController(surveyDao));
+        httpServer.addController(ListUsersController.PATH, new ListUsersController(userDao));
+        httpServer.addController(ListAnswersController.PATH, new ListAnswersController(questionDao, answerDao));
+        httpServer.addController(ChangeQuestionController.PATH, new ChangeQuestionController(questionDao, optionDao));
 
 
         logger.info("Server running at http://localhost:" + httpServer.getPort());

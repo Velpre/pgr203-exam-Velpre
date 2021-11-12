@@ -13,6 +13,7 @@ import java.util.Objects;
 
 
 public class ChangeQuestionController implements HttpController {
+    public static final String PATH = "/api/changeQuestion";
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
 

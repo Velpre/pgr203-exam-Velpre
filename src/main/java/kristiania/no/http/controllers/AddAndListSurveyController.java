@@ -9,6 +9,7 @@ import java.util.Map;
 
 
 public class AddAndListSurveyController implements HttpController {
+    public static final String PATH = "/api/addAndListSurvey";
     private final SurveyDao surveyDao;
     HttpMessage httpMessage;
 

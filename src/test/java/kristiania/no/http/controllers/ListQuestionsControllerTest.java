@@ -6,14 +6,16 @@ import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.QuestionDao;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class ListQuestionsControllerTest {
-    QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-    OptionDao optionDao = new OptionDao(TestData.testDataSource());
+    DataSource dataSource = TestData.testDataSource();
+    QuestionDao questionDao = new QuestionDao(dataSource);
+    OptionDao optionDao = new OptionDao(dataSource);
     ListQuestionsController listQuestionsController = new ListQuestionsController(questionDao, optionDao);
 
     @Test

@@ -8,13 +8,15 @@ import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ChangeQuestionsControllerTest {
-    OptionDao optionDao = new OptionDao(TestData.testDataSource());
-    QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+    DataSource dataSource = TestData.testDataSource();
+    OptionDao optionDao = new OptionDao(dataSource);
+    QuestionDao questionDao = new QuestionDao(dataSource);
     ChangeQuestionController changeQuestionController = new ChangeQuestionController(questionDao, optionDao);
 
     @Test

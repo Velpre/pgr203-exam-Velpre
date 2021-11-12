@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 
 public class ListUsersController implements HttpController {
+    public static final String PATH = "/api/listUsers";
     private final UserDao userDao;
 
     public ListUsersController(UserDao userDao) {

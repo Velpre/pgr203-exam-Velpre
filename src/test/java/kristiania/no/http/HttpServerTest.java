@@ -34,14 +34,14 @@ public class HttpServerTest {
 
     public HttpServerTest() throws IOException {
 
-        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-        server.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
-        server.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
-        server.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
-        server.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
-        server.addController("/api/listUsers", new ListUsersController(userDao));
-        server.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
-        server.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
+        server.addController(ListQuestionsController.PATH, new ListQuestionsController(questionDao, optionDao));
+        server.addController(AddAndListSurveyController.PATH, new AddAndListSurveyController(surveyDao));
+        server.addController(AnswerQuestionsController.PATH, new AnswerQuestionsController(answerDao, userDao));
+        server.addController(AddAndListAllQuestionsController.PATH, new AddAndListAllQuestionsController(questionDao, optionDao));
+        server.addController(DeleteSurveyController.PATH, new DeleteSurveyController(surveyDao));
+        server.addController(ListUsersController.PATH, new ListUsersController(userDao));
+        server.addController(ListAnswersController.PATH, new ListAnswersController(questionDao, answerDao));
+        server.addController(ChangeQuestionController.PATH, new ChangeQuestionController(questionDao, optionDao));
     }
 
     @Test

@@ -7,13 +7,15 @@ import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.question.QuestionDao;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ListAnswersControllerTest {
-    QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-    AnswerDao answerDao = new AnswerDao(TestData.testDataSource());
+    DataSource dataSource = TestData.testDataSource();
+    QuestionDao questionDao = new QuestionDao(dataSource);
+    AnswerDao answerDao = new AnswerDao(dataSource);
     ListAnswersController listAnswersController = new ListAnswersController(questionDao, answerDao);
 
     @Test

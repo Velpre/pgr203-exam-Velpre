@@ -11,6 +11,7 @@ import java.util.Map;
 
 
 public class AddAndListAllQuestionsController implements HttpController {
+    public static final String PATH = "/api/addAndListAllQuestions";
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
     HttpMessage httpMessage;

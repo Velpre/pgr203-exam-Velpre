@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class ListQuestionsController implements HttpController {
+    public static final String PATH = "/api/listQuestions";
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
     HttpMessage httpMessage;

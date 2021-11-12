@@ -12,6 +12,7 @@ import java.util.Map;
 
 
 public class AnswerQuestionsController implements HttpController {
+    public static final String PATH = "/api/answerQuestions";
     private final AnswerDao answerDao;
     private final UserDao userDao;
     private HttpMessage httpMessage;

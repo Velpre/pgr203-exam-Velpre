@@ -11,6 +11,7 @@ import java.util.Map;
 
 
 public class ListAnswersController implements HttpController {
+    public static final String PATH = "/api/listAnswers";
     private final QuestionDao questionDao;
     private final AnswerDao answerDao;
 
