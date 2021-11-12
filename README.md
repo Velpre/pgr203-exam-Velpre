@@ -22,6 +22,9 @@ Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal bes
 
 ## Server struktur
 ![image](https://user-images.githubusercontent.com/65472724/141470757-f4af41ca-7dc3-408b-ba19-3bd763712a07.png)
+Viser hva som skjer på serveren når brukeren lister alle spørsmål
+![image](https://user-images.githubusercontent.com/65472724/141493105-3ad37167-7fc0-4971-883b-87a1611cffd9.png)
+
 
 
 ## Sjekkliste
