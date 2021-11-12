@@ -39,8 +39,8 @@ public class HttpServer {
         Socket clientSocket = serverSocket.accept();
         HttpMessage httpMessage = new HttpMessage(clientSocket);
         String[] requestLine = httpMessage.startLine.split(" ");
-        String requestTarget = requestLine[1];
 
+        String requestTarget = requestLine[1];
         if (requestTarget.equals("/")) requestTarget = "/index.html";
 
         int questionPos = requestTarget.indexOf('?');
@@ -50,6 +50,11 @@ public class HttpServer {
         } else {
             fileTarget = requestTarget;
         }
+
+        System.out.println(httpMessage.startLine);
+        System.out.println(httpMessage.headerFields);
+        System.out.println(httpMessage.messageBody);
+
 
         if (controllers.containsKey(fileTarget)) {
             HttpMessage response = controllers.get(fileTarget).handle(httpMessage);
