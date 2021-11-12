@@ -1,5 +1,5 @@
 
-
+[![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
 ## Hvordan kjøre dette programmet
 * Legg til databaseinfo i en pgr203.properties fil som skal ligge i root directory
 * Bygg prosjektet ved å kjøre kommandoen: mvn package
@@ -37,18 +37,18 @@ Viser hva som skjer på serveren når brukeren lister alle spørsmål
 
 ### README.md
 
-* [ ] `README.md` inneholder en korrekt link til Github Actions
-* [ ] `README.md` beskriver prosjektets funksjonalitet, hvordan man bygger det og hvordan man kjører det
-* [ ] `README.md` beskriver eventuell ekstra leveranse utover minimum
-* [ ] `README.md` inneholder et diagram som viser datamodellen
+* [x] `README.md` inneholder en korrekt link til Github Actions
+* [x] `README.md` beskriver prosjektets funksjonalitet, hvordan man bygger det og hvordan man kjører det
+* [x] `README.md` beskriver eventuell ekstra leveranse utover minimum
+* [x] `README.md` inneholder et diagram som viser datamodellen
 
 ### Koden
 
-* [ ] `mvn package` bygger en executable jar-fil
-* [ ] Koden inneholder et godt sett med tester
-* [ ] `java -jar target/...jar` (etter `mvn package`) lar bruker legge til og liste ut data fra databasen via
+* [x] `mvn package` bygger en executable jar-fil
+* [x] Koden inneholder et godt sett med tester
+* [x] `java -jar target/...jar` (etter `mvn package`) lar bruker legge til og liste ut data fra databasen via
   webgrensesnitt
-* [ ] Serveren leser HTML-filer fra JAR-filen slik at den ikke er avhengig av å kjøre i samme directory som kildekoden
+* [x] Serveren leser HTML-filer fra JAR-filen slik at den ikke er avhengig av å kjøre i samme directory som kildekoden
 * [x] Programmet leser `dataSource.url`, `dataSource.username` og `dataSource.password` fra `pgr203.properties` for å
   connecte til databasen
 * [x] Programmet bruker Flywaydb for å sette opp databaseskjema
