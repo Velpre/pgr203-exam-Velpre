@@ -33,6 +33,7 @@ public class AnswerQuestionsController implements HttpController {
                 existingUser = userDao.retrieve(Long.parseLong(queryMap.get("existingUsers")));
                 queryMap.remove("newUser");
                 queryMap.remove("existingUsers");
+                System.out.println(queryMap);
                 //Methode som lagrer answers
                 saveAnswers(queryMap, existingUser);
             } else {

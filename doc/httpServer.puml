@@ -1,0 +1,28 @@
+@startuml
+actor Browser
+participant HttpServer
+participant controllers
+participant ListQuestionsController
+participant QuestionDao
+participant OptionDao
+database QUESTION_DB
+
+Browser -> HttpServer: POST /api/listQuestions
+HttpServer -> controllers: get("/api/listQuestions")
+HttpServer <-- controllers: ListQuestionsController
+HttpServer -> ListQuestionsController: response = handle(request)
+ListQuestionsController -> ListQuestionsController: surveyId = Integer.parseInt(queryMap.get("survey"));
+
+
+ListQuestionsController -> QuestionDao:  for (Question question : questionDao.retrieveFromSurveyId(surveyId))
+ListQuestionsController -> OptionDao: for (Option option : optionDao.retrieveFromQuestionId(question.getId()))
+
+QuestionDao -> QUESTION_DB:  select * from questions where survey_id = ?
+OptionDao -> QUESTION_DB:  select * from options where question_id = ?
+HttpServer <-- ListQuestionsController: OK 200
+HttpServer -> HttpServer: response.write(socket)
+Browser <-- HttpServer: HTTP/1.1 200 OK
+@enduml
+
+
+
