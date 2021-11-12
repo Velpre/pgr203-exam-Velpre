@@ -38,6 +38,7 @@ public abstract class AbstractDao<T> {
                     ArrayList<T> result = new ArrayList<>();
                     while (rs.next()) {
                         result.add(mapFromResultSet(rs));
+
                     }
                     return result;
                 }

@@ -13,7 +13,7 @@ public class AnswerDaoTest {
     private final AnswerDao dao = new AnswerDao(TestData.testDataSource());
 
     @Test
-    void shouldRetrieveSavedAnswersFromQuestionId() throws SQLException, UnsupportedEncodingException {
+    void shouldRetrieveSavedAnswersFromQuestionId() throws SQLException {
         Answer answer = new Answer("TestAnswer", 1, 1);
         dao.save(answer);
         assertThat(dao.retrieveFromQuestionId(answer.getQuestionId()))
