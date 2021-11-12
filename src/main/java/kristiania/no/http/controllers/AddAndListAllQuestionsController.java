@@ -30,8 +30,7 @@ public class AddAndListAllQuestionsController implements HttpController {
             questionDao.save(q);
 
             responseText = "You have added: Question: " + q.getTitle() + "\r\n Survey: " + q.getSurveyId() + "\r\nWith options:";
-            //Sjekke 1-5
-            for (int i = 1; i < 5; i++) {
+            for (int i = 1; i < 6; i++) {
                 Option option = new Option(queryMap.get("option" + i), (int) q.getId());
                 optionDao.save(option);
                 responseText += " " + option.getOptionName();

@@ -75,7 +75,7 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldUseFileExtensionForContentType() throws IOException {
+    void shouldUseFileExtensionForContentTypeHTML() throws IOException {
         server.setRoot(Paths.get("target/test-classes"));
         String fileContent = "<p>Hello</p>";
         Files.write(Paths.get("target/test-classes/example-file.html"), fileContent.getBytes());
@@ -85,23 +85,20 @@ public class HttpServerTest {
     }
 
     @Test
+    void shouldUseFileExtensionForContentTypeCSS() throws IOException {
+        server.setRoot(Paths.get("target/test-classes"));
+        String fileContent = "";
+        Files.write(Paths.get("target/test-classes/example-file.css"), fileContent.getBytes());
+
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/example-file.css");
+        assertEquals("text/css", client.getHeader("Content-Type"));
+    }
+
+    @Test
     void shouldHandelMoreThanOneRequest() throws IOException {
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/addAndListAllQuestions").getStatusCode());
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/addAndListAllQuestions").getStatusCode());
     }
-
-        /*
-   @Test
-    void shouldEchoMoreThanOneQueryParameter() throws IOException {
-        HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(), "/api/newQuestion",
-                "title=test&survey=1&option1=test1&option2=test1&option3=test1&option4=test1&option5=test1");
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/newQuestion");
-
-        assertEquals("You have added: Question: test Survey: 1 Options:test1 test1 test1 test1 test1.", client.getMessageBody());
-    }
-
-     */
-
 
     //Controller tester
     @Test
@@ -141,24 +138,21 @@ public class HttpServerTest {
                 .contains(1L);
     }
 
-    /*
-        //Testen tester helt feil ting denne må rettes
-        @Test
-        void shouldReturnQuestionsFromServer() throws IOException, SQLException {
-            QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-            OptionDao optionDao = new OptionDao(TestData.testDataSource());
-            server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
+    @Test
+    void shouldReturnQuestionsFromServer() throws IOException, SQLException {
+        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+        OptionDao optionDao = new OptionDao(TestData.testDataSource());
+        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
 
 
-            //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
-            HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
-            assertEquals(
-                    "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
-                    ,
-                    client.getMessageBody()
-            );
-        }
+        //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
+        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
+        assertEquals(
+                "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
+                ,
+                client.getMessageBody()
+        );
+    }
 
-     */
 
 }

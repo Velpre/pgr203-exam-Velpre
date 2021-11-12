@@ -20,6 +20,6 @@ public class AddAndListSurveyControllerTest {
 
         HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
         HttpMessage response = addAndListSurveyController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=3>TestAddAndListSurvey</option>");
+        assertThat(response.messageBody).contains("<option value=3>", "TestAddAndListSurvey</option>");
     }
 }

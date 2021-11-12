@@ -51,11 +51,6 @@ public class HttpServer {
             fileTarget = requestTarget;
         }
 
-        System.out.println(httpMessage.startLine);
-        System.out.println(httpMessage.headerFields);
-        System.out.println(httpMessage.messageBody);
-
-
         if (controllers.containsKey(fileTarget)) {
             HttpMessage response = controllers.get(fileTarget).handle(httpMessage);
             response.write(clientSocket);
