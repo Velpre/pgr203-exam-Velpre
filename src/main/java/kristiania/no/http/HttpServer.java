@@ -39,8 +39,8 @@ public class HttpServer {
         Socket clientSocket = serverSocket.accept();
         HttpMessage httpMessage = new HttpMessage(clientSocket);
         String[] requestLine = httpMessage.startLine.split(" ");
-        String requestTarget = requestLine[1];
 
+        String requestTarget = requestLine[1];
         if (requestTarget.equals("/")) requestTarget = "/index.html";
 
         int questionPos = requestTarget.indexOf('?');

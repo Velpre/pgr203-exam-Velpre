@@ -3,12 +3,22 @@ package kristiania.no.jdbc.options;
 import kristiania.no.jdbc.AbstractDao;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class OptionDao extends AbstractDao {
     public OptionDao(DataSource dataSource) {
         super(dataSource);
+    }
+
+    @Override
+    protected void setStatement(Object generic, PreparedStatement statement) throws SQLException {
+        Option option = (Option) generic;
+        statement.setString(1, option.getOptionName());
+        statement.setLong(2, option.getQuestionId());
+        statement.executeUpdate();
     }
 
 
@@ -18,28 +28,13 @@ public class OptionDao extends AbstractDao {
         options.setId(rs.getLong("id"));
         options.setOptionName(rs.getString("option_name"));
         options.setQuestionId(rs.getLong("question_id"));
+
         return options;
     }
 
 
     public void save(Option option) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into options (option_name, question_id) values (?,?)",
-                    Statement.RETURN_GENERATED_KEYS
-
-            )) {
-                statement.setString(1, option.getOptionName());
-                statement.setLong(2, option.getQuestionId());
-                if (option.getOptionName() != "") {
-                    statement.executeUpdate();
-                    try (ResultSet rs = statement.getGeneratedKeys()) {
-                        rs.next();
-                        option.setId(rs.getLong("id"));
-                    }
-                }
-            }
-        }
+        option.setId(save(option, "insert into options (option_name, question_id) values (?,?)"));
     }
 
 

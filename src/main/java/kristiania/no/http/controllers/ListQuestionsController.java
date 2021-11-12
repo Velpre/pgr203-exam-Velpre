@@ -13,6 +13,7 @@ import java.util.Map;
 public class ListQuestionsController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
+    HttpMessage httpMessage;
     private int surveyId;
 
     public ListQuestionsController(QuestionDao questionDao, OptionDao optionDao) {
@@ -23,13 +24,12 @@ public class ListQuestionsController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException, IOException {
         String responseText = "";
-        Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
-        HttpMessage httpMessage;
         if (request.startLine.startsWith("POST")) {
+            Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
             surveyId = Integer.parseInt(queryMap.get("survey"));
             responseText = "Selected survey with id: " + surveyId;
             httpMessage = new HttpMessage("HTTP/1.1 303", responseText, "../takeSurvey.html");
-        } else {
+        } else if (request.startLine.startsWith("GET")) {
             responseText += "<p>Create New user:</p>";
             responseText += "<input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br>";
 

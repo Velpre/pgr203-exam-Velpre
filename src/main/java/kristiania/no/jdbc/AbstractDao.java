@@ -16,6 +16,19 @@ public abstract class AbstractDao<T> {
     }
 
 
+    public long save(Object generic, String sql) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                setStatement(generic, statement);
+                try (ResultSet rs = statement.getGeneratedKeys()) {
+                    rs.next();
+                    return rs.getLong("id");
+                }
+            }
+        }
+    }
+
     public List<T> retrieve(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -57,7 +70,6 @@ public abstract class AbstractDao<T> {
         }
     }
 
-
     public void delete(long id, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -67,6 +79,7 @@ public abstract class AbstractDao<T> {
         }
     }
 
+    protected abstract void setStatement(Object generic, PreparedStatement statement) throws SQLException;
 
     protected abstract T mapFromResultSet(ResultSet rs) throws SQLException;
 

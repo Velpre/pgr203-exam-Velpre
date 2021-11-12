@@ -70,10 +70,6 @@ public class HttpMessage {
         return Integer.parseInt(headerFields.get("Content-Length"));
     }
 
-    public String getHeader(String headerName) {
-        return headerFields.get(headerName);
-    }
-
 
     private void readHeaders(Socket socket) throws IOException {
         String headerLine;

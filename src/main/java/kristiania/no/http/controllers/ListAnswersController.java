@@ -27,9 +27,9 @@ public class ListAnswersController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
         String responseText = "";
-        Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
-        System.out.println(request.startLine);
         if (request.startLine.startsWith("POST")) {
+            Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
+
             surveyId = Integer.parseInt(queryMap.get("survey"));
             userId = Integer.parseInt(queryMap.get("user"));
             showAllUsers = queryMap.get("allUsers");

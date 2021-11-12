@@ -43,21 +43,19 @@ public class SurveyServer {
         UserDao userDao = new UserDao(dataSource);
         OptionDao optionDao = new OptionDao(dataSource);
 
-        HttpServer httpServer = new HttpServer(8002);
+        HttpServer httpServer = new HttpServer(8080);
         httpServer.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-        httpServer.addController("/api/listSurveyOptions", new ListSurveyOptionsController(surveyDao));
+        httpServer.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
         httpServer.addController("/api/answerQuestions", new AnswerQuestionsController(answerDao, userDao));
-        httpServer.addController("/api/newQuestion", new NewQuestionController(questionDao, optionDao));
-        httpServer.addController("/api/newSurvey", new NewSurveyController(surveyDao));
+        httpServer.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
         httpServer.addController("/api/deleteSurvey", new DeleteSurveyController(surveyDao));
         httpServer.addController("/api/listUsers", new ListUsersController(userDao));
         httpServer.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
         httpServer.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
-        httpServer.addController("/api/listAllQuestions", new ListAllQuestionsController(questionDao));
 
         httpServer.setRoot(Paths.get("src/main/resources/webfiles"));
 
-        logger.info("Server running at http://localhost:{}/", httpServer.getPort());
+        logger.info("Server running at http://localhost:" + httpServer.getPort());
     }
 
 

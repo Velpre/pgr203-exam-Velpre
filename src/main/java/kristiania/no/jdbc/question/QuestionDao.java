@@ -3,12 +3,22 @@ package kristiania.no.jdbc.question;
 import kristiania.no.jdbc.AbstractDao;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class QuestionDao extends AbstractDao {
     public QuestionDao(DataSource dataSource) {
         super(dataSource);
+    }
+
+    @Override
+    protected void setStatement(Object generic, PreparedStatement statement) throws SQLException {
+        Question question = (Question) generic;
+        statement.setString(1, question.getTitle());
+        statement.setLong(2, question.getSurveyId());
+        statement.executeUpdate();
     }
 
     @Override
@@ -21,20 +31,7 @@ public class QuestionDao extends AbstractDao {
     }
 
     public void save(Question question) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "insert into questions (title, survey_id) values (?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            )) {
-                statement.setString(1, question.getTitle());
-                statement.setLong(2, question.getSurveyId());
-                statement.executeUpdate();
-                try (ResultSet rs = statement.getGeneratedKeys()) {
-                    rs.next();
-                    question.setId(rs.getLong("id"));
-                }
-            }
-        }
+        question.setId(save(question, "insert into questions (title, survey_id) values (?, ?)"));
     }
 
     public List<Question> listAll() throws SQLException {
@@ -46,12 +43,10 @@ public class QuestionDao extends AbstractDao {
     }
 
 
-    //Teste denne
     public void delete(long id) throws SQLException {
         delete(id, "delete from questions where id = ?");
     }
 
-    //Teste denne
     public void update(String name, long id) throws SQLException {
         update(name, id, "update questions set title = ? where id = ? ");
     }

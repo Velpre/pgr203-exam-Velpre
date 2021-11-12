@@ -51,9 +51,12 @@ VALUES ('Less than a minute', 6);
 insert into options (option_name, question_id)
 VALUES ('About 1 - 2 minutes', 6);
 insert into options (option_name, question_id)
-VALUES ('Between 2 and 5 minutes', 6);
+VALUES ('Between 2 and 4 minutes', 6);
 insert into options (option_name, question_id)
-VALUES ('More than 5 minutes', 6);
+VALUES ('More than 4 minutes', 6);
 
 insert into users(user_name)
-values('User1')
+values ('User1');
+
+insert into users(user_name)
+values ('User2');
