@@ -1,6 +1,9 @@
 
 
 ## Hvordan kjøre dette programmet
+* Legg til databaseinfo i en pgr203.properties fil som skal ligge i root directory
+* Bygg prosjektet ved å kjøre kommandoen: mvn package
+* Start SurveyServer ved å kjøre kommandoen: java -jar target\exam-1.0-SNAPSHOT.jar
 
 ## Beskriv hvordan programmet skal testes:
 
