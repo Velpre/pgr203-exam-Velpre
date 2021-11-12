@@ -25,7 +25,7 @@ public class SurveyDaoTest {
     void shouldAddAndDeleteSurvey() throws SQLException {
         Survey survey = new Survey("Survey");
         dao.save(survey);
-        dao.delete((int) survey.getId());
+        dao.delete(survey.getId());
         assertThat(dao.listAll()).doesNotContain(survey);
     }
 }

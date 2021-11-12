@@ -6,6 +6,7 @@ import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
+import kristiania.no.jdbc.survey.Survey;
 import kristiania.no.jdbc.survey.SurveyDao;
 import kristiania.no.jdbc.user.UserDao;
 import org.junit.jupiter.api.Test;
@@ -85,8 +86,8 @@ public class HttpServerTest {
 
     @Test
     void shouldHandelMoreThanOneRequest() throws IOException {
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listAllQuestions").getStatusCode());
-        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/listAllQuestions").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/addAndListAllQuestions").getStatusCode());
+        assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/addAndListAllQuestions").getStatusCode());
     }
 
         /*
@@ -102,33 +103,7 @@ public class HttpServerTest {
      */
 
 
-//Controller tester
-
-    //Tester ListALlQuestionsController - DONE
-
-    @Test
-    void shouldListAllQuestions() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
-        AddAndListAllQuestionsController addAndListAllQuestionsController = new AddAndListAllQuestionsController(questionDao, optionDao);
-        HttpMessage response = addAndListAllQuestionsController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=1>How much time do you spend using facebook? (per day)</option>" +
-                "<option value=2>In the last month, what has been your biggest pain point?</option>" +
-                "<option value=3>What is your biggest priority right now?</option>" +
-                "<option value=4>Please rate your knowledge on the following term: Knowledgeable __ __ __ __ __ Inexperienced</option>" +
-                "<option value=5>Please rate our staff on the following term: Professional __ __ __ __ __ Inappropriate</option>" +
-                "<option value=6>How much time do you spend using facebook? (per day)</option>");
-    }
-
-    // Tester ListUsersController - DONE
-    @Test
-    void shouldListAllUsers() throws SQLException {
-        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
-        ListUsersController listUsersController = new ListUsersController(userDao);
-        HttpMessage response = listUsersController.handle(httpMessage);
-        assertThat(response.messageBody).contains("<option value=1>User1</option>");
-    }
-
-
+    //Controller tester
     @Test
     void shouldRespondWith200ForKnownRequestTarget() throws IOException {
         new HttpPostClient("localhost", server.getPort(), "/api/answerQuestions", "newUser=test");
@@ -141,31 +116,22 @@ public class HttpServerTest {
     }
 
     @Test
-    void shouldReturnOptionsFromServer() throws IOException {
-        SurveyDao surveyDao = new SurveyDao(TestData.testDataSource());
+    void shouldReturnSurveyFromServer() throws IOException, SQLException {
+        Survey survey1 = new Survey("test1");
+        Survey survey2 = new Survey("test2");
+        surveyDao.save(survey1);
+        surveyDao.save(survey2);
         server.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
-        //survey1 & survey2 objekt blir lagt til i DB gjennom V004 migrering
+        //Andre survey objekter blir også lagt til i DB gjennom V006 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/addAndListSurvey");
-        assertEquals(
-                "<option value=1>Client Questionnaire</option>" +
-                        "<option value=2>Test Questionnaire</option>"
-                ,
-
-                client.getMessageBody()
-        );
+        assertThat(client.getMessageBody()).contains("<option value=" + survey1.getId() + ">test1</option><option value=" + survey2.getId() + ">test2</option>");
     }
 
     @Test
     void shouldAddQuestions() throws IOException, SQLException {
-        DataSource dataSource = TestData.testDataSource();
-        QuestionDao questionDao = new QuestionDao(dataSource);
-        OptionDao optionDao = new OptionDao(dataSource);
-
-        server.addController("/api/addAndListAllQuestions", new AddAndListAllQuestionsController(questionDao, optionDao));
-
         HttpPostClient postClient = new HttpPostClient("localhost", server.getPort(),
                 "/api/addAndListAllQuestions",
-                "title=title1&questionText=text1&survey" +
+                "title=title1&survey" +
                         "=1&option1=o1&option2=o2&option3=o3&option4=o4&option5=o5");
         assertEquals(303, postClient.getStatusCode());
         List<Question> questionList = questionDao.listAll();
@@ -173,36 +139,26 @@ public class HttpServerTest {
         assertThat(questionList)
                 .extracting(Question::getId)
                 .contains(1L);
-
     }
 
-    void æøåTest() {
-        DataSource dataSource = TestData.testDataSource();
-        QuestionDao questionDao = new QuestionDao(dataSource);
-        OptionDao optionDao = new OptionDao(dataSource);
+    /*
+        //Testen tester helt feil ting denne må rettes
+        @Test
+        void shouldReturnQuestionsFromServer() throws IOException, SQLException {
+            QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
+            OptionDao optionDao = new OptionDao(TestData.testDataSource());
+            server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
 
 
-    }
+            //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
+            HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
+            assertEquals(
+                    "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
+                    ,
+                    client.getMessageBody()
+            );
+        }
 
-/*
-    //Testen tester helt feil ting denne må rettes
-    @Test
-    void shouldReturnQuestionsFromServer() throws IOException, SQLException {
-        QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
-        OptionDao optionDao = new OptionDao(TestData.testDataSource());
-        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
-
-
-        //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering
-        HttpClient client = new HttpClient("localhost", server.getPort(), "/api/listQuestions");
-        assertEquals(
-                "<p>Create New user:</p><input type=\"text\" id=\"userName\" name=\"newUser\" label =\"Username:\"> </input><br><p>Chose one of existing users<p><p><label>Select user <select name=\"existingUsers\" id=\"existingUsers\"></select></label></p><br><button>Answer</button>"
-                ,
-                client.getMessageBody()
-        );
-    }
-
- */
-
+     */
 
 }
