@@ -2,7 +2,9 @@ package kristiania.no.http;
 
 import kristiania.no.http.controllers.HttpController;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +16,6 @@ import java.util.HashMap;
 public class HttpServer {
     private final HashMap<String, HttpController> controllers = new HashMap<>();
     private final ServerSocket serverSocket;
-    private Path rootDirectory;
 
 
     public HttpServer(int serverPort) throws IOException {
@@ -49,14 +50,26 @@ public class HttpServer {
             fileTarget = requestTarget.substring(0, questionPos);
         } else {
             fileTarget = requestTarget;
+
         }
 
         if (controllers.containsKey(fileTarget)) {
             HttpMessage response = controllers.get(fileTarget).handle(httpMessage);
             response.write(clientSocket);
+
         } else {
+            InputStream fileResource = getClass().getResourceAsStream(fileTarget);
+            if (fileResource != null) {
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                fileResource.transferTo(buffer);
+                String responseText = buffer.toString();
+
+            /*
             if (rootDirectory != null && Files.exists(rootDirectory.resolve(requestTarget.substring(1)))) {
                 String responseText = Files.readString(rootDirectory.resolve(requestTarget.substring(1)));
+             */
+
+
                 String contentType = "text/plain";
                 if (requestTarget.endsWith(".html")) {
                     contentType = "text/html";
@@ -90,10 +103,6 @@ public class HttpServer {
 
     public int getPort() {
         return serverSocket.getLocalPort();
-    }
-
-    public void setRoot(Path path) {
-        this.rootDirectory = path;
     }
 
     public void addController(String path, HttpController controller) {

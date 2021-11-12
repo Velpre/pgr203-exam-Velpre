@@ -58,18 +58,17 @@ public class HttpServerTest {
 
     @Test
     void shouldServeFiles() throws IOException {
-        server.setRoot(Paths.get("target/test-classes"));
 
         String fileContent = "Det funker";
         Files.write(Paths.get("target/test-classes/test.txt"), fileContent.getBytes());
 
         HttpClient client = new HttpClient("localhost", server.getPort(), "/test.txt");
         assertEquals(fileContent, client.getMessageBody());
+        assertEquals("text/plain", client.getHeader("Content-Type"));
     }
 
     @Test
     void shouldUseFileExtensionForContentTypeHTML() throws IOException {
-        server.setRoot(Paths.get("target/test-classes"));
         String fileContent = "<p>Hello</p>";
         Files.write(Paths.get("target/test-classes/example-file.html"), fileContent.getBytes());
 
@@ -79,7 +78,6 @@ public class HttpServerTest {
 
     @Test
     void shouldUseFileExtensionForContentTypeCSS() throws IOException {
-        server.setRoot(Paths.get("target/test-classes"));
         String fileContent = "";
         Files.write(Paths.get("target/test-classes/example-file.css"), fileContent.getBytes());
 
