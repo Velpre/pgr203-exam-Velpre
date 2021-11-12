@@ -9,12 +9,16 @@ import java.util.Map;
 
 
 public class AddAndListSurveyController implements HttpController {
-    public static final String PATH = "/api/addAndListSurvey";
     private final SurveyDao surveyDao;
     HttpMessage httpMessage;
 
     public AddAndListSurveyController(SurveyDao surveyDao) {
         this.surveyDao = surveyDao;
+    }
+
+    @Override
+    public String getPath() {
+        return "/api/addAndListSurvey";
     }
 
     @Override
@@ -34,4 +38,6 @@ public class AddAndListSurveyController implements HttpController {
         }
         return httpMessage;
     }
+
+
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 
 
 public class AddAndListAllQuestionsController implements HttpController {
-    public static final String PATH = "/api/addAndListAllQuestions";
+
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
     HttpMessage httpMessage;
@@ -21,6 +21,13 @@ public class AddAndListAllQuestionsController implements HttpController {
         this.questionDao = questionDao;
         this.optionDao = optionDao;
     }
+
+
+    @Override
+    public String getPath() {
+        return "/api/addAndListAllQuestions";
+    }
+
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
@@ -45,4 +52,5 @@ public class AddAndListAllQuestionsController implements HttpController {
         }
         return httpMessage;
     }
+
 }

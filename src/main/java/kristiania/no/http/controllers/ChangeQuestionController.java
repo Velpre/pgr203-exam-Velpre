@@ -13,13 +13,17 @@ import java.util.Objects;
 
 
 public class ChangeQuestionController implements HttpController {
-    public static final String PATH = "/api/changeQuestion";
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
 
     public ChangeQuestionController(QuestionDao questionDao, OptionDao optionDao) {
         this.optionDao = optionDao;
         this.questionDao = questionDao;
+    }
+
+    @Override
+    public String getPath() {
+        return "/api/changeQuestion";
     }
 
     @Override
@@ -47,4 +51,6 @@ public class ChangeQuestionController implements HttpController {
         String responseText = "Question has been changed";
         return new HttpMessage("HTTP/1.1 303", responseText, "../editSurvey.html");
     }
+
+
 }

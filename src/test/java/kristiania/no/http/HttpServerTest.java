@@ -34,14 +34,14 @@ public class HttpServerTest {
 
     public HttpServerTest() throws IOException {
 
-        server.addController(ListQuestionsController.PATH, new ListQuestionsController(questionDao, optionDao));
-        server.addController(AddAndListSurveyController.PATH, new AddAndListSurveyController(surveyDao));
-        server.addController(AnswerQuestionsController.PATH, new AnswerQuestionsController(answerDao, userDao));
-        server.addController(AddAndListAllQuestionsController.PATH, new AddAndListAllQuestionsController(questionDao, optionDao));
-        server.addController(DeleteSurveyController.PATH, new DeleteSurveyController(surveyDao));
-        server.addController(ListUsersController.PATH, new ListUsersController(userDao));
-        server.addController(ListAnswersController.PATH, new ListAnswersController(questionDao, answerDao));
-        server.addController(ChangeQuestionController.PATH, new ChangeQuestionController(questionDao, optionDao));
+        server.addController(new ListQuestionsController(questionDao, optionDao));
+        server.addController(new AddAndListSurveyController(surveyDao));
+        server.addController(new AnswerQuestionsController(answerDao, userDao));
+        server.addController(new AddAndListAllQuestionsController(questionDao, optionDao));
+        server.addController(new DeleteSurveyController(surveyDao));
+        server.addController(new ListUsersController(userDao));
+        server.addController(new ListAnswersController(questionDao, answerDao));
+        server.addController(new ChangeQuestionController(questionDao, optionDao));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class HttpServerTest {
         Survey survey2 = new Survey("test2");
         surveyDao.save(survey1);
         surveyDao.save(survey2);
-        server.addController("/api/addAndListSurvey", new AddAndListSurveyController(surveyDao));
+        server.addController(new AddAndListSurveyController(surveyDao));
         //Andre survey objekter blir også lagt til i DB gjennom V006 migrering
         HttpClient client = new HttpClient("localhost", server.getPort(), "/api/addAndListSurvey");
         assertThat(client.getMessageBody()).contains("<option value=" + survey1.getId() + ">test1</option><option value=" + survey2.getId() + ">test2</option>");
@@ -132,7 +132,7 @@ public class HttpServerTest {
     void shouldReturnQuestionsFromServer() throws IOException, SQLException {
         QuestionDao questionDao = new QuestionDao(TestData.testDataSource());
         OptionDao optionDao = new OptionDao(TestData.testDataSource());
-        server.addController("/api/listQuestions", new ListQuestionsController(questionDao, optionDao));
+        server.addController(new ListQuestionsController(questionDao, optionDao));
 
 
         //question1 & question2 objekt blir lagt til i DB gjennom V006 migrering

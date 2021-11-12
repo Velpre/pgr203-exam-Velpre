@@ -8,11 +8,14 @@ import java.sql.SQLException;
 
 
 public class ListUsersController implements HttpController {
-    public static final String PATH = "/api/listUsers";
     private final UserDao userDao;
 
     public ListUsersController(UserDao userDao) {
         this.userDao = userDao;
+    }
+    @Override
+    public String getPath() {
+        return "/api/listUsers";
     }
 
     @Override
@@ -25,5 +28,7 @@ public class ListUsersController implements HttpController {
 
         return new HttpMessage("HTTP/1.1 200", responseText);
     }
+
+
 }
 

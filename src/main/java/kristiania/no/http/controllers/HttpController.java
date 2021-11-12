@@ -7,4 +7,6 @@ import java.sql.SQLException;
 
 public interface HttpController {
     HttpMessage handle(HttpMessage request) throws SQLException, IOException;
+
+    String getPath();
 }

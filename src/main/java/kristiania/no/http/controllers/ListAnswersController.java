@@ -11,7 +11,6 @@ import java.util.Map;
 
 
 public class ListAnswersController implements HttpController {
-    public static final String PATH = "/api/listAnswers";
     private final QuestionDao questionDao;
     private final AnswerDao answerDao;
 
@@ -23,6 +22,10 @@ public class ListAnswersController implements HttpController {
     public ListAnswersController(QuestionDao questionDao, AnswerDao answerDao) {
         this.questionDao = questionDao;
         this.answerDao = answerDao;
+    }
+    @Override
+    public String getPath() {
+        return "/api/listAnswers";
     }
 
     @Override
@@ -61,5 +64,7 @@ public class ListAnswersController implements HttpController {
 
         return httpMessage;
     }
+
+
 
 }

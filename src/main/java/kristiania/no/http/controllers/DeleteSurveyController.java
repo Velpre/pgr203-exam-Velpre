@@ -7,12 +7,17 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public class DeleteSurveyController implements HttpController {
-    public static final String PATH = "/api/deleteSurvey";
     private final SurveyDao surveyDao;
 
     public DeleteSurveyController(SurveyDao surveyDao) {
         this.surveyDao = surveyDao;
     }
+
+    @Override
+    public String getPath() {
+        return "/api/deleteSurvey";
+    }
+
 
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
@@ -24,4 +29,6 @@ public class DeleteSurveyController implements HttpController {
         }
         return new HttpMessage("HTTP/1.1 303", responseText, "../editSurvey.html");
     }
+
+
 }

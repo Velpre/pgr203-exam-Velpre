@@ -48,14 +48,14 @@ public class SurveyServer {
         OptionDao optionDao = new OptionDao(dataSource);
 
         HttpServer httpServer = new HttpServer(8080);
-        httpServer.addController(ListQuestionsController.PATH, new ListQuestionsController(questionDao, optionDao));
-        httpServer.addController(AddAndListSurveyController.PATH, new AddAndListSurveyController(surveyDao));
-        httpServer.addController(AnswerQuestionsController.PATH, new AnswerQuestionsController(answerDao, userDao));
-        httpServer.addController(AddAndListAllQuestionsController.PATH, new AddAndListAllQuestionsController(questionDao, optionDao));
-        httpServer.addController(DeleteSurveyController.PATH, new DeleteSurveyController(surveyDao));
-        httpServer.addController(ListUsersController.PATH, new ListUsersController(userDao));
-        httpServer.addController(ListAnswersController.PATH, new ListAnswersController(questionDao, answerDao));
-        httpServer.addController(ChangeQuestionController.PATH, new ChangeQuestionController(questionDao, optionDao));
+        httpServer.addController(new ListQuestionsController(questionDao, optionDao));
+        httpServer.addController(new AddAndListSurveyController(surveyDao));
+        httpServer.addController(new AnswerQuestionsController(answerDao, userDao));
+        httpServer.addController(new AddAndListAllQuestionsController(questionDao, optionDao));
+        httpServer.addController(new DeleteSurveyController(surveyDao));
+        httpServer.addController(new ListUsersController(userDao));
+        httpServer.addController(new ListAnswersController(questionDao, answerDao));
+        httpServer.addController(new ChangeQuestionController(questionDao, optionDao));
 
 
         logger.info("Server running at http://localhost:" + httpServer.getPort());
