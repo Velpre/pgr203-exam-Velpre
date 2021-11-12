@@ -21,7 +21,7 @@ Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal bes
 <img width="1011" alt="DB java" src="https://user-images.githubusercontent.com/65472724/141207340-974c2d00-ac59-4f47-8cb0-d3983e0d43fe.PNG">
 
 ## Server struktur
-<img width="636" alt="Server struktur" src="https://user-images.githubusercontent.com/65472724/141211031-f998f0e5-7639-4eb8-a8ba-529ee2f9b77c.PNG">
+![image](https://user-images.githubusercontent.com/65472724/141470757-f4af41ca-7dc3-408b-ba19-3bd763712a07.png)
 
 
 ## Sjekkliste
