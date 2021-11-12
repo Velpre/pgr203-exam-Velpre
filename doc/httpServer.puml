@@ -7,7 +7,7 @@ participant QuestionDao
 participant OptionDao
 database QUESTION_DB
 
-Browser -> HttpServer: POST /api/listQuestions
+Browser -> HttpServer: GET /api/listQuestions
 HttpServer -> controllers: get("/api/listQuestions")
 HttpServer <-- controllers: ListQuestionsController
 HttpServer -> ListQuestionsController: response = handle(request)
