@@ -24,17 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpServerTest {
     HttpServer server = new HttpServer(0);
-
     DataSource dataSource = TestData.testDataSource();
-
     QuestionDao questionDao = new QuestionDao(dataSource);
     SurveyDao surveyDao = new SurveyDao(dataSource);
     AnswerDao answerDao = new AnswerDao(dataSource);
     UserDao userDao = new UserDao(dataSource);
     OptionDao optionDao = new OptionDao(dataSource);
 
-
-    //Sjekke om vi trenger denne
 
     public HttpServerTest() throws IOException {
 
@@ -46,10 +42,7 @@ public class HttpServerTest {
         server.addController("/api/listUsers", new ListUsersController(userDao));
         server.addController("/api/listAnswers", new ListAnswersController(questionDao, answerDao));
         server.addController("/api/changeQuestion", new ChangeQuestionController(questionDao, optionDao));
-
     }
-
-    //HttpServer tester
 
     @Test
     void shouldReturn404ForUnknownRequestTarget() throws IOException {
@@ -100,7 +93,6 @@ public class HttpServerTest {
         assertEquals(200, new HttpClient("localhost", server.getPort(), "/api/addAndListAllQuestions").getStatusCode());
     }
 
-    //Controller tester
     @Test
     void shouldRespondWith200ForKnownRequestTarget() throws IOException {
         new HttpPostClient("localhost", server.getPort(), "/api/answerQuestions", "newUser=test");
