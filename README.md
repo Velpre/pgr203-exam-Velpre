@@ -5,22 +5,18 @@
 * Bygg prosjektet ved å kjøre kommandoen: mvn package
 * Start SurveyServer ved å kjøre kommandoen: java -jar target\exam-1.0-SNAPSHOT.jar
 
-## Beskriv hvordan programmet skal testes:
-
-## Ekstra Funksjonalitet
-
+## Ekstra utover minimum
 #### Liste svar
-Bortsett fra den funksjonaliteten som er beskrevet i oppgaven har vi lagt til en ekstra tabell som lagrer users som besvarer spørreundersøkelser. På HTML siden hvor vi lister svarene gir vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de. Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
+User tabellen og survey tabellen er knyttet sammen med questions. På /showAnswers.html har vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de.Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
 #### Legge til spørsmål
 Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal besvares med options(radio buttons) eller slider.
 #### Annet
+* Terminerer while loop med beak i readLine methoden for å fikse java heap feilmeldingen
 * Mulighet for å legge til og slette eksisterende spørreundersøkelser
-* Mulighet for å legge til eller bruke eksisterende users
+* Mulighet for å legge til eller velge eksisterende users når brukeren besvarer spørreundersøkelse
 * Mulighet for å oppdatere eksisterende spørsmål
-* terminerer while loop med beak i readLine methoden for å fikse java heap feilmeldingen
 
 ## Database struktur
-
 <img width="1011" alt="DB java" src="https://user-images.githubusercontent.com/65472724/141207340-974c2d00-ac59-4f47-8cb0-d3983e0d43fe.PNG">
 
 ## Server struktur
@@ -28,7 +24,7 @@ Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal bes
 Viser hva som skjer på serveren når brukeren lister alle spørsmål
 ![image](https://user-images.githubusercontent.com/65472724/141493105-3ad37167-7fc0-4971-883b-87a1611cffd9.png)
 
-
+[![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
 
 ## Sjekkliste
 
@@ -36,8 +32,8 @@ Viser hva som skjer på serveren når brukeren lister alle spørsmål
 
 * [x] Dere har lest eksamensteksten
 * [ ] Dere har lastet opp en ZIP-fil med navn basert på navnet på deres Github repository
-* [ ] Koden er sjekket inn på github.com/pgr203-2021-repository
-* [ ] Dere har committed kode med begge prosjektdeltagernes GitHub konto (alternativt: README beskriver arbeidsform)
+* [x] Koden er sjekket inn på github.com/pgr203-2021-repository
+* [x] Dere har committed kode med begge prosjektdeltagernes GitHub konto (alternativt: README beskriver arbeidsform)
 
 ### README.md
 
