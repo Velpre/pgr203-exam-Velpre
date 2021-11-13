@@ -12,7 +12,7 @@ User tabellen og survey tabellen er knyttet sammen med questions tabellen. På /
 #### Legge til spørsmål
 Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal besvares med options(radio buttons) eller slider.
 #### Annet
-* Terminerer while loop med beak i readLine methoden for å fikse java heap feilmeldingen
+* Terminerer while loop med break i readLine methoden for å fikse java heap feilmeldingen
 * Mulighet for å legge til og slette eksisterende spørreundersøkelser
 * Mulighet for å legge til eller velge eksisterende users når brukeren besvarer spørreundersøkelse
 * Mulighet for å oppdatere eksisterende spørsmål
