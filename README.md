@@ -8,7 +8,7 @@
 
 ## Ekstra utover minimum
 #### Liste svar
-User tabellen og survey tabellen er knyttet sammen med questions. På /showAnswers.html har vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de.Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
+User tabellen og survey tabellen er knyttet sammen med questions tabellen. På /showAnswers.html har vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de.Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
 #### Legge til spørsmål
 Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal besvares med options(radio buttons) eller slider.
 #### Annet
