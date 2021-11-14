@@ -55,7 +55,7 @@ public class SurveyServer {
         httpServer.addController(new DeleteSurveyController(surveyDao));
         httpServer.addController(new ListUsersController(userDao));
         httpServer.addController(new ListAnswersController(questionDao, answerDao));
-        httpServer.addController(new ChangeQuestionController(questionDao, optionDao));
+        httpServer.addController(new ChangeQuestionController(questionDao, optionDao,answerDao));
 
 
         logger.info("Server running at http://localhost:" + httpServer.getPort());

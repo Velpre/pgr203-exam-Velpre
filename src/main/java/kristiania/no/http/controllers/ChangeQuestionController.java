@@ -1,6 +1,7 @@
 package kristiania.no.http.controllers;
 
 import kristiania.no.http.HttpMessage;
+import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.options.Option;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.QuestionDao;
@@ -15,10 +16,12 @@ import java.util.Objects;
 public class ChangeQuestionController implements HttpController {
     private final QuestionDao questionDao;
     private final OptionDao optionDao;
+    private final AnswerDao answerDao;
 
-    public ChangeQuestionController(QuestionDao questionDao, OptionDao optionDao) {
+    public ChangeQuestionController(QuestionDao questionDao, OptionDao optionDao, AnswerDao answerDao) {
         this.optionDao = optionDao;
         this.questionDao = questionDao;
+        this.answerDao = answerDao;
     }
 
     @Override
@@ -29,7 +32,6 @@ public class ChangeQuestionController implements HttpController {
     @Override
     public HttpMessage handle(HttpMessage request) throws SQLException {
         Map<String, String> queryMap = HttpMessage.parseRequestParameters(request.messageBody);
-
         List<Option> allOptions = new ArrayList<>(optionDao.retrieveFromQuestionId(Long.parseLong(queryMap.get("question"))));
 
         while (allOptions.size() < 5) {
@@ -45,7 +47,9 @@ public class ChangeQuestionController implements HttpController {
                 optionDao.update(queryMap.get("option" + i), (int) allOptions.get(i - 1).getId());
             } else {
                 optionDao.delete(allOptions.get(i - 1).getId());
+
             }
+            answerDao.delete(Long.parseLong(queryMap.get("question")));
         }
 
         String responseText = "Question has been changed";

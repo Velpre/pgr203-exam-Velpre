@@ -42,7 +42,7 @@ public class HttpServerTest {
         server.addController(new DeleteSurveyController(surveyDao));
         server.addController(new ListUsersController(userDao));
         server.addController(new ListAnswersController(questionDao, answerDao));
-        server.addController(new ChangeQuestionController(questionDao, optionDao));
+        server.addController(new ChangeQuestionController(questionDao, optionDao,answerDao));
     }
 
     @Test

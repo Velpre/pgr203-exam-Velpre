@@ -32,16 +32,17 @@ public class AnswerDao extends AbstractDao {
         return answer;
     }
 
-// Må også rette opp retrive metoder med å retunere null hvis det ikke finnes rs.next()
-
     public void save(Answer answer) throws SQLException {
         answer.setId(save(answer, "insert into answers (answer, question_id, user_id) values (?, ?, ?)"));
     }
 
-    //Denne må testes og byttes til Abstract DAO methoden
+
     public List<Answer> retrieveFromQuestionId(long id) throws SQLException {
         return (List<Answer>) retrieve(id, "select * from answers where question_id = ?");
     }
 
+    public void delete(long id) throws SQLException {
+        delete(id, "delete from answers where question_id = ?");
+    }
 
 }

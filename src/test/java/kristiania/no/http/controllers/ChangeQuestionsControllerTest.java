@@ -2,6 +2,7 @@ package kristiania.no.http.controllers;
 
 import kristiania.no.http.HttpMessage;
 import kristiania.no.jdbc.TestData;
+import kristiania.no.jdbc.answer.AnswerDao;
 import kristiania.no.jdbc.options.Option;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
@@ -17,7 +18,8 @@ public class ChangeQuestionsControllerTest {
     DataSource dataSource = TestData.testDataSource();
     OptionDao optionDao = new OptionDao(dataSource);
     QuestionDao questionDao = new QuestionDao(dataSource);
-    ChangeQuestionController changeQuestionController = new ChangeQuestionController(questionDao, optionDao);
+    AnswerDao answerDao = new AnswerDao(dataSource);
+    ChangeQuestionController changeQuestionController = new ChangeQuestionController(questionDao, optionDao, answerDao);
 
     @Test
     void shouldUpdateQuestion() throws SQLException {
