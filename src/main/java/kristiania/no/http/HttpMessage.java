@@ -63,6 +63,7 @@ public class HttpMessage {
             }
             buffer.append((char) c);
         }
+
         return URLDecoder.decode(buffer.toString(), StandardCharsets.UTF_8);
     }
 
