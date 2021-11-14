@@ -8,11 +8,11 @@
 
 ## Ekstra utover minimum
 #### Liste svar
-User tabellen og survey tabellen er knyttet sammen med questions. På /showAnswers.html har vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de.Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
+User tabellen og survey tabellen er knyttet sammen med questions tabellen. På /showAnswers.html har vi mulighet for å liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de.Det er også mulighet for å liste alle svarene fra alle users på valgt spørreundersøkelse.
 #### Legge til spørsmål
 Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal besvares med options(radio buttons) eller slider.
 #### Annet
-* Terminerer while loop med beak i readLine methoden for å fikse java heap feilmeldingen
+* Terminerer while loop med break i readLine methoden for å fikse java heap feilmeldingen
 * Mulighet for å legge til og slette eksisterende spørreundersøkelser
 * Mulighet for å legge til eller velge eksisterende users når brukeren besvarer spørreundersøkelse
 * Mulighet for å oppdatere eksisterende spørsmål
@@ -22,10 +22,10 @@ Ved opprettelse av nye spørsmål er det mulig å velge om spørsmålet skal bes
 
 ## Server struktur
 ![image](https://user-images.githubusercontent.com/65472724/141470757-f4af41ca-7dc3-408b-ba19-3bd763712a07.png)
+
 Viser hva som skjer på serveren når brukeren lister alle spørsmål
 ![image](https://user-images.githubusercontent.com/65472724/141493105-3ad37167-7fc0-4971-883b-87a1611cffd9.png)
 
-[![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
 
 ## Sjekkliste
 
@@ -53,7 +53,7 @@ Viser hva som skjer på serveren når brukeren lister alle spørsmål
 * [x] Programmet leser `dataSource.url`, `dataSource.username` og `dataSource.password` fra `pgr203.properties` for å
   connecte til databasen
 * [x] Programmet bruker Flywaydb for å sette opp databaseskjema
-* [ ] Server skriver nyttige loggmeldinger, inkludert informasjon om hvilken URL den kjører på ved oppstart
+* [x] Server skriver nyttige loggmeldinger, inkludert informasjon om hvilken URL den kjører på ved oppstart
 
 ### Funksjonalitet
 
