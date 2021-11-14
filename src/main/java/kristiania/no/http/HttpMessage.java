@@ -83,12 +83,12 @@ public class HttpMessage {
 
     public void write(Socket socket) throws IOException {
         String response = startLine + "\r\n" +
-                "Content-Length: " + messageBody.length() + "\r\n" +
+                "Content-Length: " + messageBody.getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                 "Connection: close\r\n" +
                 "Content-Type: text/html; charset=utf-8\r\n" +
                 "Location: " + location + "\r\n" +
                 "\r\n" +
                 messageBody;
-        socket.getOutputStream().write(response.getBytes());
+        socket.getOutputStream().write(response.getBytes(StandardCharsets.UTF_8));
     }
 }

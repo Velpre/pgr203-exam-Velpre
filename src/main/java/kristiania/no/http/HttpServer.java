@@ -75,21 +75,21 @@ public class HttpServer {
 
             String responseText = "File not found: " + requestTarget;
             String response = "HTTP/1.1 404 Not found\r\n" +
-                    "Content-Length: " + responseText.getBytes().length + "\r\n" +
+                    "Content-Length: " + responseText.getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                     "\r\n" +
                     responseText;
-            clientSocket.getOutputStream().write(response.getBytes());
+            clientSocket.getOutputStream().write(response.getBytes(StandardCharsets.UTF_8));
         }
     }
 
     private void writeOkResponse(Socket clientSocket, String responseText, String contentType) throws IOException {
         String response = "HTTP/1.1 200 OK\r\n" +
-                "Content-Length: " + responseText.getBytes().length + "\r\n" +
+                "Content-Length: " + responseText.getBytes(StandardCharsets.UTF_8).length + "\r\n" +
                 "Content-Type:" + contentType + "\r\n" +
                 "Connection: close\r\n" +
                 "\r\n" +
                 responseText;
-        clientSocket.getOutputStream().write(response.getBytes());
+        clientSocket.getOutputStream().write(response.getBytes(StandardCharsets.UTF_8));
     }
 
     public int getPort() {

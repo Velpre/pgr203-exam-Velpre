@@ -2,6 +2,7 @@ package kristiania.no.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class HttpClient {
     private final int statusCode;
@@ -13,7 +14,7 @@ public class HttpClient {
                 "Host: " + host + "\r\n" +
                 "Connection: close\r\n" +
                 "\r\n";
-        socket.getOutputStream().write(request.getBytes());
+        socket.getOutputStream().write(request.getBytes(StandardCharsets.UTF_8));
 
         httpMessage = new HttpMessage(socket);
         String[] statusLine = httpMessage.startLine.split(" ");

@@ -11,7 +11,7 @@
     <button><a href="index.html">Home</a></button>
     <div class="container">
         <h3>Add survey</h3>
-        <form action="/api/addAndListSurvey" method="post">
+        <form action="/api/addAndListSurvey" method="post" accept-charset="utf-8">
             <p><label>Add survey name: <input name="title" required type="text"></label></p>
             <button>Add</button>
         </form>
@@ -19,7 +19,7 @@
 
     <div class="container">
         <h3>Delete</h3>
-        <form action="/api/deleteSurvey" method="post">
+        <form action="/api/deleteSurvey" method="post" accept-charset="utf-8">
             <p><label>Select survey <select id="survey1" name="survey" required></select></label></p>
             <button>Delete</button>
         </form>
@@ -27,7 +27,7 @@
 
     <div class="container">
         <h3>Add question</h3>
-        <form action="/api/addAndListAllQuestions" method="post">
+        <form action="/api/addAndListAllQuestions" method="post" accept-charset="utf-8">
             <p><label>Choose survey <select id="survey2" name="survey" required></select></label></p>
             <b><label>Add question: <input name="title" required type="text"></label></b>
             <p><label>Add option 1: <input name="option1" type="text"></label></p>
@@ -42,7 +42,7 @@
 
     <div class="container">
         <h3>Change question</h3>
-        <form action="/api/changeQuestion" method="post">
+        <form action="/api/changeQuestion" method="post" accept-charset="utf-8">
             <p><label>Choose question <select id="questions" name="question"></select></label></p>
             <p><label>New question: <input name="title" required type="text"></label></p>
             <p><label>New option 1: <input name="option1" type="text"></label></p>
