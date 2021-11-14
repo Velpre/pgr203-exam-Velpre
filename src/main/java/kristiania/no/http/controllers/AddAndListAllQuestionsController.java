@@ -40,7 +40,9 @@ public class AddAndListAllQuestionsController implements HttpController {
             responseText = "You have added: Question: " + q.getTitle() + "\r\n Survey: " + q.getSurveyId() + "\r\nWith options:";
             for (int i = 1; i < 6; i++) {
                 Option option = new Option(queryMap.get("option" + i), (int) q.getId());
-                optionDao.save(option);
+                if (option.getOptionName() != "") {
+                    optionDao.save(option);
+                }
                 responseText += " " + option.getOptionName();
             }
             httpMessage = new HttpMessage("HTTP/1.1 303", responseText, "../editSurvey.html");
