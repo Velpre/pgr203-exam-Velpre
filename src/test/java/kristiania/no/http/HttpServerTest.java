@@ -3,6 +3,7 @@ package kristiania.no.http;
 import kristiania.no.http.controllers.*;
 import kristiania.no.jdbc.TestData;
 import kristiania.no.jdbc.answer.AnswerDao;
+import kristiania.no.jdbc.options.Option;
 import kristiania.no.jdbc.options.OptionDao;
 import kristiania.no.jdbc.question.Question;
 import kristiania.no.jdbc.question.QuestionDao;
@@ -31,9 +32,9 @@ public class HttpServerTest {
     UserDao userDao = new UserDao(dataSource);
     OptionDao optionDao = new OptionDao(dataSource);
 
+    AddAndListAllQuestionsController addAndListAllQuestionsController = new AddAndListAllQuestionsController(questionDao, optionDao);
 
     public HttpServerTest() throws IOException {
-
         server.addController(new ListQuestionsController(questionDao, optionDao));
         server.addController(new AddAndListSurveyController(surveyDao));
         server.addController(new AnswerQuestionsController(answerDao, userDao));
@@ -144,5 +145,27 @@ public class HttpServerTest {
         );
     }
 
+    @Test
+    void shouldGetWeirdCharTest() throws SQLException {
+        Question question1 = new Question("øåæ ", 1);
+        questionDao.save(question1);
+
+
+        HttpMessage httpMessage = new HttpMessage("GET HTTP/1.1 200", "");
+        HttpMessage response = addAndListAllQuestionsController.handle(httpMessage);
+        assertThat(response.messageBody)
+                .contains("øåæ ");
+    }
+
+    @Test
+    void shouldPostWeirdCharTest() throws SQLException {
+        HttpMessage httpMessage = new HttpMessage("POST HTTP/1.1 200", "title=æåø &survey=1&option1=øåææ&option2=øøø" +
+                "&option3=ø æ å &option4=æ(% å æø &option5=øæ æåø æø");
+        addAndListAllQuestionsController.handle(httpMessage);
+
+        assertThat(optionDao.listAll())
+                .extracting(Option::getOptionName)
+                .contains("øæ æåø æø", "æ(% å æø ", "ø æ å ", "øåææ", "øøø");
+    }
 
 }
