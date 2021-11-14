@@ -101,5 +101,4 @@ Viser hva som skjer på serveren når brukeren lister alle spørsmål
 * [x] Avansert funksjonalitet (skala på spørsmål, spørreundersøkelser)
 * [x] Rammeverk rundt Http-håndtering (en god HttpMessage class med HttpRequest og HttpResponse subtyper) som
   gjenspeiler RFC7230
-* [x] God bruk av Controller-pattern
- 
+* [x] God bruk av Controller-pattern 
