@@ -12,7 +12,7 @@
 #### Liste svar
 
 User tabellen og survey tabellen er knyttet sammen med questions tabellen. På /showAnswers.html har vi mulighet for å
-liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de.Det er også mulighet for å
+liste svarene i forhold til forskjellige spørreundersøkelser og users som har besvart de. Det er også mulighet for å
 liste alle svarene fra alle users på valgt spørreundersøkelse.
 
 #### Legge til spørsmål
@@ -25,7 +25,7 @@ slider.
 * Terminerer while loop med break i readLine methoden for å fikse java heap feilmeldingen
 * Mulighet for å legge til og slette eksisterende spørreundersøkelser
 * Mulighet for å legge til eller velge eksisterende users når brukeren besvarer spørreundersøkelse
-* Mulighet for å oppdatere eksisterende spørsmål
+* Ved forandring av esisterende spørsmål, blir svarene som allerede er angit på spørsmålet som forandres slettet. (ingen vits å beholde svarene når spørsmål blir endret)
 
 ## Database struktur
 
@@ -43,7 +43,7 @@ Viser hva som skjer på serveren når brukeren lister alle spørsmål
 ## Vedlegg: Sjekkliste for innlevering
 
 * [x] Dere har lest eksamensteksten
-* [ ] Dere har lastet opp en ZIP-fil med navn basert på navnet på deres Github repository
+* [x] Dere har lastet opp en ZIP-fil med navn basert på navnet på deres Github repository
 * [x] Koden er sjekket inn på github.com/pgr203-2021-repository
 * [x] Dere har committed kode med begge prosjektdeltagernes GitHub konto (alternativt: README beskriver arbeidsform)
 
