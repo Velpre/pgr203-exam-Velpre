@@ -1,6 +1,6 @@
 [![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
 
-## Om programmet
+## Om prosjektet
 
 Dette er en eksamensbesvarelese i faget PGR203 Avansert Javaprogrammering ved Høyskolen Kristiania. Oppgaven gikk ut på å utvikle en HTTP-server for en Questionnaire applikasjon. Besvarelesen ble sensurert til en A.
 
