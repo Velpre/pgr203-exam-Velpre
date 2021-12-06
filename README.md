@@ -1,5 +1,9 @@
 [![Java CI with Maven](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml/badge.svg)](https://github.com/kristiania-pgr203-2021/pgr203-exam-Velpre/actions/workflows/maven.yml)
 
+## Om programmet
+
+Dette er en eksamensbesvarelese i faget PGR203 Avansert Javaprogrammering ved Høyskolen Kristiania. Oppgaven gikk ut på å utvikle en HTTP-server for en Questionnaire applikasjon. Besvarelesen ble sensurert til en A.
+
 ## Hvordan kjøre dette programmet
 
 * Legg til databaseinfo i en pgr203.properties fil som skal ligge i root directory
