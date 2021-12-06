@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Surveys</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<main>
+    <h1>Edit Survey</h1>
+    <button><a href="index.html">Home</a></button>
+    <div class="container">
+        <h3>Add survey</h3>
+        <form action="/api/addAndListSurvey" method="post" accept-charset="utf-8">
+            <p><label>Add survey name: <input name="title" required type="text"></label></p>
+            <button>Add</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h3>Delete</h3>
+        <form action="/api/deleteSurvey" method="post" accept-charset="utf-8">
+            <p><label>Select survey <select id="survey1" name="survey" required></select></label></p>
+            <button>Delete</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h3>Add question</h3>
+        <form action="/api/addAndListAllQuestions" method="post" accept-charset="utf-8">
+            <p><label>Choose survey <select id="survey2" name="survey" required></select></label></p>
+            <b><label>Add question: <input name="title" required type="text"></label></b>
+            <p><label>Add option 1: <input name="option1" type="text"></label></p>
+            <p><label>Add option 2: <input name="option2" type="text"></label></p>
+            <p><label>Add option 3: <input name="option3" type="text"></label></p>
+            <p><label>Add option 4: <input name="option4" type="text"></label></p>
+            <p><label>Add option 5: <input name="option5" type="text"></label></p>
+            <p>(Leave empty to use a slider with values 1-5.)</p>
+            <button>Add</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h3>Change question</h3>
+        <form action="/api/changeQuestion" method="post" accept-charset="utf-8">
+            <p><label>Choose question <select id="questions" name="question"></select></label></p>
+            <p><label>New question: <input name="title" required type="text"></label></p>
+            <p><label>New option 1: <input name="option1" type="text"></label></p>
+            <p><label>New option 2: <input name="option2" type="text"></label></p>
+            <p><label>New option 3: <input name="option3" type="text"></label></p>
+            <p><label>New option 4: <input name="option4" type="text"></label></p>
+            <p><label>New option 5: <input name="option5" type="text"></label></p>
+            <p>(Leave empty to use a slider with values 1-5.)</p>
+            <button>Change</button>
+        </form>
+    </div>
+
+    <button><a href="index.html">Home</a></button>
+
+</main>
+<script>
+    fetch("/api/addAndListSurvey").then(function (res) {
+        return res.text();
+    }).then(function (text) {
+        document.getElementById("survey1").innerHTML = text;
+        document.getElementById("survey2").innerHTML = text;
+    });
+
+    fetch("/api/addAndListAllQuestions").then(function (res) {
+        return res.text();
+    }).then(function (text) {
+        document.getElementById("questions").innerHTML = text;
+    });
+
+
+</script>
+</body>
+
+</html>
